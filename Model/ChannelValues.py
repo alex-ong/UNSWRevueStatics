@@ -1,0 +1,3 @@
+'''
+an array of channels
+'''
