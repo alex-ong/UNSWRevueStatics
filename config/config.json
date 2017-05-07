@@ -1,0 +1,6 @@
+{
+    "groupBindings": "config/groupBindings",
+    "settings": "config/settings.json",
+    "dmxBinding": "config/dmxBinding.json",
+    "faderBindings": "config/faderBindings"
+}

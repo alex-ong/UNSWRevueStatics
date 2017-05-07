@@ -1,4 +1,9 @@
 '''
+@author: alex-ong
+@date 2017-05-07
+'''
+
+'''
 list of all groups and channels + values.
 
 remember we use HTP,
