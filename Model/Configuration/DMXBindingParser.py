@@ -8,12 +8,11 @@ import collections
 DEFAULT_NUM_CHANNELS = 84  # default value for science theatre
 
 def openFile(targetFile):
-    try: 
+    try:
         with open(targetFile, 'r') as f:
             result = json.load(f, object_pairs_hook=collections.OrderedDict)
-        #json turns int keys into strings.
         finalResult = {}
-        for key, value in result:
+        for key, value in result.items():
             finalResult[int(key)] = value
         result = finalResult
     except:

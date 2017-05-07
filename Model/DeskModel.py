@@ -13,9 +13,7 @@ class DeskModel(object):
         self.config = ConfigReader.ConfigReader('config/config.json')
         self.patching = self.config.readDMXBindings()
         
-#         self.playbackValues = ChannelValues.ChannelValues()
-#         self.recordingValues = ChannelValues.ChannelValues()
-#         
+        self.channelValues = ChannelValues.ChannelValues(self.patching)    
         
     def Reset(self):
         # get configReader to reset everything, then load everything

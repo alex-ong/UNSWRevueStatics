@@ -14,6 +14,11 @@ class Channel(object):
         self._dmxValue = 0 #byte value from 0->255
         self._dmxAddress = dmxAddress
         
+        self.directValue = 0
+        self.groupValue = 0
+        self.recordValue = 0
+        self.playbackValue = 0
+        
     def setDMXAddress(self, newAddress):
         self._dmxAddress = newAddress
         

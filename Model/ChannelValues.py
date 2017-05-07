@@ -15,9 +15,18 @@ DMX_PER_UNIVERSE = 512
 # then we can combine the values to get the final channel Values.
 # also we can use this array to combine groups with channels.
 class ChannelValues(object):
-    def __init__(self):
-        self.values = [Channel.Channel(i) for i in range(DMX_PER_UNIVERSE)]
-                
+    def __init__(self, patching):                
+        self.values = [Channel.Channel(key, value) for key, value in patching.items()]
+    
+    def __iter__(self):
+        return iter(self.values)
+    
+    def __getitem__(self, i):
+        return self.values[i]
+    
+    def __len__(self):
+        return len(self.values)
+    
     def resetValues(self):
         for value in self.values:
             value.setValue(Channel.BYTE_MIN)
