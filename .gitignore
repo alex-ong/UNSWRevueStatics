@@ -1,2 +1,5 @@
-config/
 __pycache__/
+config/config.json
+config/dmxBinding.json
+config/faderBindings.json
+config/settings.json
