@@ -5,7 +5,10 @@
 import json
 import collections
 
-def openFile(targetFile,numChannels):
+DEFAULT_FADERS = 27
+DEFAULT_CHANNELS = 84
+
+def openFile(targetFile):
     try:
         with open(targetFile, 'r') as f:
             result = json.load(f, object_pairs_hook=collections.OrderedDict)
@@ -14,14 +17,14 @@ def openFile(targetFile,numChannels):
             finalResult[int(key)] = value
         result = finalResult
     except:
-        result = defaultFile(targetFile,numChannels)
+        result = defaultFile(targetFile)
         saveFile(result, targetFile) #turns keys into strings...
         
     return result
  
 
-def defaultFile(targetFile, numChannels):
-    result = {x:x for x in range(1, numChannels+1)}
+def defaultFile(targetFile=None):
+    result = {'channels':84,'faders':27}
     saveFile(result, targetFile)
     return result
     

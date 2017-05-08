@@ -15,17 +15,13 @@ class Channel(object):
         self._dmxAddress = dmxAddress
         
         self.directValue = 0
-        self.groupValue = 0
-        self.recordValue = 0
-        self.playbackValue = 0
+        self.playbackValue = None
+        self.groupValue = None
+        self.recordValue = None        
         
     def setDMXAddress(self, newAddress):
         self._dmxAddress = newAddress
-        
-    def setValueHTP(self, newValue):
-        value = max(newValue, self._dmxValue)
-        self.setValue(value)
-         
+             
     #sets the value immediately.        
     def setValue(self, dmxValue):
         dmxValue = max (dmxValue, BYTE_MIN)
@@ -40,3 +36,6 @@ class Channel(object):
     def getPerc(self):
         return self._dmxValue / float(BYTE_MAX)
     
+    def getCueValue(self):
+        pass
+            

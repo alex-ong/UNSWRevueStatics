@@ -1,5 +1,7 @@
 import json
 import Model.Configuration.DMXBindingParser as DMXBindingParser
+import Model.Configuration.FaderBindingParser as FaderBindingParser
+import Model.Configuration.GeneralSettingParser as GeneralSettingParser
 
 DMX_BINDING = 'dmxBinding'
 SETTING_BINDING = 'settings'
@@ -25,7 +27,7 @@ class ConfigReader(object):
         try:
             with open(self.metaConfigPath, 'r') as f:
                 data = json.load(f)
-        except: #e.g. metaconfigpath is inaccessible.
+        except:  # e.g. metaconfigpath is inaccessible.
             data = self.defaultConfig()
             self.paths = data
             self.writeConfig()
@@ -39,19 +41,31 @@ class ConfigReader(object):
     def writeConfig(self):        
         try:
             with open(self.metaConfigPath, 'w') as f:
-                json.dump(self.paths,f,indent=4)
+                json.dump(self.paths, f, indent=4)
         except:
             print("Error Writing config file!")
    
     def defaultConfig(self):
         return {DMX_BINDING:'config/dmxBinding.json',
-                SETTING_BINDING:'config/settings.json', 
-                GROUP_BINDINGS: 'config/groupBindings',
-                FADER_BINDINGS: 'config/faderBindings'}
+                SETTING_BINDING:'config/settings.json',
+                GROUP_BINDINGS: 'config/groupBindings.json',
+                FADER_BINDINGS: 'config/faderBindings.json'}
         
-    def readDMXBindings(self):
-        return DMXBindingParser.openFile(self.paths[DMX_BINDING])
+    def readDMXBindings(self, numChannels):
+        return DMXBindingParser.openFile(self.paths[DMX_BINDING], numChannels)
     
     def writeDMXBindings(self, bindingDict):
         DMXBindingParser.saveFile(bindingDict, self.paths[DMX_BINDING]) 
+        
+    def readFaderBindings(self, numFaders, numChannels):
+        return FaderBindingParser.openFile(self.paths[FADER_BINDINGS], numFaders, numChannels)
+    
+    def writeFaderBindings(self, bindingDict):
+        FaderBindingParser.saveFile(bindingDict, self.paths[FADER_BINDINGS]) 
+    
+    def readGeneralSettings(self):
+        return GeneralSettingParser.openFile(self.paths[SETTING_BINDING])
+    
+    def writeGeneralSettings(self, bindingDict):
+        GeneralSettingParser.saveFile(bindingDict, self.paths[SETTING_BINDING])
         

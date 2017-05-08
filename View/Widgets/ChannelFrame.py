@@ -33,8 +33,8 @@ class ChannelFrame(tk.Frame):
                 self.channelWidgets[channelIndex] = cw
             layoutIndex += 1
                 
-    def handleInput(self, dictInput):
-        for key in self.channelWidgets:            
-            if 'slider' + str(key) in dictInput:
-                self.channelWidgets[key].updateValues(dictInput['slider'+str(key)],0,0,None)
+    def refreshDisplay(self):
+        for widget in self.channelWidgets.values():
+            widget.refreshDisplay()
+    
         

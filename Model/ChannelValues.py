@@ -11,7 +11,6 @@ import Model.Channel as Channel
 DMX_PER_UNIVERSE = 512
 
 # an array of channels.
-# "playback" will have a copy of this, and "recording" will also have a copy.
 # then we can combine the values to get the final channel Values.
 # also we can use this array to combine groups with channels.
 class ChannelValues(object):

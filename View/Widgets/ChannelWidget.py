@@ -50,54 +50,57 @@ class ChannelWidget(tk.Frame):
         directLabel.grid(row=row, column=0)
         playbackLabel.grid(row=row, column=1)
         row += 1        
-        groupLabel.grid(row=row, columnspan=2)        
-        self.updateValues(None, None, None, None)
+        groupLabel.grid(row=row, columnspan=2)
+        self.lastValues = []        
+        self.refreshDisplay()
         
     def createButton(self, stringVar, colour, size=12):
         return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', 6, 'bold'))
     
-    # shows displays sub-values when necessary
-    def updateValues(self, direct, playback, group, record):
-        self.clearValues()
+    def refreshDisplay(self):
+        direct = self.channel.directValue
+        playback = self.channel.playbackValue
+        group = self.channel.groupValue
+        record = self.channel.recordValue
         
-        # figure out how many actual values we got.
-        maxComps = []
-        if direct is not None and direct != 0:
-            maxComps.append(direct)
-        if playback is not None and playback != 0:
-            maxComps.append(playback)
-        if group is not None and group != 0:
-            maxComps.append(group)
-        if record is not None:
-            maxComps.append(record)
-        
-        if len(maxComps) == 0:
-            maxComps.append(0)
-        
-        # only show mini labels if 2 or more values set.
-        if len(maxComps) >= 2:
-            self.directValue.set(autoString(direct))
-            self.playBackValue.set(autoString(playback))
-            self.groupValue.set(autoString(group))
-            self.finalValue.set(autoString(record))
+        if [direct,playback,group,record] != self.lastValues:            
+            # figure out how many actual values we got.
+            maxComps = []
+            if direct is not None and direct != 0:
+                maxComps.append(direct)
+            if playback is not None and playback != 0:
+                maxComps.append(playback)
+            if group is not None and group != 0:
+                maxComps.append(group)
+            if record is not None:
+                maxComps.append(record)
             
-        if record is not None:
-            self.finalValue.set(autoString(record))   
-            self.finalValueLabel.config(fg=COLOR_RECORD)             
-        else:                        
-            maxValue = max(item for item in maxComps)
-            self.finalValue.set(autoString(maxValue))
-            if maxValue == 0:
-                self.finalValueLabel.config(fg='black')
-            elif direct == maxValue:
-                self.finalValueLabel.config(fg=COLOR_DIRECT)
-            elif playback == maxValue:
-                self.finalValueLabel.config(fg=COLOR_PLAYBACK)
-            elif group == maxValue:
-                self.finalValueLabel.config(fg=COLOR_GROUP)
+            if len(maxComps) == 0:
+                maxComps.append(0)
             
+            # only show mini labels if 2 or more values set.
+            if len(maxComps) >= 2:
+                self.directValue.set(autoString(direct))
+                self.playBackValue.set(autoString(playback))
+                self.groupValue.set(autoString(group))
+                self.finalValue.set(autoString(record))
                 
-        
+            if record is not None:
+                self.finalValue.set(autoString(record))   
+                self.finalValueLabel.config(fg=COLOR_RECORD)             
+            else:                        
+                maxValue = max(item for item in maxComps)
+                self.finalValue.set(autoString(maxValue))
+                if maxValue == 0:
+                    self.finalValueLabel.config(fg='black')
+                elif direct == maxValue:
+                    self.finalValueLabel.config(fg=COLOR_DIRECT)
+                elif playback == maxValue:
+                    self.finalValueLabel.config(fg=COLOR_PLAYBACK)
+                elif group == maxValue:
+                    self.finalValueLabel.config(fg=COLOR_GROUP)
+            
+        self.lastValues = [direct, playback, group, record]        
     def clearValues(self):
         self.directValue.set(autoString(None))
         self.playBackValue.set(autoString(None))
