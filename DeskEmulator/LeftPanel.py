@@ -31,7 +31,7 @@ class LeftPanel(tk.Frame):
         nxt = CherryButton.CherryButton('Next', self)
         nxt.grid(row=5, column=0, sticky=tk.NSEW)
                 
-        self.buttons = [dbo,back,rel,nxt]
+        self.buttons = [dbo, back, rel, nxt]
         
         grandMaster = SliderPlusButton.SliderPlusButton(30, "GM", self)
         grandMaster.grid(row=0, column=2, rowspan=6)

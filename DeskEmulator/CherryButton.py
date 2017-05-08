@@ -3,10 +3,10 @@ import tkinter as tk
 class CherryButton(tk.Frame):
     def __init__(self, label, *args):
         
-        super().__init__(*args,height=32,width=32)        
+        super().__init__(*args, height=32, width=32)        
         self.configure(bg='black')
         self.button = tk.Button(self, fg='white', bg='black', text=label)        
-        self.button.pack(fill='both',expand=True)
+        self.button.pack(fill='both', expand=True)
         self.label = label
         self.button.bind("<Button-1>", self.buttonDown)
         self.button.bind("<ButtonRelease-1>", self.buttonUp)

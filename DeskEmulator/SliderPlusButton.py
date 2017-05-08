@@ -23,6 +23,7 @@ class SliderPlusButton(tk.Frame):
         
     def getState(self):
         return {self.sliderNum: self.getValue()}  
+    
     def refreshValue(self, val):
         self.sliderValue = val
         

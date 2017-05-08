@@ -37,9 +37,9 @@ class RightPanel(tk.Frame):
                 
                 cherryButton = CherryButton.CherryButton(buttons[y][x], self)
                 if label == 'Enter':
-                    cherryButton.grid(row=y, column=x, columnspan=2,sticky=tk.NSEW)
+                    cherryButton.grid(row=y, column=x, columnspan=2, sticky=tk.NSEW)
                 else:
-                    cherryButton.grid(row=y, column=x,sticky=tk.NSEW)
+                    cherryButton.grid(row=y, column=x, sticky=tk.NSEW)
                 
                 self.buttons.append(cherryButton)
              
