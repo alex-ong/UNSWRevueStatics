@@ -25,11 +25,11 @@ class ChannelWidget(tk.Frame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)    
                 
-        label = tk.Label(self, text=str(self.channel.number).zfill(2), font=('Courier Sans', 20, 'bold'), fg='grey', bg='black')
+        label = tk.Label(self, text=str(self.channel.number).zfill(2), font=('Consolas', 20), fg='grey', bg='black')
         
         self.finalValue = tk.StringVar()
         self.finalValueLabel = self.createButton(self.finalValue, 'white')
-        self.finalValueLabel.config(font=('Courier Sans', 20, 'bold'))
+        self.finalValueLabel.config(font=('Consolas', 20))
         
         self.directValue = tk.StringVar()
         directLabel = self.createButton(self.directValue, COLOR_DIRECT)
@@ -54,7 +54,7 @@ class ChannelWidget(tk.Frame):
         self.updateValues(None, None, None, None)
         
     def createButton(self, stringVar, colour, size=12):
-        return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Courier Sans', 6, 'bold'))
+        return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', 6, 'bold'))
     
     # shows displays sub-values when necessary
     def updateValues(self, direct, playback, group, record):
@@ -62,11 +62,11 @@ class ChannelWidget(tk.Frame):
         
         # figure out how many actual values we got.
         maxComps = []
-        if direct is not None:
+        if direct is not None and direct != 0:
             maxComps.append(direct)
-        if playback is not None:
+        if playback is not None and playback != 0:
             maxComps.append(playback)
-        if group is not None:
+        if group is not None and group != 0:
             maxComps.append(group)
         if record is not None:
             maxComps.append(record)
@@ -87,14 +87,16 @@ class ChannelWidget(tk.Frame):
         else:                        
             maxValue = max(item for item in maxComps)
             self.finalValue.set(autoString(maxValue))
-            if direct == maxValue:
+            if maxValue == 0:
+                self.finalValueLabel.config(fg='black')
+            elif direct == maxValue:
                 self.finalValueLabel.config(fg=COLOR_DIRECT)
             elif playback == maxValue:
                 self.finalValueLabel.config(fg=COLOR_PLAYBACK)
             elif group == maxValue:
                 self.finalValueLabel.config(fg=COLOR_GROUP)
-            else:
-                self.finalValueLabel.config(fg='black')
+            
+                
         
     def clearValues(self):
         self.directValue.set(autoString(None))

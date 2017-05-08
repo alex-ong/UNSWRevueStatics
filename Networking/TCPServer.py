@@ -23,7 +23,7 @@ class ThreadedServer(StoppableThread):
     def run(self):        
         server = socketserver.ThreadingTCPServer((self.target, self.port), MyTCPHandler)
         server.onRecvMessage = self.onRecvMessage
-        print (self.isAlive())
+        
         server.serverThreadAlive = self.isAlive
         server.serve_forever()
         

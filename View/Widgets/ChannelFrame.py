@@ -5,6 +5,7 @@ class ChannelFrame(tk.Frame):
     def __init__(self, channelValues, *args):
         super().__init__(*args)     
         self.configure(bg='black')
+        self.channelWidgets = {}
         
         # setup layout. Groups of 6 with gaps between elements,
         # double gaps between groups.
@@ -16,7 +17,7 @@ class ChannelFrame(tk.Frame):
         layoutIndex = 0
         
         for i in range (len(layout)):
-            self.grid_columnconfigure(i, weight=1,minsize=16)
+            self.grid_columnconfigure(i, weight=0,minsize=16)
             
         while channelIndex < len(channelValues):
             
@@ -29,7 +30,11 @@ class ChannelFrame(tk.Frame):
                 channelIndex += 1
                 cw = ChannelWidget.ChannelWidget(channel, self)
                 cw.grid(row=row, column=col)
-                
+                self.channelWidgets[channelIndex] = cw
             layoutIndex += 1
-        
+                
+    def handleInput(self, dictInput):
+        for key in self.channelWidgets:            
+            if 'slider' + str(key) in dictInput:
+                self.channelWidgets[key].updateValues(dictInput['slider'+str(key)],0,0,None)
         

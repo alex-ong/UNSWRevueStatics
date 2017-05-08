@@ -8,6 +8,7 @@ import RightPanel
 import time
 import asyncio
 import TCPClient
+import json
 
 GUI_REFRESH = 0.01
 
@@ -29,19 +30,21 @@ class DeskEmulator(tk.Frame):
         result = {}
         result.update(self.topPanel.getState())
         result.update(self.leftPanel.getState())
-        result.update(self.rightPanel.getState())
+        result.update(self.rightPanel.getState())        
         return result
     
 class Controller(object):
-    def __init__(self, deskView):
+    def __init__(self, deskView, host='localhost', port=9999):
         self.deskView = deskView        
         self.lastState = self.deskView.getState()
-    
+        self.client = TCPClient.CreateClient(host, port)
+        
     def update(self):
         state = self.deskView.getState()
         if (state != self.lastState):
             print (state)
             self.lastState = state
+            self.client.sendMessage(json.dumps(state))
 
 async def run_tk(root, controller, interval=GUI_REFRESH):
     '''

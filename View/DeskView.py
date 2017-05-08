@@ -19,6 +19,15 @@ class DeskView(tk.Frame):
         self.style = ttk.Style(root)
         self.style.theme_use("winnative")
         
+        self.channelFrame = None
+        
+    #called by model during setup
     def setupChannels(self, channels):
         cf = ChannelFrame.ChannelFrame(channels, self)
         cf.pack()
+        self.channelFrame = cf
+    
+    def handleInput(self, dictInput):
+        self.channelFrame.handleInput(dictInput)
+        
+                
