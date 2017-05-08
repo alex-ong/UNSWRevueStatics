@@ -32,7 +32,7 @@ def defaultFile(targetFile, numFaders, numChannels):
             binding = pageNum * numFaders + x + 1
             if binding > numChannels:
                 break
-            page[x] = binding 
+            page[x+1] = binding 
         result.append(page) 
     result.append({x:'group'+str(x) for x in range(1,numFaders+1)})
     

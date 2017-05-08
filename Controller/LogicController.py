@@ -29,6 +29,7 @@ class LogicController(object):
                 else:
                     self.handleButtonInput(key, self.lastInput[key])
             self.lastInput = {}
+            self.view.refreshDisplay()
             
     def handleSliderInput(self, sliderName, value):
         self.model.handleSliderInput(sliderName,value)

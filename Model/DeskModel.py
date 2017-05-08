@@ -19,8 +19,24 @@ class DeskModel(object):
         self.faderBindings = self.config.readFaderBindings(numFaders, numChannels)
         self.channelValues = ChannelValues.ChannelValues(self.patching)    
         
+        self.currentfaderBinding = self.settings['lastFaderPage'] 
     def Reset(self):
         # get configReader to reset everything, then load everything
         pass
          
-    
+    def handleSliderInput(self, sliderName, value):
+        # get relevant slider
+        bindings = self.faderBindings[self.currentfaderBinding]
+        # get slider number        
+        sliderNumber = int(sliderName.replace('slider', ''))
+        
+        # change value of group or channel
+        toChange = bindings[sliderNumber]
+        
+        # slider bound to channel
+        if isinstance(toChange, int):            
+            self.channelValues[toChange].setDirectValue(value)
+        
+        # slider bound to group
+        else:
+            pass

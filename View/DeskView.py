@@ -30,4 +30,6 @@ class DeskView(tk.Frame):
     def handleInput(self, dictInput):
         self.channelFrame.handleInput(dictInput)
         
+    def refreshDisplay(self):
+        self.channelFrame.refreshDisplay()
                 

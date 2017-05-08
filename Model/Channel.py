@@ -11,7 +11,6 @@ BYTE_MIN = 0
 class Channel(object):
     def __init__(self, number, dmxAddress):
         self.number = number
-        self._dmxValue = 0 #byte value from 0->255
         self._dmxAddress = dmxAddress
         
         self.directValue = 0
@@ -22,20 +21,9 @@ class Channel(object):
     def setDMXAddress(self, newAddress):
         self._dmxAddress = newAddress
              
-    #sets the value immediately.        
-    def setValue(self, dmxValue):
-        dmxValue = max (dmxValue, BYTE_MIN)
-        dmxValue = min (dmxValue, BYTE_MAX)
-        self._dmxValue = dmxValue
-    
-    # perc is a _dmxValue from 0.0 to 1.0
-    def setPerc(self, perc):
-        self.setValue(int(perc * BYTE_MAX))
-
-    # returns a _dmxValue from 0.0 to 1.0          
-    def getPerc(self):
-        return self._dmxValue / float(BYTE_MAX)
-    
+    def setDirectValue(self, value):
+        self.directValue = value
+                
     def getCueValue(self):
         pass
             

@@ -12,19 +12,17 @@ def openFile(targetFile):
     try:
         with open(targetFile, 'r') as f:
             result = json.load(f, object_pairs_hook=collections.OrderedDict)
-        finalResult = {}
-        for key, value in result.items():
-            finalResult[int(key)] = value
-        result = finalResult
     except:
         result = defaultFile(targetFile)
         saveFile(result, targetFile) #turns keys into strings...
         
     return result
  
-
+    
 def defaultFile(targetFile=None):
-    result = {'channels':84,'faders':27}
+    result = {'channels':84,
+              'faders':27,
+              'lastFaderPage': 0}
     saveFile(result, targetFile)
     return result
     
