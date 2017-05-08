@@ -2,7 +2,7 @@ import json
 import Model.Configuration.DMXBindingParser as DMXBindingParser
 import Model.Configuration.FaderBindingParser as FaderBindingParser
 import Model.Configuration.GeneralSettingParser as GeneralSettingParser
-
+import Model.Configuration.GroupBindingParser as GroupBindingParser
 DMX_BINDING = 'dmxBinding'
 SETTING_BINDING = 'settings'
 GROUP_BINDINGS = 'groupBindings'
@@ -62,7 +62,13 @@ class ConfigReader(object):
     
     def writeFaderBindings(self, bindingDict):
         FaderBindingParser.saveFile(bindingDict, self.paths[FADER_BINDINGS]) 
+
+    def readGroupBindings(self, numFaders):
+        return GroupBindingParser.openFile(self.paths[GROUP_BINDINGS], numFaders)
     
+    def writeGroupBindings(self, bindingDict):
+        GroupBindingParser.saveFile(bindingDict, self.paths[GROUP_BINDINGS])
+            
     def readGeneralSettings(self):
         return GeneralSettingParser.openFile(self.paths[SETTING_BINDING])
     

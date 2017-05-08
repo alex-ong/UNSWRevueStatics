@@ -17,6 +17,7 @@ class DeskModel(object):
         
         self.patching = self.config.readDMXBindings(numChannels)
         self.faderBindings = self.config.readFaderBindings(numFaders, numChannels)
+        self.groupBindings = self.config.readGroupBindings(numFaders)
         self.channelValues = ChannelValues.ChannelValues(self.patching)    
         
         self.currentfaderBinding = self.settings['lastFaderPage'] 
