@@ -7,3 +7,16 @@ class CherryButton(tk.Frame):
         self.configure(bg='black')
         self.button = tk.Button(self, fg='white', bg='black', text=label)        
         self.button.pack(fill='both',expand=True)
+        self.label = label
+        self.button.bind("<Button-1>", self.buttonDown)
+        self.button.bind("<ButtonRelease-1>", self.buttonUp)
+        self.isButtonDown = False
+    
+    def getState(self):
+        return {self.label: self.isButtonDown}
+    
+    def buttonDown(self, *args):
+        self.isButtonDown = True
+        
+    def buttonUp(self, *args):
+        self.isButtonDown = False

@@ -11,7 +11,7 @@ buttons = [['<-', '???', '-', '+', '', 'Clear', 'Menu'],
 class RightPanel(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
-        self.sliders = []
+        self.buttons = []
         self.grid_columnconfigure(0, minsize=32)
         self.grid_columnconfigure(1, minsize=32)
         self.grid_columnconfigure(2, minsize=32)
@@ -41,6 +41,10 @@ class RightPanel(tk.Frame):
                 else:
                     cherryButton.grid(row=y, column=x,sticky=tk.NSEW)
                 
-        
+                self.buttons.append(cherryButton)
              
-    
+    def getState(self):
+        result = {}
+        for button in self.buttons:
+            result.update(button.getState())
+        return result
