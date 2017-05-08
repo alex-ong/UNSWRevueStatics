@@ -24,11 +24,15 @@ class Group(object):
         self.directValue = 0
         self.playbackValue = 0
         self.recordValue = 0
-        
+        self.channelMappings = channelMappings
     
         
     def setChannelMappings(self, mappings):
         self.channelMappings = mappings
-             
+    
+    def reset(self):
+        self.directValue = 0
+        self.playbackValue = 0
+        self.recordValue = 0 
     
     

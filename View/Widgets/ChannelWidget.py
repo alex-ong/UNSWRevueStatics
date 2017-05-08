@@ -16,6 +16,7 @@ COLOR_DIRECT = 'yellow'
 COLOR_PLAYBACK = 'green'
 COLOR_GROUP = 'cyan'
 COLOR_RECORD = 'red'
+
 class ChannelWidget(tk.Frame):
     def __init__(self, channel, *args):
         super().__init__(*args)
@@ -63,6 +64,8 @@ class ChannelWidget(tk.Frame):
         group = self.channel.groupValue
         record = self.channel.recordValue
         
+        #todo: change to call channel.getCueValueAndReason()
+        
         if [direct,playback,group,record] != self.lastValues:            
             # figure out how many actual values we got.
             maxComps = []
@@ -85,8 +88,9 @@ class ChannelWidget(tk.Frame):
                 self.groupValue.set(autoString(group))
                 self.finalValue.set(autoString(record))
                 
-            if record is not None:
-                self.finalValue.set(autoString(record))   
+            self.finalValue.set(autoString(self.channel.getCueValue()))
+            
+            if record is not None:                
                 self.finalValueLabel.config(fg=COLOR_RECORD)             
             else:                        
                 maxValue = max(item for item in maxComps)

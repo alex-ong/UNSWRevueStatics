@@ -23,7 +23,15 @@ class Channel(object):
              
     def setDirectValue(self, value):
         self.directValue = value
-                
+        
+    # value that gets pushed out to dmx
     def getCueValue(self):
+        if self.recordValue is not None:
+            return self.recordValue
+        else: #todo: scan through direct,playback,group and do HTP 
+            return self.directValue
+    
+    def getCueValueAndReason(self):
+        # returns the value and either "direct", "playback", "group" or "record"
         pass
-            
+    
