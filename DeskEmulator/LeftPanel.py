@@ -1,6 +1,7 @@
 import tkinter as tk
 import SliderPlusButton
 import CherryButton
+import collections
 
 class LeftPanel(tk.Frame):
     def __init__(self, *args):
@@ -42,7 +43,7 @@ class LeftPanel(tk.Frame):
              
     
     def getState(self):
-        result = {}
+        result = collections.OrderedDict()
         for button in self.buttons:
             result.update(button.getState())
         for slider in self.sliders:

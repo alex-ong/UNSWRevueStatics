@@ -1,5 +1,7 @@
 import tkinter as tk
 import SliderPlusButton
+import collections
+
 
 class TopPanel(tk.Frame):
     def __init__(self, *args):
@@ -15,9 +17,9 @@ class TopPanel(tk.Frame):
             self.sliders.append(sliderPair)
     
     def getState(self):
-        result = {}
+        result = collections.OrderedDict()
 
         for slider in self.sliders:
             result.update(slider.getState())
-            
+        
         return result

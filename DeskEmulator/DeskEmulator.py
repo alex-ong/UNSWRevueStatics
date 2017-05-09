@@ -1,5 +1,6 @@
 import tkinter as tk
 import sys
+from _collections import OrderedDict
 sys.path.append('../Networking')  # hack
 
 import TopPanel
@@ -9,6 +10,7 @@ import time
 import asyncio
 import TCPClient
 import json
+import collections
 
 GUI_REFRESH = 0.01
 
@@ -27,7 +29,7 @@ class DeskEmulator(tk.Frame):
         self.rightPanel.grid(row=1, column=1)
     
     def getState(self):
-        result = {}
+        result = OrderedDict()
         result.update(self.topPanel.getState())
         result.update(self.leftPanel.getState())
         result.update(self.rightPanel.getState())        

@@ -2,6 +2,7 @@ import sys
 
 import Networking.TCPServer as TCPServer
 import json
+import collections
 
 class LogicController(object):
     def __init__(self, model, view, host='localhost', port=9999):
@@ -15,14 +16,13 @@ class LogicController(object):
         
     # called when we receive network input
     def receiveInput(self, msg):
-        self.lastInput = json.loads(msg)        
+        self.lastInput = json.loads(msg,object_pairs_hook=collections.OrderedDict)        
         
     def update(self):  # occurs in main thread/same thread as tkinter
         self.handleInput()        
             
     def handleInput(self):
         if self.lastInput != {}:
-            print (self.lastInput)
             for key in self.lastInput:
                 if key.startswith('slider'):
                     self.handleSliderInput(key, self.lastInput[key])
