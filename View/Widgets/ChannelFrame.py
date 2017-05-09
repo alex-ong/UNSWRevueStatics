@@ -18,9 +18,10 @@ class ChannelFrame(tk.Frame):
         
         for i in range (len(layout)):
             self.grid_columnconfigure(i, weight=0,minsize=16)
-            
-        while channelIndex < len(channelValues):
-            
+                                               
+        channelValues = list(channelValues.values.values())
+        
+        while channelIndex < len(channelValues):        
             col = layoutIndex % len(layout)
             row = layoutIndex // len(layout)
             layoutItem = layout[col]
