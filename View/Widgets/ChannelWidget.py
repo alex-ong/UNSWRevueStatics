@@ -11,11 +11,20 @@ def autoString(value):
         return ('FL')
     else:
         return str(value).zfill(2)
-    
+
+from Model import Channel
+
 COLOR_DIRECT = 'yellow'
 COLOR_PLAYBACK = 'green'
 COLOR_GROUP = 'cyan'
 COLOR_RECORD = 'red'
+COLOR_NONE = 'black'
+
+typeColourMapping = { Channel.ValueType.DIRECT : COLOR_DIRECT,
+                     Channel.ValueType.PLAYBACK : COLOR_PLAYBACK,
+                     Channel.ValueType.GROUP : COLOR_GROUP,
+                     Channel.ValueType.RECORD : COLOR_RECORD,
+                     Channel.ValueType.NONE: COLOR_NONE}
 
 class ChannelWidget(tk.Frame):
     def __init__(self, channel, *args):
@@ -62,9 +71,7 @@ class ChannelWidget(tk.Frame):
         direct = self.channel.directValue
         playback = self.channel.playbackValue
         group = self.channel.groupValue
-        record = self.channel.recordValue
-        
-        #todo: change to call channel.getCueValueAndReason()
+        record = self.channel.recordValue            
         
         if [direct,playback,group,record] != self.lastValues:            
             # figure out how many actual values we got.
@@ -87,24 +94,15 @@ class ChannelWidget(tk.Frame):
                 self.playBackValue.set(autoString(playback))
                 self.groupValue.set(autoString(group))
                 self.finalValue.set(autoString(record))
-                
-            self.finalValue.set(autoString(self.channel.getCueValue()))
             
-            if record is not None:                
-                self.finalValueLabel.config(fg=COLOR_RECORD)             
-            else:                        
-                maxValue = max(item for item in maxComps)
-                self.finalValue.set(autoString(maxValue))
-                if maxValue == 0:
-                    self.finalValueLabel.config(fg='black')
-                elif direct == maxValue:
-                    self.finalValueLabel.config(fg=COLOR_DIRECT)
-                elif playback == maxValue:
-                    self.finalValueLabel.config(fg=COLOR_PLAYBACK)
-                elif group == maxValue:
-                    self.finalValueLabel.config(fg=COLOR_GROUP)
+            (finalValue, reason) = self.channel.getCueValueAndReason() 
             
+            self.finalValue.set(autoString(finalValue))
+            
+            self.finalValueLabel.config(fg=typeColourMapping[reason])
+                    
         self.lastValues = [direct, playback, group, record]        
+    
     def clearValues(self):
         self.directValue.set(autoString(None))
         self.playBackValue.set(autoString(None))
