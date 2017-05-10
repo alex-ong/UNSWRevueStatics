@@ -1,21 +1,21 @@
 '''
 @author: alex-ong
-@date 2017-05-09
+@date 2017-05-10    
 '''
 
 '''
-an array of groups
+an array of Faders
 '''
-import Model.Group as Group
+import Model.Fader as Fader
 from _collections import OrderedDict
 
 
-class GroupValues(object):
-    def __init__(self, groupsConfiguration): 
-        print (groupsConfiguration)       
-        self.values = OrderedDict([(key,Group.Group(key, value['name'], value['channels']))
-                                    for key, value in groupsConfiguration.items()]) 
-        
+
+# an array of Faders
+
+class FaderValues(object):
+    def __init__(self, faderConfiguration):              
+        self.values = OrderedDict([(key, Fader.Fader(key, value)) for key, value in faderConfiguration.items()])
     
     def __iter__(self):
         return iter(self.values)

@@ -5,6 +5,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import View.Widgets.ChannelFrame as ChannelFrame
+import View.Widgets.FaderFrame as FaderFrame
 
 class DeskView(tk.Frame):
     def __init__(self):
@@ -26,7 +27,12 @@ class DeskView(tk.Frame):
         cf = ChannelFrame.ChannelFrame(channels, self)
         cf.pack()
         self.channelFrame = cf
-    
+        
+    def setupFaders(self, faders):
+        ff = FaderFrame.FaderFrame(faders, self)
+        ff.pack()
+        self.channelFrame = ff
+        
     def handleInput(self, dictInput):
         self.channelFrame.handleInput(dictInput)
         

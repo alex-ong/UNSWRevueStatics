@@ -10,13 +10,15 @@ class LogicController(object):
         self.view = view
     
         self.view.setupChannels(model.channelValues)
+        self.view.setupFaders(model.faderValues)
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
         
         self.lastInput = {}
         
     # called when we receive network input
     def receiveInput(self, msg):
-        self.lastInput = json.loads(msg,object_pairs_hook=collections.OrderedDict)        
+        # NB: don't use orderedDict if it runs too slowly
+        self.lastInput = json.loads(msg, object_pairs_hook=collections.OrderedDict)        
         
     def update(self):  # occurs in main thread/same thread as tkinter
         self.handleInput()        
@@ -32,7 +34,7 @@ class LogicController(object):
             self.view.refreshDisplay()
             
     def handleSliderInput(self, sliderName, value):
-        self.model.handleSliderInput(sliderName,value)
+        self.model.handleSliderInput(sliderName, value)
     
     def handleButtonInput(self, buttonName, value):
         pass

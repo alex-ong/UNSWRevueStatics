@@ -3,7 +3,11 @@
 @date 2017-05-07
 '''
 from Model import ChannelValues
+from Model import GroupValues
+from Model import FaderValues
+
 import Model.Configuration.ConfigReader as ConfigReader
+from _collections import OrderedDict
 
 
 
@@ -19,8 +23,12 @@ class DeskModel(object):
         self.faderBindings = self.config.readFaderBindings(numFaders, numChannels)
         self.groupBindings = self.config.readGroupBindings(numFaders)
         self.channelValues = ChannelValues.ChannelValues(self.patching)    
+        self.groupValues = GroupValues.GroupValues(self.groupBindings)
         
         self.currentfaderBinding = self.settings['lastFaderPage'] 
+        self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
+        
+            
     def Reset(self):
         # get configReader to reset everything, then load everything
         pass
@@ -41,3 +49,19 @@ class DeskModel(object):
         # slider bound to group
         else:
             pass
+    
+    def getFaderBindings(self):
+        bindings = self.faderBindings[self.currentfaderBinding]
+        result = OrderedDict()       
+        
+        for key, value in bindings.items():  # assume ordered dict.            
+            if isinstance(value, int):
+                result[key] = self.channelValues[value]
+            elif 'group' in value:  # bind the group
+                groupNumber = int(value.replace('group', ''))  
+                result[key] = self.groupValues[groupNumber]
+            else:
+                print ("Error with fader bindings...")
+                
+        return result
+    

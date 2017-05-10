@@ -14,14 +14,14 @@ def openFile(targetFile):
             result = json.load(f, object_pairs_hook=collections.OrderedDict)
     except:
         result = defaultFile(targetFile)
-        saveFile(result, targetFile) #turns keys into strings...
+        saveFile(result, targetFile)  # turns keys into strings...
         
     return result
  
     
 def defaultFile(targetFile=None):
-    result = {'channels':84,
-              'faders':27,
+    result = {'channels':DEFAULT_CHANNELS,
+              'faders':DEFAULT_FADERS,
               'lastFaderPage': 0}
     saveFile(result, targetFile)
     return result
@@ -29,7 +29,7 @@ def defaultFile(targetFile=None):
 def saveFile(bindings, targetFile):
     try:
         with open(targetFile, 'w') as f:
-            json.dump(bindings, f, indent=4,sort_keys=True)
+            json.dump(bindings, f, indent=4, sort_keys=True)
     except:
         print ("Error saving binding file to", targetFile)
     
