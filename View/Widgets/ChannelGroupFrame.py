@@ -1,11 +1,11 @@
 import tkinter as tk
-import View.Widgets.ChannelWidget as ChannelWidget
 
-class ChannelFrame(tk.Frame):
-    def __init__(self, channelValues, *args):
+
+class ChannelGroupFrame(tk.Frame):
+    def __init__(self, values, WidgetType, *args):
         super().__init__(*args)     
         self.configure(bg='black')
-        self.channelWidgets = {}
+        self.widgets = {}
         
         # setup layout. Groups of 6 with gaps between elements,
         # double gaps between groups.
@@ -13,29 +13,29 @@ class ChannelFrame(tk.Frame):
         layout = "  ".join(layout)
         layout = ' ' + layout + ' '                
         
-        channelIndex = 0
+        itemIndex = 0
         layoutIndex = 0
         
         for i in range (len(layout)):
             self.grid_columnconfigure(i, weight=0,minsize=16)
                                                
-        channelValues = list(channelValues.values.values())
+        values = list(values.values.values())
         
-        while channelIndex < len(channelValues):        
+        while itemIndex < len(values):        
             col = layoutIndex % len(layout)
             row = layoutIndex // len(layout)
             layoutItem = layout[col]
             
             if layoutItem == 'x':
-                channel = channelValues[channelIndex]
-                channelIndex += 1
-                cw = ChannelWidget.ChannelWidget(channel, self)
+                value = values[itemIndex]
+                itemIndex += 1
+                cw = WidgetType(value, self)
                 cw.grid(row=row, column=col)
-                self.channelWidgets[channelIndex] = cw
+                self.widgets[itemIndex] = cw
             layoutIndex += 1
                 
     def refreshDisplay(self):
-        for widget in self.channelWidgets.values():
+        for widget in self.widgets.values():
             widget.refreshDisplay()
     
         

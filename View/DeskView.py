@@ -4,8 +4,11 @@
 '''
 import tkinter as tk
 import tkinter.ttk as ttk
-import View.Widgets.ChannelFrame as ChannelFrame
 import View.Widgets.FaderFrame as FaderFrame
+
+from View.Widgets.ChannelWidget import ChannelWidget
+from View.Widgets.GroupWidget import GroupWidget
+from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
 
 class DeskView(tk.Frame):
     def __init__(self):
@@ -21,17 +24,24 @@ class DeskView(tk.Frame):
         self.style.theme_use("winnative")
         
         self.channelFrame = None
+        self.groupFrame = None
+        self.faderFrame = None
         
-    #called by model during setup
+    # called by model during setup
     def setupChannels(self, channels):
-        cf = ChannelFrame.ChannelFrame(channels, self)
+        cf = ChannelGroupFrame(channels, ChannelWidget, self)
         cf.pack()
         self.channelFrame = cf
         
-    def setupFaders(self, faders):
-        ff = FaderFrame.FaderFrame(faders, self)
+    def setupGroups(self, groups):
+        gf = ChannelGroupFrame(groups, GroupWidget, self)
+        gf.pack()
+        self.groupFrame = gf
+        
+    def setupFaders(self, faders, faderLayout=[19, 8]):        
+        ff = FaderFrame.FaderFrame(faders, faderLayout, self)
         ff.pack()
-        self.channelFrame = ff
+        self.faderFrame = ff
         
     def handleInput(self, dictInput):
         self.channelFrame.handleInput(dictInput)

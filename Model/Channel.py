@@ -20,6 +20,7 @@ class ValueType(Enum):
 class Channel(object):
     def __init__(self, number, dmxAddress):
         self.number = number
+        self.label = str(number)
         self._dmxAddress = dmxAddress
         
         self.directValue = 0
