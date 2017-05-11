@@ -68,7 +68,7 @@ class GroupWidget(tk.Frame):
         self.refreshDisplay()
         
     def createButton(self, stringVar, colour, size=12):
-        return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', 6, 'bold'))    
+        return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', 8, 'bold'))    
     
     def refreshDisplay(self):    
         direct = self.group.directValue

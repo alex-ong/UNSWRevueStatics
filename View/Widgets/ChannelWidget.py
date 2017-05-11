@@ -56,8 +56,8 @@ class ChannelWidget(tk.Frame):
         
         row = 0
         if showLabel:
-            labelString = self.channel.label
-            subLabel = tk.Label(self, text=labelString, font=('Consolas', 8), fg=COLOR_DIRECT, bg='black')
+            labelString = 'Ch' + self.channel.label.zfill(2)
+            subLabel = tk.Label(self, text=labelString, font=('Consolas', 10), fg=COLOR_DIRECT, bg='black')
             subLabel.grid(row=row, columnspan=2)        
             row += 1
         label.grid(row=row, columnspan=2)        
@@ -72,8 +72,8 @@ class ChannelWidget(tk.Frame):
         self.lastValues = []        
         self.refreshDisplay()
         
-    def createButton(self, stringVar, colour, size=12):
-        return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', 6, 'bold'))
+    def createButton(self, stringVar, colour):
+        return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', 8, 'bold'))
     
     def getNonZeroCount(self, direct, playback, group, record):
         # figure out how many actual values we got.
