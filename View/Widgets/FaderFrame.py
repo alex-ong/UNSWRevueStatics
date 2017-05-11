@@ -12,14 +12,15 @@ class FaderFrame(tk.Frame):
         layout = []
         
         for row in faderLayout:
-            layout.append(' '.join('x' for i in range(row)))
-                                
+            rowLayout = ' '.join('x' for i in range(row))            
+            layout.append(' ' + rowLayout + ' ')
+                                    
         faderIndex = 0
         col = 0
         row = 0
         
         for i in range (len(layout[0])):
-            self.grid_columnconfigure(i, weight=0,minsize=16)                                     
+            self.grid_columnconfigure(i, weight=0, minsize=16)                                     
              
         faderValues = list(faderValues.values.values())    
                 

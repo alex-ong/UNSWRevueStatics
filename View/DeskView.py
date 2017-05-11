@@ -13,9 +13,10 @@ from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
 class DeskView(tk.Frame):
     def __init__(self):
         root = tk.Tk()
-        root.geometry('1400x500')
+        root.geometry('1400x700') #todo: scale to screen rez
         super().__init__(root)
-        self.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        #root.overrideredirect(True) # change to windowless border        
+        self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         root.wm_title("UNSW Revue Statics")
         
@@ -30,17 +31,18 @@ class DeskView(tk.Frame):
     # called by model during setup
     def setupChannels(self, channels):
         cf = ChannelGroupFrame(channels, ChannelWidget, self)
-        cf.pack()
+        cf.grid()
         self.channelFrame = cf
         
     def setupGroups(self, groups):
         gf = ChannelGroupFrame(groups, GroupWidget, self)
-        gf.pack()
+        gf.grid()
         self.groupFrame = gf
         
+    #todo: change faderLayout to "x x x  x" layout 
     def setupFaders(self, faders, faderLayout=[19, 8]):        
         ff = FaderFrame.FaderFrame(faders, faderLayout, self)
-        ff.pack()
+        ff.grid()
         self.faderFrame = ff
         
     def handleInput(self, dictInput):
@@ -48,4 +50,5 @@ class DeskView(tk.Frame):
         
     def refreshDisplay(self):
         self.channelFrame.refreshDisplay()
+        self.faderFrame.refreshDisplay()
                 

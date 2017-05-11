@@ -14,34 +14,29 @@ def autoString(value):
 
 from Model import Channel
 
-COLOR_DIRECT = 'yellow'
-COLOR_PLAYBACK = 'green'
-COLOR_GROUP = 'cyan'
-COLOR_RECORD = 'red'
-COLOR_NONE = 'black'
+from View.Widgets.ChannelWidget import COLOR_DIRECT
+from View.Widgets.ChannelWidget import COLOR_GROUP
+from View.Widgets.ChannelWidget import COLOR_PLAYBACK
+from View.Widgets.ChannelWidget import COLOR_RECORD
+from View.Widgets.ChannelWidget import COLOR_NONE 
 
-typeColourMapping = { Channel.ValueType.DIRECT : COLOR_DIRECT,
-                     Channel.ValueType.PLAYBACK : COLOR_PLAYBACK,
-                     Channel.ValueType.GROUP : COLOR_GROUP,
-                     Channel.ValueType.RECORD : COLOR_RECORD,
-                     Channel.ValueType.NONE: COLOR_NONE}
-import Model.Channel
-import Model.Group
+
+
+from View.Widgets.ChannelWidget import typeColourMapping
+
 
 class GroupWidget(tk.Frame):
-    def __init__(self, group, *args):
+    def __init__(self, group, showLabel, *args):
         super().__init__(*args)
         self.group = group
         self.config(bg='black')
         
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)                    
-        
-        labelColor = COLOR_PLAYBACK        
+                    
         labelString = group.label        
                     
         label = tk.Label(self, text=str(self.group.number).zfill(2), font=('Consolas', 20), fg='grey', bg='black')
-        subLabel = tk.Label(self, text=labelString, font=('Consolas', 10), fg=labelColor,bg='black')
         
         self.finalValue = tk.StringVar()
         self.finalValueLabel = self.createButton(self.finalValue, 'white')
@@ -55,8 +50,10 @@ class GroupWidget(tk.Frame):
                     
         self.recordValue = tk.StringVar()  # no record label since it overrides everything        
         
-        row = 0
-        subLabel.grid(row=row,columnspan=2)                      
+        row = 0    
+        labelString = labelString[:6]
+        subLabel = tk.Label(self, text=self.group.label, font=('Consolas', 10), fg=COLOR_GROUP, bg='black')
+        subLabel.grid(row=row, columnspan=2)                      
         row += 1                
         label.grid(row=row, columnspan=2)  
         row += 1
@@ -64,6 +61,9 @@ class GroupWidget(tk.Frame):
         row += 1        
         directLabel.grid(row=row, column=0)
         playbackLabel.grid(row=row, column=1)
+        row += 1 #put in black group-label to make this widget line up to channel widget
+        groupLabel = self.createButton(None, COLOR_NONE)
+        groupLabel.grid(row=row,columnspan=2)
         self.lastValues = []        
         self.refreshDisplay()
         
@@ -75,8 +75,8 @@ class GroupWidget(tk.Frame):
         playback = self.group.playbackValue        
         record = self.group.recordValue            
         
-        if [direct,playback,record] != self.lastValues:            
             # figure out how many actual values we got.
+        if [direct, playback, record] != self.lastValues:            
             maxComps = []
             if direct is not None and direct != 0:
                 maxComps.append(direct)

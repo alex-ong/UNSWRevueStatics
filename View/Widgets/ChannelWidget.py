@@ -6,17 +6,19 @@ import tkinter as tk
 
 def autoString(value):        
     if value is None:
-        return ''
+        return ''    
     elif value == 100:
         return ('FL')
+    elif value == 0:
+        return ''
     else:
         return str(value).zfill(2)
 
 from Model import Channel
 
 COLOR_DIRECT = 'yellow'
-COLOR_PLAYBACK = 'green'
-COLOR_GROUP = 'cyan'
+COLOR_PLAYBACK = 'cyan'
+COLOR_GROUP = '#00ff00'
 COLOR_RECORD = 'red'
 COLOR_NONE = 'black'
 
@@ -27,7 +29,7 @@ typeColourMapping = { Channel.ValueType.DIRECT : COLOR_DIRECT,
                      Channel.ValueType.NONE: COLOR_NONE}
 
 class ChannelWidget(tk.Frame):
-    def __init__(self, channel, *args):
+    def __init__(self, channel, showLabel, *args):
         super().__init__(*args)
         self.channel = channel
         self.config(bg='black')
@@ -35,7 +37,7 @@ class ChannelWidget(tk.Frame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)    
                 
-        label = tk.Label(self, text=str(self.channel.number).zfill(2), font=('Consolas', 20), fg='grey', bg='black')
+        label = tk.Label(self, text=str(self.channel.number).zfill(2), font=('Consolas', 20), fg='grey', bg='black')        
         
         self.finalValue = tk.StringVar()
         self.finalValueLabel = self.createButton(self.finalValue, 'white')
@@ -53,8 +55,14 @@ class ChannelWidget(tk.Frame):
         self.recordValue = tk.StringVar()  # no record label since it overrides everything        
         
         row = 0
-        label.grid(row=row, columnspan=2)
-        row += 1        
+        if showLabel:
+            labelString = self.channel.label
+            subLabel = tk.Label(self, text=labelString, font=('Consolas', 8), fg=COLOR_DIRECT, bg='black')
+            subLabel.grid(row=row, columnspan=2)        
+            row += 1
+        label.grid(row=row, columnspan=2)        
+        row += 1
+        
         self.finalValueLabel.grid(row=row, columnspan=2)
         row += 1        
         directLabel.grid(row=row, column=0)
@@ -67,34 +75,36 @@ class ChannelWidget(tk.Frame):
     def createButton(self, stringVar, colour, size=12):
         return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', 6, 'bold'))
     
+    def getNonZeroCount(self, direct, playback, group, record):
+        # figure out how many actual values we got.
+        maxComps = []
+        if direct is not None and direct != 0:
+            maxComps.append(direct)
+        if playback is not None and playback != 0:
+            maxComps.append(playback)
+        if group != 0:
+            maxComps.append(group)
+        
+        return len(maxComps)
+        
     def refreshDisplay(self):
         direct = self.channel.directValue
         playback = self.channel.playbackValue
-        group = self.channel.groupValue
+        group = self.channel.getGroupValue()
         record = self.channel.recordValue            
         
-        if [direct,playback,group,record] != self.lastValues:            
-            # figure out how many actual values we got.
-            maxComps = []
-            if direct is not None and direct != 0:
-                maxComps.append(direct)
-            if playback is not None and playback != 0:
-                maxComps.append(playback)
-            if group is not None and group != 0:
-                maxComps.append(group)
-            if record is not None:
-                maxComps.append(record)
-            
-            if len(maxComps) == 0:
-                maxComps.append(0)
-            
-            # only show mini labels if 2 or more values set.
-            if len(maxComps) >= 2:
+        if [direct, playback, group, record] != self.lastValues:
+            self.clearValues()
+            if record is not None:  # show any non-zeroes if record isn't None                 
                 self.directValue.set(autoString(direct))
-                self.playBackValue.set(autoString(playback))
                 self.groupValue.set(autoString(group))
-                self.finalValue.set(autoString(record))
-            
+                self.playback.set(autoString(playback))                
+            elif self.getNonZeroCount(direct, playback, group, record) >= 2: 
+                # show if there are at least two non-zeroes
+                self.directValue.set(autoString(direct))
+                self.groupValue.set(autoString(group))
+                self.playBackValue.set(autoString(playback))                
+                        
             (finalValue, reason) = self.channel.getCueValueAndReason() 
             
             self.finalValue.set(autoString(finalValue))

@@ -23,7 +23,7 @@ class DeskModel(object):
         self.faderBindings = self.config.readFaderBindings(numFaders, numChannels)
         self.groupBindings = self.config.readGroupBindings(numFaders)
         self.channelValues = ChannelValues.ChannelValues(self.patching)    
-        self.groupValues = GroupValues.GroupValues(self.groupBindings)
+        self.groupValues = GroupValues.GroupValues(self.groupBindings, self.channelValues)
         
         self.currentfaderBinding = self.settings['lastFaderPage'] 
         self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
@@ -41,14 +41,13 @@ class DeskModel(object):
         
         # change value of group or channel
         toChange = bindings[sliderNumber]
-        
-        # slider bound to channel
-        if isinstance(toChange, int):            
-            self.channelValues[toChange].setDirectValue(value)
-        
-        # slider bound to group
-        else:
-            pass
+                
+        if isinstance(toChange, int):  # slider bound to channel            
+            self.channelValues[toChange].setDirectValue(value)                
+        else:  # slider bound to group
+            groupNumber = int(toChange.replace('group', ''))
+            self.groupValues[groupNumber].setDirectValue(value)
+            
     
     def getFaderBindings(self):
         bindings = self.faderBindings[self.currentfaderBinding]

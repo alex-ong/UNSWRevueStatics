@@ -25,7 +25,7 @@ class Channel(object):
         
         self.directValue = 0
         self.playbackValue = None
-        self.groupValue = None
+        self._groupValue = {}
         self.recordValue = None        
         
     def setDMXAddress(self, newAddress):
@@ -33,6 +33,22 @@ class Channel(object):
              
     def setDirectValue(self, value):
         self.directValue = value
+    
+    def setGroupValue(self, groupNumber, value):
+        if value == 0:
+            try:
+                del self._groupValue[groupNumber]
+            except:
+                pass
+        else:
+            self._groupValue[groupNumber] = value
+            
+    def getGroupValue(self):
+        if self._groupValue == {}:
+            return 0
+        else:
+            values = self._groupValue.values()
+            return max(values)            
         
     # value that gets pushed out to dmx
     def getCueValue(self):
@@ -51,8 +67,9 @@ class Channel(object):
                 values.append(self.directValue)
             if self.playbackValue is not None and self.playbackValue > 0:
                 values.append(self.playbackValue)
-            if self.groupValue is not None and self.groupValue > 0:
-                values.append(self.groupValue)
+            groupValue = self.getGroupValue() 
+            if groupValue > 0:
+                values.append(groupValue)
             
             maxValue = max(values)
             if maxValue == 0:
@@ -61,7 +78,7 @@ class Channel(object):
                 return self.directValue, ValueType.DIRECT
             elif maxValue == self.playbackValue:
                 return self.playbackValue, ValueType.PLAYBACK
-            elif maxValue == self.groupValue:
-                return self.groupValue, ValueType.GROUP
+            elif maxValue == groupValue:
+                return groupValue, ValueType.GROUP
             
                         

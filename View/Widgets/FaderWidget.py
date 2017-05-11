@@ -38,9 +38,9 @@ class FaderWidget(tk.Frame):
         self.binding = self.fader.getBinding()
         
         if self.bindingIsChannel():
-            self.subWidget = ChannelWidget(self.binding,self)
-        else: #self.bindingIsGroup():
-            self.subWidget = GroupWidget(self.binding,self)            
+            self.subWidget = ChannelWidget(self.binding, True, self)
+        else:  # self.bindingIsGroup():
+            self.subWidget = GroupWidget(self.binding, True, self)            
         self.subWidget.pack()
         
     def bindingIsChannel(self):

@@ -11,20 +11,29 @@ name, channels:maxValue bindings.
 # a group. A mapping for some number of channels and their max value.
 
 from Model.Channel import ValueType
+import math
 
 class Group(object):
     def __init__(self, number, label, channelMappings):
-        self.number = number
+        self.number = number        
         if label is None:
             label = "Group " + str(self.number)
-        self.label = label
-        self.perc = 0
+        self.label = label        
         
         self.directValue = 0
         self.playbackValue = None
         self.recordValue = None
         self.channelMappings = channelMappings
     
+        
+    def setDirectValue(self, value):
+        self.directValue = value
+        self.propagateValue()
+    
+    def propagateValue(self):
+        value = self.getCueValueAndReason()[0]
+        for channel, proportion in self.channelMappings:
+            channel.setGroupValue(self.number, round(value*proportion/100)) #TODO THIS
         
     def setChannelMappings(self, mappings):
         self.channelMappings = mappings
