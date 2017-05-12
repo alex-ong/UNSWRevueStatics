@@ -20,7 +20,7 @@ class FaderFrame(tk.Frame):
         row = 0
         
         for i in range (len(layout[0])):
-            self.grid_columnconfigure(i, weight=0, minsize=16)                                     
+            self.grid_columnconfigure(i, weight=1, minsize=16)                                     
         
         # title bar
         title = tk.Label(self, text='Faders', bg='grey', font=('consolas', 16, 'bold'))

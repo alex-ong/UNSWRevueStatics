@@ -14,6 +14,7 @@ class DeskView(tk.Frame):
     def __init__(self):
         root = tk.Tk()
         root.geometry('1400x700') #todo: scale to screen rez
+        root.config(bg='red')
         super().__init__(root)
         #root.overrideredirect(True) # change to windowless border        
         self.grid(sticky=tk.NSEW)
@@ -23,6 +24,8 @@ class DeskView(tk.Frame):
         # this stops widgets using style elements overwriting other widgets also using styles
         self.style = ttk.Style(root)
         self.style.theme_use("winnative")
+        
+        self.columnconfigure(0,weight=1)
         
         self.channelFrame = None
         self.groupFrame = None
