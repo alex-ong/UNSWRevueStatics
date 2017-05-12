@@ -31,18 +31,18 @@ class DeskView(tk.Frame):
     # called by model during setup
     def setupChannels(self, channels):
         cf = ChannelGroupFrame(channels, ChannelWidget, self)
-        cf.grid()
+        cf.grid(sticky=tk.NSEW)
         self.channelFrame = cf
         
     def setupGroups(self, groups):
         gf = ChannelGroupFrame(groups, GroupWidget, self)
-        gf.grid()
+        gf.grid(sticky=tk.NSEW)
         self.groupFrame = gf
         
     #todo: change faderLayout to "x x x  x" layout 
-    def setupFaders(self, faders, faderLayout=[19, 8]):        
+    def setupFaders(self, faders, faderLayout=[18, 9]):        
         ff = FaderFrame.FaderFrame(faders, faderLayout, self)
-        ff.grid()
+        ff.grid(sticky=tk.NSEW)
         self.faderFrame = ff
         
     def handleInput(self, dictInput):

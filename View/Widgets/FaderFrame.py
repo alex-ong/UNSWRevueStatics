@@ -21,9 +21,13 @@ class FaderFrame(tk.Frame):
         
         for i in range (len(layout[0])):
             self.grid_columnconfigure(i, weight=0, minsize=16)                                     
-             
+        
+        # title bar
+        title = tk.Label(self, text='Faders', bg='grey', font=('consolas', 16, 'bold'))
+        title.grid(row=row, columnspan=len(layout[0]), sticky=tk.NSEW)        
+        
         faderValues = list(faderValues.values.values())    
-                
+
         while faderIndex < len(faderValues):        
             if col >= len(layout[row]):
                 col = 0
@@ -35,7 +39,7 @@ class FaderFrame(tk.Frame):
                 channel = faderValues[faderIndex]
                 faderIndex += 1
                 cw = FaderWidget.FaderWidget(channel, self)
-                cw.grid(row=row, column=col)
+                cw.grid(row=row + 1, column=col)
                 self.widgets[faderIndex] = cw
             col += 1
                 

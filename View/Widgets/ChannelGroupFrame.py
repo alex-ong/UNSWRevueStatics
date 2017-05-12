@@ -22,7 +22,7 @@ class ChannelGroupFrame(tk.Frame):
         
         # setup layout. Groups of 6 with gaps between elements,
         # double gaps between groups.
-        print (WidgetType)
+        
         if WidgetType == GroupWidget:
             layout = GroupLayout()
         elif WidgetType == ChannelWidget:
@@ -36,6 +36,10 @@ class ChannelGroupFrame(tk.Frame):
                                                
         values = list(values.values.values())
         
+        # title bar
+        title = tk.Label(self, text='Channels',bg='grey', font=('consolas',16,'bold'))
+        title.grid(row=0,columnspan=len(layout),sticky=tk.NSEW)
+        
         while itemIndex < len(values):        
             col = layoutIndex % len(layout)
             row = layoutIndex // len(layout)
@@ -45,7 +49,7 @@ class ChannelGroupFrame(tk.Frame):
                 value = values[itemIndex]
                 itemIndex += 1
                 cw = WidgetType(value, False, self)
-                cw.grid(row=row, column=col)
+                cw.grid(row=row + 1, column=col)
                 self.widgets[itemIndex] = cw
             layoutIndex += 1
                 
