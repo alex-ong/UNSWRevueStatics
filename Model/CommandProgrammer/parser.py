@@ -109,7 +109,7 @@ class operator_at_token:
     def led(self, left):
         # you an only use left if you are selecting groups/channels
         if isinstance(left, SortedSet):
-            if not subContainsList(left, [FADER,CUE]):
+            if not subContainsList(left, [FADER, CUE]):
                 right = expression(5)
                 return evaluate_at_value(left, right)       
         raise ValueError('@ can only be called with Channels and Groups!')
@@ -250,8 +250,9 @@ def safeParse(program):
     except Exception as e:        
         return str(e)
     
+# we could use this function in future to provide auto-complete features...
 def validOperators(program):
-    #TODO: complete this...    
+    # TODO: complete this...    
     if len(program) == 0:
         return [AT, RECORD, GROUP, CUE, CHANNEL]
     elif program[0] == RECORD:  # program starts with @
@@ -265,15 +266,15 @@ def validOperators(program):
     elif AT in program:  # we are at [expression] @ number
         return [NUMBER]
     
-#e.g. checks if options('GROUP','FADER') are inside ['GROUP1','GROUP2'] etcc
+# e.g. checks if options('GROUP','FADER') are inside ['GROUP1','GROUP2'] etcc
 def subContainsList(items, options):
     for item in items:
-        result = subContains(item,options)
+        result = subContains(item, options)
         if result is not None:
             return result
     return None
 
-#e.g. checks if options('GROUP','FADER') are inside 'GROUP1' etc        
+# e.g. checks if options('GROUP','FADER') are inside 'GROUP1' etc        
 def subContains(item, options):
     for option in options:
         if option in item:
@@ -286,9 +287,9 @@ if __name__ == '__main__':
     print(parse(program))
     program = [RECORD, CHANNEL, '13']    
     print(parse(program))
-    program = [RECORD, CHANNEL, '13','.','1']    
+    program = [RECORD, CHANNEL, '13', '.', '1']    
     print(safeParse(program))
-    program = [RECORD, CHANNEL, '100','.']
+    program = [RECORD, CHANNEL, '100', '.']
     print(safeParse(program))
     program = [RECORD, GROUP, '1', THRU, GROUP, '10']    
     print(safeParse(program))
@@ -300,9 +301,9 @@ if __name__ == '__main__':
     print(parse(program))
     program = [CHANNEL, '20']
     print(parse(program))
-    program = [CUE, '1','.','100']
+    program = [CUE, '1', '.', '100']
     print(parse(program))
-    program = [DELETE, CUE, '1','.','100']
+    program = [DELETE, CUE, '1', '.', '100']
     print(parse(program))
-    program = [CUE,'1',AT,'100']
+    program = [CUE, '1', AT, '100']
     print(safeParse(program))

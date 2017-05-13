@@ -4,13 +4,6 @@
 
 Our parser outputs Commands which the Model can interpret
 '''
-
-from enum import Enum
-class CommandType(Enum):
-    SET_SELECTION = 1 #set channels or groups selected
-    SET_VALUE = 2 #set currently selected channels/groups to value
-    SET_SELECTION_AND_VALUE = 3 #do SET_SELECTION followed by SET_VALUE
-    RECORD = 3 #record cue, bind group to fader, bind channel to group
     
 class AbstractCommand():
     def __init__(self):
