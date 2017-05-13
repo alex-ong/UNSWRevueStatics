@@ -8,8 +8,9 @@ http://effbot.org/zone/simple-top-down-parsing.htm
 '''
 
 from libs.sorted_containers.sortedset import SortedSet
-from test.test_typechecks import Integer
 from Model.CommandProgrammer.Command import SelectCommand
+from libs.string_decimal import string_decimal
+
 token = None
 tokenGenerator = None
 import re
@@ -19,7 +20,9 @@ import Model.CommandProgrammer.Command as Command
 def expression(rbp=0):
     global token, tokenGenerator
     t = token
+    
     token = next(tokenGenerator)
+    
     left = t.nud()
     while rbp < token.lbp:
         t = token
@@ -28,12 +31,46 @@ def expression(rbp=0):
     return left
 
 
-class value_token:
+class value_token:  # basically just numbers
     def __init__(self, value):
-        self.value = value        
+        self.value = int(value)        
     def nud(self):
         return self.value
     
+class abstract_operator_cgf_token:  # Channel/Group/Fader
+    lbp = 90
+    def getStartString(self):
+        return ''    
+    def nud(self):
+        right = expression(90)
+        if self.validateRight(right):
+            return SortedSet([self.getStartString() + str(right)])    
+    def validateRight(self, value):        
+        if tryParseInt(value):        
+            return True
+        raise ValueError('Expected integer after ' + self.getStartString())
+    
+class operator_channel_token(abstract_operator_cgf_token):
+    def getStartString(self):
+        return CHANNEL
+
+class operator_group_token(abstract_operator_cgf_token):
+    def getStartString(self):
+        return GROUP    
+
+class operator_fader_token(abstract_operator_cgf_token):
+    def getStartString(self):
+        return FADER        
+
+class operator_cue_token():
+    def getStartString(self):
+        return CUE
+    def nud(self):
+        right = expression(90)    
+        if (isinstance(right, int) or 
+            isinstance(right, string_decimal)):
+            return SortedSet([self.getStartString() + str(right)])        
+
 class collection_token:
     def __init__(self, value):
         self.value = SortedSet([value])        
@@ -57,7 +94,16 @@ class operator_thru_token:
     def led(self, left):
         right = expression(20)
         return evaluate_thru_value(left, right)
-    
+
+class operator_decimal_token:
+    lbp = 100
+    def led(self, left):
+        if isinstance(left, int):
+            right = expression(5)
+            if isinstance(right, int):                
+                return string_decimal(left, right)        
+        raise ValueError('Decimal point only applicable with numbers!')
+     
 class operator_at_token:
     lbp = 10
     def led(self, left):
@@ -110,11 +156,8 @@ def evaluate_record_value(right):
             raise ValueError('Record expects a SINGLE cue, group or fader!')
         else:
             return Command.RecordCommand(right[0])
-    elif isinstance(right, str):
-        if 'Cue' not in right:
-            raise ValueError('Expected a cue, group or fader!')
-        else:
-            return Command.RecordCommand(right)
+    else:
+        raise ValueError('Record expects a Cue, Group, or Fader')
         
 class end_token:
     lbp = 0
@@ -135,7 +178,8 @@ FADER = 'Fader'
 AT = '@'
 PLUS = '+'
 MINUS = '-'
-
+NUMBER = 'Number'
+DECIMAL = '.'
     
 # tokenizer. Convert from list of strings to tokens
 def tokenize(program):
@@ -151,13 +195,15 @@ def tokenize(program):
         elif THRU == token:
             yield operator_thru_token()
         elif GROUP in token:
-            yield collection_token(token)
+            yield operator_group_token()
         elif CHANNEL in token:
-            yield collection_token(token)
+            yield operator_channel_token()
         elif CUE in token:
-            yield value_token(token)
+            yield operator_cue_token()
         elif FADER in token:
-            yield value_token(token)
+            yield operator_fader_token()
+        elif DECIMAL == token:
+            yield operator_decimal_token()
         elif tryParseInt(token):
             yield value_token(token)
         else:        
@@ -169,8 +215,8 @@ def parse(program):
     tokenGenerator = tokenize(program)
     token = next(tokenGenerator)
     result = expression()
-    #final check. If it's a set, we issue a selection
-    if isinstance(result,SortedSet):
+    # final check. If it's a set, we issue a selection
+    if isinstance(result, SortedSet):
         return SelectCommand(result)
     else:
         return result
@@ -179,36 +225,51 @@ def safeParse(program):
     try:
         printout = parse(program)
         return printout
+    except StopIteration:
+        return 'Expression not finished'
     except Exception as e:        
         return str(e)
     
 def validOperators(program):    
     if len(program) == 0:
-        return ['@', 'record', 'Group', 'Chan', 'Cue']
-    elif program[0] == 'record':
+        return [AT, RECORD, GROUP, CUE, CHANNEL]
+    elif program[0] == RECORD:  # program starts with @
         if len(program) == 1:
-            return ['Group', 'Chan', 'Cue', 'Fader']
-        else:
-            return []
-    elif program[-1] == '@':
-        return ['number']
-    else:
-        pass
+            return [GROUP, CHANNEL, CUE, FADER]
+        elif len(program == 2):            
+            return [NUMBER]
+            
+    elif program[-1] == AT:  # program ends with @
+        return [NUMBER]
+    elif AT in program:  # we are at [expression] @ number
+        return [NUMBER]
     
+        
+def subContains(item, options):
+    for option in options:
+        if option in item:
+            return option
+    return None
 if __name__ == '__main__':
-    program = [CHANNEL + '13', '+', CHANNEL + '13', '@', '13']    
-    print(safeParse(program))
+    program = [CHANNEL, '13', '+', CHANNEL, '14', '@', '13']    
+    print(parse(program))
     program = ['@', '10']    
+    print(parse(program))
+    program = [RECORD, CHANNEL, '13']    
+    print(parse(program))
+    program = [RECORD, CHANNEL, '13','.','1']    
     print(safeParse(program))
-    program = [RECORD, CHANNEL + '13']    
+    program = [RECORD, CHANNEL, '100','.']
     print(safeParse(program))
-    program = [RECORD, CUE + '1']
+    program = [RECORD, GROUP, '1', THRU, GROUP, '10']    
     print(safeParse(program))
-    program = [RECORD, GROUP + '1', THRU, GROUP + '10']    
-    print(safeParse(program))
-    program = [RECORD, '1']   
-    print(safeParse(program))
-    program = [CHANNEL+'20',THRU,CHANNEL+'1',AT,'10']
-    print(safeParse(program))
-    program = [CHANNEL+'20']
-    print(safeParse(program))
+    program = [RECORD, CUE, '1']   
+    print(parse(program))
+    program = [RECORD, CUE, '1', '.', '10']   
+    print(parse(program))
+    program = [CHANNEL, '5', THRU, CHANNEL, '1', AT, '10']
+    print(parse(program))
+    program = [CHANNEL, '20']
+    print(parse(program))
+    program = [CUE, '1','.','100']
+    print(parse(program))
