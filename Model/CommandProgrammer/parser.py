@@ -26,42 +26,54 @@ def expression(rbp=0):
         left = t.led(left)
     return left
 
-class collection_token:
-    def __init__(self, value):
-        self.value = SortedSet([value])        
-    def nud(self):
-        return self.value    
+    
 
 class value_token:
     def __init__(self, value):
         self.value = value        
     def nud(self):
         return self.value
-                
+    
+class collection_token:
+    def __init__(self, value):
+        self.value = SortedSet([value])        
+    def nud(self):
+        return self.value
+                    
 class operator_add_token:
-    lbp = 10
+    lbp = 20
     def led(self, left):
         right = expression(10)
         return left | right
     
 class operator_sub_token:
-    lbp = 10
+    lbp = 20
     def led(self, left):
         right = expression(10)
         return left.difference(right)
     
 class operator_thru_token:
-    lbp = 20
+    lbp = 30
     def led(self, left):
         right = expression(20)
         return evaluate_thru_value(left, right)
     
 class operator_at_token:
-    lbp = 5
+    lbp = 10
     def led(self, left):
         right = expression(5)
         return evaluate_at_value(left, right)
     
+    def nud(self):
+        right = expression(5)
+        return evaluate_at_value(None, right) 
+
+class operator_record_token:
+    lbp = 5        
+    def nud(self):
+        right = expression(5)
+        return evaluate_record_value(right)
+        
 def splitLabelAndNumber(string):
     items = re.split('(\d+)', string)  # splits 'word123' into ['word','123','']
     return items[0], items[1]
@@ -84,9 +96,21 @@ def evaluate_thru_value(lo, hi):
     return result
 
 def evaluate_at_value(left, right):
-    #TODO: Unary operator.
-    return Command.SelectAndSetCommand(left,right)
+    # TODO: Unary operator.
+    if left is None:
+        return Command.SetCommand(right)
+    else:
+        return Command.SelectAndSetCommand(left, right)
 
+def evaluate_record_value(right):    
+    if isinstance(right, SortedSet):
+        if len(right) > 1:
+            raise ValueError('Record expects a SINGLE cue, group or fader!')
+        else:
+            return Command.RecordCommand(right)
+    else:
+        raise ValueError('Expected a cue, group or fader!')
+        
 class end_token:
     lbp = 0
     
@@ -107,6 +131,8 @@ def tokenize(program):
             yield operator_sub_token()
         elif '@' == token:
             yield operator_at_token()
+        elif 'record' == token:
+            yield operator_record_token()
         elif 'thru' == token:
             yield operator_thru_token()
         elif 'Group' in token:
@@ -125,7 +151,20 @@ def parse(program):
     token = next(tokenGenerator)
     return expression()
 
+def safeParse(program):
+    try:
+        printout = parse(program)
+        return printout
+    except Exception as e:        
+        return str(e)
+        
 if __name__ == '__main__':
-    program = ['Chan13','+','Chan12','@','13']    
-    print(parse(program))
+    program = ['Chan13', '+', 'Chan12', '@', '13']    
+    print(safeParse(program))
+    program = ['@', '10']    
+    print(safeParse(program))
+    program = ['record', 'Chan13']    
+    print(safeParse(program))
+    program = ['record', '1']    
+    print(safeParse(program))
     

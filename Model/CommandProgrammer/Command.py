@@ -37,7 +37,13 @@ class SelectAndSetCommand(AbstractCommand):
     def __str__(self):
         return ('select ' + str(self.target) +
                 ' and then set to ' + str(self.value))
-         
+        
+#e.g. record fader, record group, record cue 
 class RecordCommand(AbstractCommand):
     def __init__(self, target):
         self.target = target
+    def __str__(self):
+        return ('Record current direct values to ' + 
+                str(self.target[0]))
+        
+        
