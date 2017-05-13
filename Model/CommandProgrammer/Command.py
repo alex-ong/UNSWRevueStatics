@@ -43,7 +43,6 @@ class RecordCommand(AbstractCommand):
     def __init__(self, target):
         self.target = target
     def __str__(self):
-        return ('Record current direct values to ' + 
-                str(self.target[0]))
+        return ('Record current direct values to ' + self.target)
         
         

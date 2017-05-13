@@ -79,6 +79,7 @@ def splitLabelAndNumber(string):
     return items[0], items[1]
 
 def evaluate_thru_value(lo, hi):
+    applicable_thru = ['Group', 'Chan']
     lo = lo[0]
     hi = hi[0]
     loType, loNum = splitLabelAndNumber(lo)
@@ -86,7 +87,8 @@ def evaluate_thru_value(lo, hi):
     
     if loType != hiType:
         raise ValueError('When using Thru, both sides must be the same type!')
-    
+    if loType not in applicable_thru:
+        raise ValueError('Thru can only be usd with Group or Chan!')
     loNum = int(loNum)
     hiNum = int(hiNum)
     # make sure lo/hi are right way round
@@ -97,7 +99,7 @@ def evaluate_thru_value(lo, hi):
 
 def evaluate_at_value(left, right):
     # TODO: Unary operator.
-    if left is None:
+    if left is None:        
         return Command.SetCommand(right)
     else:
         return Command.SelectAndSetCommand(left, right)
@@ -107,9 +109,12 @@ def evaluate_record_value(right):
         if len(right) > 1:
             raise ValueError('Record expects a SINGLE cue, group or fader!')
         else:
+            return Command.RecordCommand(right[0])
+    elif isinstance(right, str):
+        if 'Cue' not in right:
+            raise ValueError('Expected a cue, group or fader!')
+        else:
             return Command.RecordCommand(right)
-    else:
-        raise ValueError('Expected a cue, group or fader!')
         
 class end_token:
     lbp = 0
@@ -139,6 +144,8 @@ def tokenize(program):
             yield collection_token(token)
         elif 'Chan' in token:
             yield collection_token(token)
+        elif 'Cue' in token:
+            yield value_token(token)
         elif tryParseInt(token):
             yield value_token(token)
         else:        
@@ -157,7 +164,7 @@ def safeParse(program):
         return printout
     except Exception as e:        
         return str(e)
-        
+
 if __name__ == '__main__':
     program = ['Chan13', '+', 'Chan12', '@', '13']    
     print(safeParse(program))
@@ -165,6 +172,11 @@ if __name__ == '__main__':
     print(safeParse(program))
     program = ['record', 'Chan13']    
     print(safeParse(program))
+    program = ['record', 'Cue1']
+    print(safeParse(program))
+    program = ['record', 'Group1','thru','Group10']    
+    print(safeParse(program))
     program = ['record', '1']    
     print(safeParse(program))
-    
+    program = ['Chan20', 'thru', 'Chan1', '@', '10']
+    print(safeParse(program))
