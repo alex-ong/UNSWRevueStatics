@@ -107,9 +107,12 @@ class operator_decimal_token:
 class operator_at_token:
     lbp = 10
     def led(self, left):
-        right = expression(5)
-        return evaluate_at_value(left, right)
-    
+        # you an only use left if you are selecting groups/channels
+        if isinstance(left, SortedSet):
+            if not subContainsList(left, [FADER,CUE]):
+                right = expression(5)
+                return evaluate_at_value(left, right)       
+        raise ValueError('@ can only be called with Channels and Groups!')
     def nud(self):
         right = expression(5)
         return evaluate_at_value(None, right) 
@@ -119,7 +122,13 @@ class operator_record_token:
     def nud(self):
         right = expression(5)
         return evaluate_record_value(right)
-        
+
+class operator_delete_token:
+    lbp = 5
+    def nud(self):
+        right = expression(5)
+        return evaluate_delete_value(right)
+    
 def splitLabelAndNumber(string):
     items = re.split('(\d+)', string)  # splits 'word123' into ['word','123','']
     return items[0], items[1]
@@ -158,7 +167,15 @@ def evaluate_record_value(right):
             return Command.RecordCommand(right[0])
     else:
         raise ValueError('Record expects a Cue, Group, or Fader')
-        
+
+def evaluate_delete_value(right):
+    if isinstance(right, SortedSet):
+        if len(right) > 1:
+            raise ValueError('Record expects a SINGLE cue, group or fader!')
+        else:
+            return Command.DeleteCommand(right[0])
+    else:
+        raise ValueError('Record expects a Cue, Group, or Fader')
 class end_token:
     lbp = 0
     
@@ -180,6 +197,7 @@ PLUS = '+'
 MINUS = '-'
 NUMBER = 'Number'
 DECIMAL = '.'
+DELETE = 'Delete'
     
 # tokenizer. Convert from list of strings to tokens
 def tokenize(program):
@@ -204,10 +222,12 @@ def tokenize(program):
             yield operator_fader_token()
         elif DECIMAL == token:
             yield operator_decimal_token()
+        elif DELETE == token:
+            yield operator_delete_token()
         elif tryParseInt(token):
             yield value_token(token)
         else:        
-            raise SyntaxError("unknown operator")
+            raise SyntaxError("unknown token")
     yield end_token()
 
 def parse(program):
@@ -230,7 +250,8 @@ def safeParse(program):
     except Exception as e:        
         return str(e)
     
-def validOperators(program):    
+def validOperators(program):
+    #TODO: complete this...    
     if len(program) == 0:
         return [AT, RECORD, GROUP, CUE, CHANNEL]
     elif program[0] == RECORD:  # program starts with @
@@ -244,7 +265,15 @@ def validOperators(program):
     elif AT in program:  # we are at [expression] @ number
         return [NUMBER]
     
-        
+#e.g. checks if options('GROUP','FADER') are inside ['GROUP1','GROUP2'] etcc
+def subContainsList(items, options):
+    for item in items:
+        result = subContains(item,options)
+        if result is not None:
+            return result
+    return None
+
+#e.g. checks if options('GROUP','FADER') are inside 'GROUP1' etc        
 def subContains(item, options):
     for option in options:
         if option in item:
@@ -273,3 +302,7 @@ if __name__ == '__main__':
     print(parse(program))
     program = [CUE, '1','.','100']
     print(parse(program))
+    program = [DELETE, CUE, '1','.','100']
+    print(parse(program))
+    program = [CUE,'1',AT,'100']
+    print(safeParse(program))

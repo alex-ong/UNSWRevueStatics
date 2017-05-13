@@ -44,5 +44,10 @@ class RecordCommand(AbstractCommand):
         self.target = target
     def __str__(self):
         return ('Record current direct values to ' + self.target)
-        
+
+class DeleteCommand(AbstractCommand):
+    def __init__(self, target):
+        self.target = target 
+    def __str__(self):
+        return ('Delete ' + self.target)
         
