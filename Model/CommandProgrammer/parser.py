@@ -12,7 +12,9 @@ from test.test_typechecks import Integer
 token = None
 tokenGenerator = None
 import re
-   
+
+import Model.CommandProgrammer.Command as Command
+
 def expression(rbp=0):
     global token, tokenGenerator
     t = token
@@ -54,8 +56,14 @@ class operator_thru_token:
         right = expression(20)
         return evaluate_thru_value(left, right)
     
+class operator_at_token:
+    lbp = 5
+    def led(self, left):
+        right = expression(5)
+        return evaluate_at_value(left, right)
+    
 def splitLabelAndNumber(string):
-    items = re.split('(\d+)', string) #splits 'word123' into ['word','123','']
+    items = re.split('(\d+)', string)  # splits 'word123' into ['word','123','']
     return items[0], items[1]
 
 def evaluate_thru_value(lo, hi):
@@ -69,9 +77,16 @@ def evaluate_thru_value(lo, hi):
     
     loNum = int(loNum)
     hiNum = int(hiNum)
-    result = SortedSet([(loType + str(num)) for num in range(loNum,hiNum+1)])
-    return result
+    # make sure lo/hi are right way round
+    loNum, hiNum = min(loNum, hiNum), max(loNum, hiNum) 
         
+    result = SortedSet([(loType + str(num)) for num in range(loNum, hiNum + 1)])
+    return result
+
+def evaluate_at_value(left, right):
+    #TODO: Unary operator.
+    return Command.SelectAndSetCommand(left,right)
+
 class end_token:
     lbp = 0
     
@@ -82,6 +97,7 @@ def tryParseInt(token):
         return False
     return True
 
+    
 # tokenizer. Convert from list of strings to tokens
 def tokenize(program):
     for token in program:
@@ -89,6 +105,8 @@ def tokenize(program):
             yield operator_add_token()
         elif '-' == token:
             yield operator_sub_token()
+        elif '@' == token:
+            yield operator_at_token()
         elif 'thru' == token:
             yield operator_thru_token()
         elif 'Group' in token:
@@ -108,6 +126,6 @@ def parse(program):
     return expression()
 
 if __name__ == '__main__':
-    program = ['13']    
+    program = ['Chan13','+','Chan12','@','13']    
     print(parse(program))
     
