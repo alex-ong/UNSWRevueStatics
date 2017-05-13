@@ -9,6 +9,7 @@ http://effbot.org/zone/simple-top-down-parsing.htm
 
 from libs.sorted_containers.sortedset import SortedSet
 from test.test_typechecks import Integer
+from Model.CommandProgrammer.Command import SelectCommand
 token = None
 tokenGenerator = None
 import re
@@ -26,7 +27,6 @@ def expression(rbp=0):
         left = t.led(left)
     return left
 
-    
 
 class value_token:
     def __init__(self, value):
@@ -79,7 +79,7 @@ def splitLabelAndNumber(string):
     return items[0], items[1]
 
 def evaluate_thru_value(lo, hi):
-    applicable_thru = ['Group', 'Chan']
+    applicable_thru = [GROUP, CHANNEL]
     lo = lo[0]
     hi = hi[0]
     loType, loNum = splitLabelAndNumber(lo)
@@ -126,25 +126,37 @@ def tryParseInt(token):
         return False
     return True
 
+RECORD = 'Record'
+THRU = 'Thru'
+GROUP = 'Group'
+CHANNEL = 'Channel'
+CUE = 'Cue'
+FADER = 'Fader'
+AT = '@'
+PLUS = '+'
+MINUS = '-'
+
     
 # tokenizer. Convert from list of strings to tokens
 def tokenize(program):
     for token in program:
-        if '+' == token:
+        if PLUS == token:
             yield operator_add_token()
-        elif '-' == token:
+        elif MINUS == token:
             yield operator_sub_token()
-        elif '@' == token:
+        elif AT == token:
             yield operator_at_token()
-        elif 'record' == token:
+        elif RECORD == token:
             yield operator_record_token()
-        elif 'thru' == token:
+        elif THRU == token:
             yield operator_thru_token()
-        elif 'Group' in token:
+        elif GROUP in token:
             yield collection_token(token)
-        elif 'Chan' in token:
+        elif CHANNEL in token:
             yield collection_token(token)
-        elif 'Cue' in token:
+        elif CUE in token:
+            yield value_token(token)
+        elif FADER in token:
             yield value_token(token)
         elif tryParseInt(token):
             yield value_token(token)
@@ -156,7 +168,12 @@ def parse(program):
     global token, tokenGenerator
     tokenGenerator = tokenize(program)
     token = next(tokenGenerator)
-    return expression()
+    result = expression()
+    #final check. If it's a set, we issue a selection
+    if isinstance(result,SortedSet):
+        return SelectCommand(result)
+    else:
+        return result
 
 def safeParse(program):
     try:
@@ -164,19 +181,34 @@ def safeParse(program):
         return printout
     except Exception as e:        
         return str(e)
-
+    
+def validOperators(program):    
+    if len(program) == 0:
+        return ['@', 'record', 'Group', 'Chan', 'Cue']
+    elif program[0] == 'record':
+        if len(program) == 1:
+            return ['Group', 'Chan', 'Cue', 'Fader']
+        else:
+            return []
+    elif program[-1] == '@':
+        return ['number']
+    else:
+        pass
+    
 if __name__ == '__main__':
-    program = ['Chan13', '+', 'Chan12', '@', '13']    
+    program = [CHANNEL + '13', '+', CHANNEL + '13', '@', '13']    
     print(safeParse(program))
     program = ['@', '10']    
     print(safeParse(program))
-    program = ['record', 'Chan13']    
+    program = [RECORD, CHANNEL + '13']    
     print(safeParse(program))
-    program = ['record', 'Cue1']
+    program = [RECORD, CUE + '1']
     print(safeParse(program))
-    program = ['record', 'Group1','thru','Group10']    
+    program = [RECORD, GROUP + '1', THRU, GROUP + '10']    
     print(safeParse(program))
-    program = ['record', '1']    
+    program = [RECORD, '1']   
     print(safeParse(program))
-    program = ['Chan20', 'thru', 'Chan1', '@', '10']
+    program = [CHANNEL+'20',THRU,CHANNEL+'1',AT,'10']
+    print(safeParse(program))
+    program = [CHANNEL+'20']
     print(safeParse(program))
