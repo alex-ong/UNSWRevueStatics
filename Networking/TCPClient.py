@@ -11,7 +11,8 @@ except:
 HOST, PORT = "localhost", 9999
 data = " ".join(sys.argv[1:])
 
-
+START_TOKEN = '\x00'
+END_TOKEN = '\x01'
 def CreateClient(target, port):    
     client = ThreadedClient(target, port)    
     client.start()
@@ -41,7 +42,7 @@ class ThreadedClient(StoppableThread.StoppableThread):
                         except queue.Empty:
                             time.sleep(0.01)
                             continue
-                        sock.sendall(bytes('\x00' + item + '\x00', "utf-8"))    
+                        sock.sendall(bytes(START_TOKEN + item + END_TOKEN, "utf-8"))    
             except: #reconnect on any error
                 pass
 if __name__ == '__main__':

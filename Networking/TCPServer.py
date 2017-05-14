@@ -5,7 +5,9 @@ try:
     from Networking.StoppableThread import StoppableThread
 except:
     import StoppableThread.StoppableThread as StoppableThread
-    
+
+START_TOKEN = '\x00'    
+END_TOKEN = '\x01'
 def CreateServer(target, port, onRecvMessage):    
     server = ThreadedServer(target, port, onRecvMessage)    
     server.start()
@@ -33,28 +35,41 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         self.request.setsockopt(socket.IPPROTO_TCP,
                                    socket.TCP_NODELAY, True)
     def handle(self):                
-        #todo: proper packet segmentation.
-        #find \x00's and split on them.
-        #make sure we always start with \x00, otherwise discard packet
+        # todo: proper packet segmentation.
+        # find \x00's and split on them.
+        # make sure we always start with \x00, otherwise discard packet
+        dataBuffer = ''
         while self.server.serverThreadAlive():                       
-            data = self.request.recv(2048)    
+            data = self.request.recv(10)    
                 
             if not data:
                 break  # disconnection 
             
-            data = data.decode("utf-8") #change from array of bytes to utf8 string
-            if data[0] != '\x00':
-                print ("packet discarded")
-                continue
-            if data[len(data) - 1] != '\x00':
-                print ("packet discarded")
-                continue    
-            
-            data = data[1:len(data)-1]
-            messages = data.split('\x00')
-                        
-            #only send latest message in case we received multiple
-            self.server.onRecvMessage(messages[len(messages)-1])
+            data = data.decode("utf-8")  # change from array of bytes to utf8 string
+            dataBuffer += data
+            while END_TOKEN in dataBuffer:
+                endIndex = dataBuffer.index(END_TOKEN)
+                # check for buffer index of start...
+                try:
+                    startIndex = dataBuffer.index(START_TOKEN)
+                except:  # malformed packet
+                    print ("TCPServerRecv: Malformed packet, no start_token")
+                    self.dataBuffer = self.dataBuffer[endIndex + 1:]
+                    continue
+                
+                if startIndex > endIndex:  # malformed packet. Delete everyting including endIndex
+                    dataBuffer = self.dataBuffer[endIndex + 1:]
+                    continue
+                
+                # by this point we have good packet structure.
+                if startIndex != 0:
+                    print ('Unhandled exception, flushing dataBuffer...')
+                    dataBuffer = ''
+                    continue
+                
+                message = dataBuffer[1:endIndex]
+                self.server.onRecvMessage(message)
+                dataBuffer = dataBuffer[endIndex+1:]
         
         print ("done handling!")
 
