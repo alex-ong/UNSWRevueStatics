@@ -7,6 +7,7 @@ from Model.CommandProgrammer.parser import (RECORD,THRU,GROUP,CHANNEL,CUE,FADER,
 from Model.CommandProgrammer.parser import validOperators
 
 
+                        
 class Console(object):
     def __init__(self):
         self.tokens = []
@@ -19,6 +20,18 @@ class Console(object):
         return (result,if_error,autocomplete)
     
     def parseString(self, string):
+        print(string)
+        if string == '<-':
+            if len(self.tokens) > 0:
+                if tryParseInt(self.tokens[-1]):
+                    newInt = self.tokens[-1][:-1]
+                    if len(newInt) == 0:
+                        self.tokens = self.tokens[:-1]
+                    else:
+                        self.tokens[-1] = newInt
+                else:
+                    self.tokens = self.tokens[:-1]
+            return
         #split into more tokens, or add as a token. or do conversion.
         # have to deal with lack of channel key... When we receive ints,
         # we have to decide whether to combine ints, or add "Channel" in front of it.
@@ -28,8 +41,12 @@ class Console(object):
                 self.tokens.append(string)
             else:
                 self.tokens.append(string)
-        elif AT in self.tokens: #all number references can't be to channel
-            pass
+        elif self.tokens[-1] == AT:
+            if tryParseInt(string):
+                self.tokens.append(string)            
+        elif AT in self.tokens: 
+            if tryParseInt(string):
+                self.tokens[-1] = self.tokens[-1] + string
         else: #no at symbol yet
             if tryParseInt(string):
                 if tryParseInt(self.tokens[-1]):

@@ -24,10 +24,12 @@ class ConsoleWidget(tk.Entry):
         self.s = tk.StringVar()
         kwargs.update(appearance)
         kwargs['textvariable'] = self.s
-        
+        self.console = console
         super().__init__(*args, **kwargs)
         self.configure(state=tk.DISABLED)
         self.setValue([])
+        self.lastTokens = []
+        #self.executed = False #todo: implement
         
     def setValue(self, tokens):
         #reset background
@@ -36,6 +38,13 @@ class ConsoleWidget(tk.Entry):
         self.configure(state=tk.NORMAL)
         self.s.set(' '.join(tokens))
         self.configure(state=tk.DISABLED)
+        self.lastTokens = tokens
         
     def executeCommand(self):
         self.configure({BG:EXECUTED_COMMAND_BG})
+        #self.executed = True
+        
+    def refreshDisplay(self):
+        if self.lastTokens != self.console.tokens:
+            self.setValue(self.console.tokens.copy())
+            

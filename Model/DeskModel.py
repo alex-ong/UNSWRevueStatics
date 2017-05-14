@@ -49,9 +49,13 @@ class DeskModel(object):
             groupNumber = int(toChange.replace('group', ''))
             self.groupValues[groupNumber].setDirectValue(value)
             
-    def handleButtonInput(self, buttonName, value):
-        return
-        #todo: implement slider buttons
+    def handleButtonInput(self, buttonName, buttonPressed):
+        if 'slider' in buttonName:
+            pass #todo deal with this based on context
+            #e.g. pass to programmer or set direct value
+        elif buttonPressed: #we only care about keyDown
+            self.handleConsoleInput(buttonName)                    
+        
     def getFaderBindings(self):
         bindings = self.faderBindings[self.currentfaderBinding]
         result = OrderedDict()       

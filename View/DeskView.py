@@ -61,4 +61,5 @@ class DeskView(tk.Frame):
     def refreshDisplay(self):
         self.channelFrame.refreshDisplay()
         self.faderFrame.refreshDisplay()
+        self.consoleWidget.refreshDisplay()
                 
