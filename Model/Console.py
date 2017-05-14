@@ -48,3 +48,4 @@ class Console(object):
     #called when user hits clear 
     def reset(self):
         self.tokens = []
+        

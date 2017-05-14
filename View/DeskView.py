@@ -4,19 +4,20 @@
 '''
 import tkinter as tk
 import tkinter.ttk as ttk
-import View.Widgets.FaderFrame as FaderFrame
 
+from View.Widgets.FaderFrame import FaderFrame
 from View.Widgets.ChannelWidget import ChannelWidget
 from View.Widgets.GroupWidget import GroupWidget
 from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
+from View.Widgets.ConsoleWidget import ConsoleWidget
 
 class DeskView(tk.Frame):
     def __init__(self):
         root = tk.Tk()
-        root.geometry('1400x700') #todo: scale to screen rez
+        root.geometry('1400x850')  # todo: scale to screen rez
         root.config(bg='red')
         super().__init__(root)
-        #root.overrideredirect(True) # change to windowless border        
+        # root.overrideredirect(True) # change to windowless border        
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         root.wm_title("UNSW Revue Statics")
@@ -25,11 +26,12 @@ class DeskView(tk.Frame):
         self.style = ttk.Style(root)
         self.style.theme_use("winnative")
         
-        self.columnconfigure(0,weight=1)
+        self.columnconfigure(0, weight=1)
         
         self.channelFrame = None
         self.groupFrame = None
         self.faderFrame = None
+        self.consoleWidget = None
         
     # called by model during setup
     def setupChannels(self, channels):
@@ -42,11 +44,16 @@ class DeskView(tk.Frame):
         gf.grid(sticky=tk.NSEW)
         self.groupFrame = gf
         
-    #todo: change faderLayout to "x x x  x" layout 
+    # todo: change faderLayout to "x x x  x" layout 
     def setupFaders(self, faders, faderLayout=[18, 9]):        
-        ff = FaderFrame.FaderFrame(faders, faderLayout, self)
+        ff = FaderFrame(faders, faderLayout, self)
         ff.grid(sticky=tk.NSEW)
         self.faderFrame = ff
+    
+    def setupConsole(self, console):
+        cc = ConsoleWidget(console, self)
+        cc.grid(sticky=tk.NSEW)
+        self.consoleWidget = cc
         
     def handleInput(self, dictInput):
         self.channelFrame.handleInput(dictInput)

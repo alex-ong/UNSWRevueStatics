@@ -12,6 +12,7 @@ class LogicController(object):
         self.view.setupChannels(model.channelValues)
         #self.view.setupGroups(model.groupValues)
         self.view.setupFaders(model.faderValues)
+        self.view.setupConsole(model.console)
         
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
         

@@ -7,10 +7,10 @@ from Model import GroupValues
 from Model import FaderValues
 
 import Model.Configuration.ConfigReader as ConfigReader
+from Model import Programmer
+from Model import Console
+
 from _collections import OrderedDict
-
-
-
 
 class DeskModel(object):
     def __init__(self):
@@ -27,7 +27,8 @@ class DeskModel(object):
         
         self.currentfaderBinding = self.settings['lastFaderPage'] 
         self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
-        
+        self.programmer = Programmer.Programmer()
+        self.console = Console.Console()
             
     def Reset(self):
         # get configReader to reset everything, then load everything
@@ -64,3 +65,6 @@ class DeskModel(object):
                 
         return result
     
+    def handleConsoleInput(self, stringInput):
+        self.console.parseString(stringInput)
+        
