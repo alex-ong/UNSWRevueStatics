@@ -4,10 +4,26 @@ import CherryButton
 
 buttons = [['<-', '???', '-', '+', '', 'Clear', 'Menu'],
            ['7', '8', '9', 'Thru', '', 'Cue', 'S1'],
-           ['4', '5', '6', 'Full', '', 'Sub', 'S2'],
+           ['4', '5', '6', 'Full', '', 'Group', 'S2'],
            ['1', '2', '3', '@', '', 'Time', 'S3'],
            ['0', '.', 'Enter', '', '', 'Rec', 'S4']]
 
+RECORD = 'Record'
+THRU = 'Thru'
+GROUP = 'Group'
+CHANNEL = 'Channel'
+CUE = 'Cue'
+FADER = 'Fader'
+AT = '@'
+PLUS = '+'
+MINUS = '-'
+NUMBER = 'Number'
+DECIMAL = '.'
+DELETE = 'Delete'
+
+#quickly map from buttonName to correct name to send
+buttonToSendMapping = {'Rec': RECORD,
+                       }
 class RightPanel(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
@@ -34,8 +50,11 @@ class RightPanel(tk.Frame):
                 label = buttons[y][x]
                 if label == '':
                     continue
-                
-                cherryButton = CherryButton.CherryButton(buttons[y][x], self)
+                if label in buttonToSendMapping:
+                    sendLabel = buttonToSendMapping[label]
+                else:
+                    sendLabel = label
+                cherryButton = CherryButton.CherryButton(buttons[y][x], sendLabel, self)
                 if label == 'Enter':
                     cherryButton.grid(row=y, column=x, columnspan=2, sticky=tk.NSEW)
                 else:

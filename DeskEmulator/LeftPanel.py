@@ -23,13 +23,13 @@ class LeftPanel(tk.Frame):
         
         
     def initPanel(self):
-        dbo = CherryButton.CherryButton('DBO', self)
+        dbo = CherryButton.CherryButton('DBO', 'DBO',self)
         dbo.grid(row=0, column=0, sticky=tk.NSEW)
-        back = CherryButton.CherryButton('Back', self)
+        back = CherryButton.CherryButton('Back', 'Back',self)
         back.grid(row=2, column=0, sticky=tk.NSEW)
-        rel = CherryButton.CherryButton('Rel', self)
+        rel = CherryButton.CherryButton('Rel', 'Release', self)
         rel.grid(row=3, column=0, sticky=tk.NSEW)
-        nxt = CherryButton.CherryButton('Next', self)
+        nxt = CherryButton.CherryButton('Next', 'Next', self)
         nxt.grid(row=5, column=0, sticky=tk.NSEW)
                 
         self.buttons = [dbo, back, rel, nxt]
