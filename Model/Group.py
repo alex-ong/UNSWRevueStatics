@@ -21,6 +21,7 @@ class Group(object):
         self.label = label        
         
         self.directValue = 0
+        self.directFlashValue = 0
         self.playbackValue = None
         self.recordValue = None
         self.channelMappings = channelMappings
@@ -28,6 +29,13 @@ class Group(object):
         
     def setDirectValue(self, value):
         self.directValue = value
+        self.propagateValue()
+    
+    def getDirectValue(self):
+        return max(self.directValue,self.directFlashValue)
+    
+    def setDirectFlashValue(self, value):
+        self.directFlashValue = value
         self.propagateValue()
     
     def propagateValue(self):
@@ -40,6 +48,7 @@ class Group(object):
     
     def reset(self):
         self.directValue = 0
+        self.directFlashValue = 0
         self.playbackValue = 0
         self.recordValue = 0 
     
@@ -49,15 +58,15 @@ class Group(object):
             return self.recordValue, ValueType.RECORD
         else:
             values = [0]
-            if self.directValue > 0:
-                values.append(self.directValue)
+            if self.getDirectValue() > 0:
+                values.append(self.getDirectValue())
             if self.playbackValue is not None and self.playbackValue > 0:
                 values.append(self.playbackValue)
             
             maxValue = max(values)
             if maxValue == 0:
                 return 0, ValueType.NONE            
-            elif maxValue == self.directValue:
+            elif maxValue == self.getDirectValue():
                 return self.directValue, ValueType.DIRECT
             elif maxValue == self.playbackValue:
                 return self.playbackValue, ValueType.PLAYBACK        

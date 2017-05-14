@@ -24,6 +24,7 @@ class Channel(object):
         self._dmxAddress = dmxAddress
         
         self.directValue = 0
+        self.directFlashValue = 0
         self.playbackValue = None
         self._groupValue = {}
         self.recordValue = None        
@@ -33,6 +34,9 @@ class Channel(object):
              
     def setDirectValue(self, value):
         self.directValue = value
+        
+    def setDirectFlashValue(self, value):
+        self.directFlashValue = value
     
     def setGroupValue(self, groupNumber, value):
         if value == 0:
@@ -43,6 +47,9 @@ class Channel(object):
         else:
             self._groupValue[groupNumber] = value
             
+    def getDirectValue(self):
+        return max(self.directValue, self.directFlashValue)
+    
     def getGroupValue(self):
         if self._groupValue == {}:
             return 0
@@ -54,7 +61,7 @@ class Channel(object):
     def getCueValue(self):
         if self.recordValue is not None:
             return self.recordValue
-        else: #todo: scan through direct,playback,group and do HTP 
+        else:  # todo: scan through direct,playback,group and do HTP 
             return self.directValue
     
     def getCueValueAndReason(self):
@@ -63,8 +70,8 @@ class Channel(object):
             return self.recordValue, ValueType.RECORD
         else:
             values = [0]
-            if self.directValue > 0:
-                values.append(self.directValue)
+            if self.getDirectValue() > 0:
+                values.append(self.getDirectValue())
             if self.playbackValue is not None and self.playbackValue > 0:
                 values.append(self.playbackValue)
             groupValue = self.getGroupValue() 
@@ -74,8 +81,8 @@ class Channel(object):
             maxValue = max(values)
             if maxValue == 0:
                 return 0, ValueType.NONE            
-            elif maxValue == self.directValue:
-                return self.directValue, ValueType.DIRECT
+            elif maxValue == self.getDirectValue():
+                return self.getDirectValue(), ValueType.DIRECT
             elif maxValue == self.playbackValue:
                 return self.playbackValue, ValueType.PLAYBACK
             elif maxValue == groupValue:

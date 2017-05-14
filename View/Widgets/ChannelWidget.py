@@ -88,7 +88,7 @@ class ChannelWidget(tk.Frame):
         return len(maxComps)
         
     def refreshDisplay(self):
-        direct = self.channel.directValue
+        direct = self.channel.getDirectValue()
         playback = self.channel.playbackValue
         group = self.channel.getGroupValue()
         record = self.channel.recordValue            

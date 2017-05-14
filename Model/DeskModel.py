@@ -50,9 +50,22 @@ class DeskModel(object):
             self.groupValues[groupNumber].setDirectValue(value)
             
     def handleButtonInput(self, buttonName, buttonPressed):
-        if 'slider' in buttonName:
-            pass #todo deal with this based on context
-            #e.g. pass to programmer or set direct value
+        if 'b_slider' in buttonName: #todo check programmer state first.
+            faderNumber = int(buttonName.replace('b_slider',''))
+            bindings = self.faderBindings[self.currentfaderBinding]
+            toChange = bindings[faderNumber]
+            
+            if buttonPressed: 
+                value = 100
+            else:
+                value = 0
+                
+            if isinstance(toChange, int):  # slider bound to channel            
+                self.channelValues[toChange].setDirectFlashValue(value)                
+            else:  # slider bound to group
+                groupNumber = int(toChange.replace('group', ''))
+                self.groupValues[groupNumber].setDirectFlashValue(value)
+                       
         elif buttonPressed: #we only care about keyDown
             self.handleConsoleInput(buttonName)                    
         

@@ -71,7 +71,7 @@ class GroupWidget(tk.Frame):
         return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', 8, 'bold'))    
     
     def refreshDisplay(self):    
-        direct = self.group.directValue
+        direct = self.group.getDirectValue()
         playback = self.group.playbackValue        
         record = self.group.recordValue            
         
