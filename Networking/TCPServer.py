@@ -7,10 +7,9 @@ except:
     import StoppableThread.StoppableThread as StoppableThread
     
 def CreateServer(target, port, onRecvMessage):    
-    server = ThreadedServer(target, port, onRecvMessage)
-    print('hmm')
+    server = ThreadedServer(target, port, onRecvMessage)    
     server.start()
-    
+    print('TCP server started')
     return server
     
 class ThreadedServer(StoppableThread):
@@ -34,16 +33,21 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         self.request.setsockopt(socket.IPPROTO_TCP,
                                    socket.TCP_NODELAY, True)
     def handle(self):                
+        #todo: proper packet segmentation.
+        #find \x00's and split on them.
+        #make sure we always start with \x00, otherwise discard packet
         while self.server.serverThreadAlive():                       
-            data = self.request.recv(1024)    
+            data = self.request.recv(2048)    
                 
             if not data:
                 break  # disconnection 
             
             data = data.decode("utf-8") #change from array of bytes to utf8 string
             if data[0] != '\x00':
+                print ("packet discarded")
                 continue
             if data[len(data) - 1] != '\x00':
+                print ("packet discarded")
                 continue    
             
             data = data[1:len(data)-1]

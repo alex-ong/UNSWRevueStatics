@@ -3,12 +3,13 @@ import sys
 import Networking.TCPServer as TCPServer
 import json
 import collections
+from Controller.IOConverter import IOConverter
 
 class LogicController(object):
     def __init__(self, model, view, host='localhost', port=9999):
         self.model = model
         self.view = view
-    
+        
         self.view.setupChannels(model.channelValues)
         #self.view.setupGroups(model.groupValues)
         self.view.setupFaders(model.faderValues)
@@ -16,28 +17,32 @@ class LogicController(object):
         
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
         
-        self.lastInput = {}
+        self.inputEventMaster = IOConverter()
+        
         
     # called when we receive network input
-    def receiveInput(self, msg):
-        # NB: don't use orderedDict if it runs too slowly
-        self.lastInput = json.loads(msg, object_pairs_hook=collections.OrderedDict)        
+    def receiveInput(self, msg):             
+        msg = json.loads(msg)         
+        self.inputEventMaster.addState(msg)
         
     def update(self):  # occurs in main thread/same thread as tkinter
         self.handleInput()        
             
     def handleInput(self):
-        if self.lastInput != {}:
-            for key in self.lastInput:
+        inputEvents = self.inputEventMaster.getEvents()
+        if inputEvents != {}:
+            for key in inputEvents:
                 if key.startswith('slider'):
-                    self.handleSliderInput(key, self.lastInput[key])
+                    self.handleSliderInput(key, inputEvents[key].value)
                 else:
-                    self.handleButtonInput(key, self.lastInput[key])
-            self.lastInput = {}
+                    buttonEvents = inputEvents[key]
+                    for buttonEvent in buttonEvents:
+                        self.handleButtonInput(key, buttonEvent.down)
+        
             self.view.refreshDisplay()
             
     def handleSliderInput(self, sliderName, value):
         self.model.handleSliderInput(sliderName, value)
     
     def handleButtonInput(self, buttonName, value):
-        pass
+        self.model.handleButtonInput(buttonName, value)
