@@ -198,6 +198,7 @@ MINUS = '-'
 NUMBER = 'Number'
 DECIMAL = '.'
 DELETE = 'Delete'
+FULL = 'Full'
     
 # tokenizer. Convert from list of strings to tokens
 def tokenize(program):
@@ -225,6 +226,8 @@ def tokenize(program):
         elif DELETE == token:
             yield operator_delete_token()
         elif tryParseInt(token):
+            yield value_token(token)
+        elif FULL == token:
             yield value_token(token)
         else:        
             raise SyntaxError("unknown token")
