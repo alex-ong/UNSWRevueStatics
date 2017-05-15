@@ -4,7 +4,8 @@ Can receive arbitrary strings, and then attempt to tokenize them and parse them.
 '''
 from Model.CommandProgrammer.parser import (RECORD, THRU, GROUP, CHANNEL, CUE, FADER, AT,
                                             PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL,
-                                            tryParseInt, subContains)
+                                            tryParseInt, subContains,
+    validOperators)
 from Model.CommandProgrammer.parser import validOperators
 
 BACKSPACE = '<-'
@@ -21,18 +22,25 @@ class Console(object):
         if_error = False  # todo call parser and get command or error
         return (result, if_error, autocomplete)
     
-    def parseString(self, string):
-        print(string)
-        if string == BACKSPACE:
-            if len(self.tokens) > 0:
-                if tryParseInt(self.tokens[-1]):
-                    newInt = self.tokens[-1][:-1]
-                    if len(newInt) == 0:
-                        self.tokens = self.tokens[:-1]
-                    else:
-                        self.tokens[-1] = newInt
-                else:
+    def handleBackspace(self):
+        if len(self.tokens) > 0:
+            if tryParseInt(self.tokens[-1]):
+                newInt = self.tokens[-1][:-1]
+                if len(newInt) == 0:
                     self.tokens = self.tokens[:-1]
+                else:
+                    self.tokens[-1] = newInt
+            else:
+                self.tokens = self.tokens[:-1]
+    def checkValidOperator(self, string, operators):
+        if tryParseInt(string) and NUMBER in operators:
+            return True
+        else:
+            return string in operators
+        
+    def parseString(self, string):        
+        if string == BACKSPACE:
+            self.handleBackspace()
             return
         
         if string == CLEAR:
@@ -43,33 +51,27 @@ class Console(object):
         # split into more tokens, or add as a token. or do conversion.
         # have to deal with lack of channel key... When we receive ints,
         # we have to decide whether to combine ints, or add "Channel" in front of it.
-        if len(self.tokens) == 0:            
-            if tryParseInt(string):
-                self.tokens.append(CHANNEL)
-                self.tokens.append(string)
+        if self.checkValidOperator(string,validOperators(self.tokens)):
+            if tryParseInt(string) and tryParseInt(self.tokens[-1]):
+                self.tokens[-1] = self.tokens[-1] + string
             else:
                 self.tokens.append(string)
-        elif self.tokens[-1] == AT:
+        else: 
             if tryParseInt(string):
-                self.tokens.append(string) 
-            if string == FULL:
-                self.tokens.append(string)           
-        elif AT in self.tokens: 
-            if tryParseInt(string):
-                self.tokens[-1] = self.tokens[-1] + string        
-        else:  # no at symbol yet                        
-            if tryParseInt(string):
-                if tryParseInt(self.tokens[-1]):
-                    self.tokens[-1] = self.tokens[-1] + string
-                elif self.tokens[-1] == DECIMAL:
-                    self.tokens.append(string)                    
-                elif subContains(self.tokens[-1], [GROUP, CHANNEL, CUE, FADER]):
-                    self.tokens.append(string)
-                else:                    
+                #need to insert channel or group.
+                if len(self.tokens) == 0:
                     self.tokens.append(CHANNEL)
-                    self.tokens.append(string)                    
+                    self.tokens.append(string)
+                elif self.tokens[-1] == THRU:
+                    self.tokens.append(self.tokens[-3])
+                    self.tokens.append(string)
+                elif self.tokens[-1] in [PLUS, MINUS]:
+                    self.tokens.append(CHANNEL)
+                    self.tokens.append(string)
             else:
-                self.tokens.append(string)
+                print('Tried to enter ', string, 
+                      'but valid operators are:', 
+                      validOperators(self.tokens))
              
             
     # called when user hits clear 

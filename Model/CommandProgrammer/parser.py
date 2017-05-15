@@ -258,7 +258,7 @@ def validOperators(program):
     # TODO: complete this...
         
     if len(program) == 0:
-        return [AT, RECORD, GROUP, CUE, CHANNEL, NUMBER]
+        return [AT, RECORD, GROUP, CUE, CHANNEL]
     
     lastSymbol = program[-1]
     
@@ -276,20 +276,15 @@ def validOperators(program):
         else:
             return [NUMBER]
     else: #assume no @ in program
-        if lastSymbol  in [GROUP,CUE,CHANNEL]:
+        if lastSymbol in [GROUP,CUE,CHANNEL]:
             return [NUMBER]
         elif tryParseInt(lastSymbol): #isNumber
             if program[-2] in [GROUP,CHANNEL]:
-                return [NUMBER, THRU, PLUS, MINUS]
-            else: #cue
-                return [NUMBER, DECIMAL, THRU, PLUS, MINUS]
+                return [NUMBER, THRU, PLUS, MINUS, AT]            
         elif lastSymbol == THRU:
             return [program[-3]]
         elif lastSymbol == PLUS:
-            if program[-3] in [GROUP, CHANNEL]:
-                return [GROUP, CHANNEL]
-            else:
-                return [CUE]
+            return [GROUP, CHANNEL]
         elif lastSymbol == MINUS:
             return [GROUP, CHANNEL]
         
