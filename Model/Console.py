@@ -32,7 +32,7 @@ class Console(object):
                     self.tokens[-1] = newInt
             else:
                 self.tokens = self.tokens[:-1]
-    def checkValidOperator(self, string, operators):
+    def checkValidOperator(self, string, operators):        
         if tryParseInt(string) and NUMBER in operators:
             return True
         else:
@@ -51,12 +51,13 @@ class Console(object):
         # split into more tokens, or add as a token. or do conversion.
         # have to deal with lack of channel key... When we receive ints,
         # we have to decide whether to combine ints, or add "Channel" in front of it.
-        if self.checkValidOperator(string,validOperators(self.tokens)):
+        validOps = validOperators(self.tokens)
+        if self.checkValidOperator(string, validOps):
             if tryParseInt(string) and tryParseInt(self.tokens[-1]):
                 self.tokens[-1] = self.tokens[-1] + string
             else:
                 self.tokens.append(string)
-        else: 
+        elif len(validOps) > 0: 
             if tryParseInt(string):
                 #need to insert channel or group.
                 if len(self.tokens) == 0:
