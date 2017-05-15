@@ -36,6 +36,7 @@ class Group(object):
     
     def setRecordValue(self, value):
         self.recordValue = value
+        self.propagateValue()
         
     def setDirectFlashValue(self, value):
         self.directFlashValue = value
