@@ -4,13 +4,16 @@
 '''
 import tkinter as tk
 
-def autoString(value):        
+def autoString(value, reason=None):        
     if value is None:
         return ''    
     elif value == 100:
         return ('FL')
     elif value == 0:
-        return ''
+        if reason == Channel.ValueType.RECORD:
+            return '00'
+        else:
+            return ''
     else:
         return str(value).zfill(2)
 
@@ -98,7 +101,7 @@ class ChannelWidget(tk.Frame):
             if record is not None:  # show any non-zeroes if record isn't None                 
                 self.directValue.set(autoString(direct))
                 self.groupValue.set(autoString(group))
-                self.playback.set(autoString(playback))                
+                self.playBackValue.set(autoString(playback))                
             elif self.getNonZeroCount(direct, playback, group, record) >= 2: 
                 # show if there are at least two non-zeroes
                 self.directValue.set(autoString(direct))
@@ -107,7 +110,7 @@ class ChannelWidget(tk.Frame):
                         
             (finalValue, reason) = self.channel.getCueValueAndReason() 
             
-            self.finalValue.set(autoString(finalValue))
+            self.finalValue.set(autoString(finalValue, reason))
             
             self.finalValueLabel.config(fg=typeColourMapping[reason])
                     

@@ -33,7 +33,11 @@ def expression(rbp=0):
 
 class value_token:  # basically just numbers
     def __init__(self, value):
-        self.value = int(value)        
+        if value == FULL:
+            self.value = 100
+        else:
+            self.value = int(value)
+                
     def nud(self):
         return self.value
     

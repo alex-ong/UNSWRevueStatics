@@ -50,6 +50,9 @@ class Channel(object):
     def getDirectValue(self):
         return max(self.directValue, self.directFlashValue)
     
+    def setRecordValue(self, value):
+        self.recordValue = value
+        
     def getGroupValue(self):
         if self._groupValue == {}:
             return 0
@@ -87,5 +90,9 @@ class Channel(object):
                 return self.playbackValue, ValueType.PLAYBACK
             elif maxValue == groupValue:
                 return groupValue, ValueType.GROUP
-            
-                        
+                            
+    def clearPlayback(self):                
+        self.playbackValue = None
+                
+    def clearRecord(self):
+        self.recordValue = None            

@@ -29,4 +29,11 @@ class ChannelValues(object):
     def resetValues(self):
         for value in self.values:
             value.setValue(Channel.BYTE_MIN)
-            
+                        
+    def clearPlayback(self):
+        for value in self.values.values():
+            value.clearPlayback()
+                
+    def clearRecord(self):
+        for value in self.values.values():
+            value.clearRecord()

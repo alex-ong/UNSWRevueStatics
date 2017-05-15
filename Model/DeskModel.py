@@ -27,8 +27,11 @@ class DeskModel(object):
         
         self.currentfaderBinding = self.settings['lastFaderPage'] 
         self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
-        self.programmer = Programmer.Programmer()
-        self.console = Console.Console()
+        self.programmer = Programmer.Programmer(None,
+                                                self.faderValues,
+                                                self.groupValues,
+                                                self.channelValues)
+        self.console = Console.Console(self.programmer)
             
     def Reset(self):
         # get configReader to reset everything, then load everything
@@ -50,8 +53,8 @@ class DeskModel(object):
             self.groupValues[groupNumber].setDirectValue(value)
             
     def handleButtonInput(self, buttonName, buttonPressed):
-        if 'b_slider' in buttonName: #todo check programmer state first.
-            faderNumber = int(buttonName.replace('b_slider',''))
+        if 'b_slider' in buttonName:  # todo check programmer state first.
+            faderNumber = int(buttonName.replace('b_slider', ''))
             bindings = self.faderBindings[self.currentfaderBinding]
             toChange = bindings[faderNumber]
             
@@ -66,7 +69,7 @@ class DeskModel(object):
                 groupNumber = int(toChange.replace('group', ''))
                 self.groupValues[groupNumber].setDirectFlashValue(value)
                        
-        elif buttonPressed: #we only care about keyDown
+        elif buttonPressed:  # we only care about keyDown
             self.handleConsoleInput(buttonName)                    
         
     def getFaderBindings(self):

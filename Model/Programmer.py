@@ -4,28 +4,58 @@ from libs.sorted_containers.sortedset import SortedSet
 
 from Model.CommandProgrammer.Command import (SelectCommand, SetCommand, SelectAndSetCommand,
                                               DeleteCommand, RecordCommand)
+from Model.CommandProgrammer.parser import  CUE, CHANNEL, GROUP
 
 class Programmer(object):
-    def __init__(self):
+    def __init__(self, cueList, faderValues, groupValues, channelValues):
         self.currentlySelected = SortedSet()
+        self.cueList = None  # todo link this
+        self.faderValues = faderValues
+        self.groupValues = groupValues
+        self.channelValues = channelValues
         
     def handleCommand(self, command):
         if isinstance(command, SelectCommand):
-            pass
+            return self._doSelect(command)            
         elif isinstance(command, SetCommand):
-            pass
+            return self._doSet(command)
         elif isinstance(command, SelectAndSetCommand):
-            pass
+            return self._doSelectAndSet(command)
         elif isinstance(command, DeleteCommand):
-            pass
+            return self._doDelete(command)
         elif isinstance(command, RecordCommand):
-            pass    
+            return self._doRecord(command)
         
     def _doSelect(self, command):
-        pass
+        if len(command.target) > 0:
+            if CUE in command.target[0]:
+                return self.cueList.goto(command.target[0])
+            else:  # select group and or channel
+                self.currentlySelected = SortedSet(command.target)
+                return 'Selected:' + str(command.target)
+        else:
+            return 'No targets selected'
     
     def _doSet(self, command):
-        pass
+        if len(self.currentlySelected) == 0:
+            return 'No items to set'
+        else:
+            if CUE in self.currentlySelected[0]:
+                return 'Unable to perform this command on a cue'
+            else:
+                for string in self.currentlySelected:
+                    item = None
+                    try:
+                        if GROUP in string:
+                            groupNum = int(string.replace(GROUP,''))
+                            item = self.groupValues[groupNum] 
+                        elif CHANNEL in string:
+                            chanNum = int(string.replace(CHANNEL,''))
+                            item = self.channelValues[chanNum]
+                        item.setRecordValue(command.value)
+                    except Exception as e:
+                        print (e)
+                    
     
     def _doSelectAndSet(self, command):
         pass
@@ -37,9 +67,8 @@ class Programmer(object):
         pass
     
     def clear(self):
-        self.currentlySelected.clear()
-        # todo. call model and clear all recorded values.
-    
+        self.groupValues.clearRecord()
+        self.channelValues.clearRecord()        
     
 if __name__ == '__main__':
     pass

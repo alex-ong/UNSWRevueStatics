@@ -4,17 +4,20 @@ Can receive arbitrary strings, and then attempt to tokenize them and parse them.
 '''
 from Model.CommandProgrammer.parser import (RECORD, THRU, GROUP, CHANNEL, CUE, FADER, AT,
                                             PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL,
-                                            tryParseInt, subContains,
-    validOperators)
-from Model.CommandProgrammer.parser import validOperators
+                                            tryParseInt, subContains, validOperators)
+
+from Model.CommandProgrammer.parser import safeParse
+from Model.CommandProgrammer.Command import AbstractCommand
 
 BACKSPACE = '<-'
 CLEAR = 'Clear'
+ENTER = 'Enter'
                         
 class Console(object):
-    def __init__(self):
+    def __init__(self, programmer):
         self.tokens = []
-    
+        self.programmer = programmer
+        
     # returns autocomplete, if_error, and a list of strings
     def getTokens(self):
         result = self.tokens.copy()
@@ -45,7 +48,16 @@ class Console(object):
         
         if string == CLEAR:
             self.tokens = []
-            #self.programmer.clear() #todo: implement
+            self.programmer.clear()
+            return
+            
+        if string == ENTER:
+            result = safeParse(self.tokens)
+            if isinstance(result,AbstractCommand): 
+                result = self.programmer.handleCommand(result)
+            else:
+                print (result)
+            self.tokens = []
             return
             
         # split into more tokens, or add as a token. or do conversion.

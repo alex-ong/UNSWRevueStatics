@@ -36,3 +36,11 @@ class GroupValues(object):
         for value in self.values:
             value.reset()
             
+    def clearPlayback(self):
+        for value in self.values.values():
+            value.clearPlayback()
+                
+    def clearRecord(self):
+        for value in self.values.values():
+            value.clearRecord()
+            

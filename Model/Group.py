@@ -34,6 +34,9 @@ class Group(object):
     def getDirectValue(self):
         return max(self.directValue,self.directFlashValue)
     
+    def setRecordValue(self, value):
+        self.recordValue = value
+        
     def setDirectFlashValue(self, value):
         self.directFlashValue = value
         self.propagateValue()
@@ -49,9 +52,15 @@ class Group(object):
     def reset(self):
         self.directValue = 0
         self.directFlashValue = 0
-        self.playbackValue = 0
-        self.recordValue = 0 
+        self.playbackValue = None
+        self.recordValue = None
     
+    def clearPlayback(self):                
+        self.playbackValue = None
+                
+    def clearRecord(self):
+        self.recordValue = None
+        
     def getCueValueAndReason(self):
         # returns the value and either "direct", "playback", "group" or "record"
         if self.recordValue != None:
