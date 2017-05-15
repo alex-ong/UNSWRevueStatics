@@ -56,9 +56,7 @@ class Console(object):
                 self.tokens.append(string)           
         elif AT in self.tokens: 
             if tryParseInt(string):
-                self.tokens[-1] = self.tokens[-1] + string
-#         elif self.tokens[-1] == THRU:
-#             
+                self.tokens[-1] = self.tokens[-1] + string        
         else:  # no at symbol yet                        
             if tryParseInt(string):
                 if tryParseInt(self.tokens[-1]):

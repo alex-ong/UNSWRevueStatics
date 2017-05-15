@@ -255,19 +255,45 @@ def safeParse(program):
     
 # we could use this function in future to provide auto-complete features...
 def validOperators(program):
-    # TODO: complete this...    
+    # TODO: complete this...
+        
     if len(program) == 0:
-        return [AT, RECORD, GROUP, CUE, CHANNEL]
-    elif program[0] == RECORD:  # program starts with @
+        return [AT, RECORD, GROUP, CUE, CHANNEL, NUMBER]
+    
+    lastSymbol = program[-1]
+    
+    if program[0] == RECORD:  # program starts with @
         if len(program) == 1:
             return [GROUP, CHANNEL, CUE, FADER]
         elif len(program == 2):            
             return [NUMBER]
             
-    elif program[-1] == AT:  # program ends with @
-        return [NUMBER]
+    elif lastSymbol  == AT:  # program ends with @
+        return [NUMBER, FULL]
     elif AT in program:  # we are at [expression] @ number
-        return [NUMBER]
+        if lastSymbol  == FULL:
+            return []
+        else:
+            return [NUMBER]
+    else: #assume no @ in program
+        if lastSymbol  in [GROUP,CUE,CHANNEL]:
+            return [NUMBER]
+        elif tryParseInt(lastSymbol): #isNumber
+            if program[-2] in [GROUP,CHANNEL]:
+                return [NUMBER, THRU, PLUS, MINUS]
+            else: #cue
+                return [NUMBER, DECIMAL, THRU, PLUS, MINUS]
+        elif lastSymbol == THRU:
+            return [program[-3]]
+        elif lastSymbol == PLUS:
+            if program[-3] in [GROUP, CHANNEL]:
+                return [GROUP, CHANNEL]
+            else:
+                return [CUE]
+        elif lastSymbol == MINUS:
+            return [GROUP, CHANNEL]
+        
+        
     
 # e.g. checks if options('GROUP','FADER') are inside ['GROUP1','GROUP2'] etcc
 def subContainsList(items, options):
