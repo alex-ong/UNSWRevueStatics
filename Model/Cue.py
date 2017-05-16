@@ -34,9 +34,11 @@ class Cue(object):
     def __init__(self, mappings, fadeTimes, name = None):
         self.mappings = {}
         self.name = name
-        self.upTIme = fadeTimes[0]
+        self.upTime = fadeTimes[0]
         self.downTime = fadeTimes[1]
         
     def toDict(self):
         pass
     
+    def getValues(self):
+        return self.mappings
