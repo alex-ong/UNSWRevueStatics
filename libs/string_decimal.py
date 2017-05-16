@@ -7,7 +7,14 @@ when sorted, 1.1 and 1.10 are different,with 1.10 > 1.9 > 1.1
 @author alex-ong
 @date 2017-05-14
 '''
-
+def fromStr(string):
+    pairs = string.split('.')
+    if len(pairs) > 1:
+        return string_decimal(int(pairs[0]),int(pairs[1]))
+    else:
+        return string_decimal(int(pairs[0]),int(pairs[1]))
+        
+    
 # when sorting these (e.g. for cues), 1.10 > 1.9
 class string_decimal(object):
     def __init__(self, base, mantissa):        
