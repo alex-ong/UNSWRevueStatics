@@ -17,7 +17,6 @@ functions include
 
 list of groups,
 list of channels,
-evaluate() function that returns array of dmx values.
 fade up
 fade down
 cueName
@@ -26,3 +25,18 @@ cueName
 fromJson()
 toJson()
 '''
+
+def fromDict(data):
+    #return Cue(data['mappings'],data['fadeTimes'],data['name'])
+    return None #todo!
+    
+class Cue(object):
+    def __init__(self, mappings, fadeTimes, name = None):
+        self.mappings = {}
+        self.name = name
+        self.upTIme = fadeTimes[0]
+        self.downTime = fadeTimes[1]
+        
+    def toDict(self):
+        pass
+    
