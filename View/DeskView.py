@@ -9,14 +9,14 @@ from View.Widgets.ChannelWidget import ChannelWidget
 from View.Widgets.GroupWidget import GroupWidget
 from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
 from View.Widgets.ConsoleWidget import ConsoleWidget
+from View.Widgets.CueListWidget import CueListWidget
 
 class DeskView(tk.Frame):
     def __init__(self):
-        root = tk.Tk()
-        root.geometry('1400x850')  # todo: scale to screen rez
+        root = tk.Tk()        
         root.config(bg='red')
         super().__init__(root)
-        # root.overrideredirect(True) # change to windowless border        
+        # root.overrideredirect(True) # change to windowless border                
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         root.wm_title("UNSW Revue Statics")
@@ -27,12 +27,14 @@ class DeskView(tk.Frame):
         self.groupFrame = None
         self.faderFrame = None
         self.consoleWidget = None
+        self.cueListWidget = None
         
     # called by model during setup
     def setupChannels(self, channels):
         cf = ChannelGroupFrame(channels, ChannelWidget, self)
-        cf.grid(sticky=tk.NSEW)
+        cf.grid(row=0, column=1, sticky=tk.NSEW)
         self.channelFrame = cf
+    
         
     def setupGroups(self, groups):
         gf = ChannelGroupFrame(groups, GroupWidget, self)
@@ -42,13 +44,17 @@ class DeskView(tk.Frame):
     # todo: change faderLayout to "x x x  x" layout 
     def setupFaders(self, faders, faderLayout=[18, 9]):        
         ff = FaderFrame(faders, faderLayout, self)
-        ff.grid(sticky=tk.NSEW)
+        ff.grid(row=1, column=1, sticky=tk.NSEW)
         self.faderFrame = ff
     
     def setupConsole(self, console):
         cc = ConsoleWidget(console, self)
-        cc.grid(sticky=tk.NSEW)
+        cc.grid(row=2, column=1, columnspan=2, sticky=tk.NSEW)
         self.consoleWidget = cc
+        
+    def setupCueList(self, cueList):
+        cl = CueListWidget(cueList, self)
+        cl.grid(row=0, column=0,rowspan=3, sticky=tk.NSEW)
         
     def handleInput(self, dictInput):
         self.channelFrame.handleInput(dictInput)

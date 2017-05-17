@@ -30,8 +30,8 @@ class ChannelGroupValueCompact(tk.Frame):
         self.grid_columnconfigure(1, minsize=20, weight=0)
         self.grid_columnconfigure(2, minsize=20, weight=0)
         
-        titleLabel.grid(row=0, column=0,sticky=tk.W)        
-        cueLabel.grid(row=0, column=1,sticky=tk.W)
+        titleLabel.grid(row=0, column=0, sticky=tk.W)        
+        cueLabel.grid(row=0, column=1, sticky=tk.W)
         playLabel.grid(row=0, column=2)
         
     def setValue(self, title, cueValue, playValue):
@@ -136,6 +136,7 @@ class CueWidget(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
         self.config(bg='black')
+        self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=0)
         self.columnconfigure(1, weight=1)
         
@@ -148,7 +149,7 @@ class CueWidget(tk.Frame):
         
         cvf = CompactValueFrame(self)
         
-        cnf.grid(row=0, column=0, sticky=tk.E)
+        cnf.grid(row=0, column=0, sticky=tk.NSEW)
         ctf.grid(row=0, column=1, sticky=tk.EW)
         cvf.grid(row=1, column=1, sticky=tk.NSEW)
     

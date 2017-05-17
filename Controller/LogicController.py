@@ -14,7 +14,7 @@ class LogicController(object):
         #self.view.setupGroups(model.groupValues)
         self.view.setupFaders(model.faderValues)
         self.view.setupConsole(model.console)
-        
+        self.view.setupCueList(model.cueList)
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
         
         self.inputEventMaster = IOConverter()

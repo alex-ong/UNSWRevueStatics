@@ -29,8 +29,9 @@ class DeskModel(object):
         self.currentfaderBinding = self.settings['lastFaderPage'] 
         self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
         cueListData = self.config.readCueList()
-        cueList = CueList.fromDict(cueListData, self.groupValues, self.channelValues, self.config.writeCueList)
-        self.programmer = Programmer.Programmer(cueList,
+        self.cueList = CueList.fromDict(cueListData, self.groupValues, self.channelValues, self.config.writeCueList)
+        
+        self.programmer = Programmer.Programmer(self.cueList,
                                                 self.faderValues,
                                                 self.groupValues,
                                                 self.channelValues)
