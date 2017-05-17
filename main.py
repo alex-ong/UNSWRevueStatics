@@ -45,3 +45,10 @@ if __name__ == '__main__':
     # Start running the tkinter update() through an asyncio coroutine
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run_tk(view, controller, 0.001))
+    
+    controller.sliderInput.stop()    
+    print ("All Done - printing hanging threads")
+    for t in threading.enumerate():
+        if (t != threading.current_thread()):
+            print (t)
+            
