@@ -17,15 +17,27 @@ def fromDict(data, groupValues, channelValues, saveFunc):
         parsedData[newKey] = Cue.fromDict(cueData)
     return CueList(parsedData, groupValues, channelValues, saveFunc)
 
+
+def alterPivot(listLen, numIndices, index, fromEnd):
+    endIndex = index + fromEnd
+    startIndex = index - numIndices + fromEnd
+    while endIndex >= listLen:
+        endIndex -= 1
+        startIndex -= 1
+    while startIndex < 0:
+        startIndex += 1
+        endIndex += 1
+    return (startIndex,endIndex)
+
 class CueList(object):
-    def __init__(self, sortedDict, groupValues, channelValues, saveFunc, defaultUpDown = [2.0,0.0]):
+    def __init__(self, sortedDict, groupValues, channelValues, saveFunc, defaultUpDown=[2.0, 0.0]):
         self.data = sortedDict
         self.player = CuePlayer(groupValues, channelValues)
         self.defaultUpDown = defaultUpDown
+        self.currentCue = None
         if len(self.data.keys()) > 0:
-            self.currentCue = self.data.keys()[0]
-        else: 
-            self.currentCue = None
+            self.currentCue = self.data.keys()[0]        
+            
         self.groupValues = groupValues
         self.channelValues = channelValues 
         self.saveFunc = saveFunc
@@ -41,7 +53,7 @@ class CueList(object):
         for group in self.groupValues.values.values():            
             value, _ = group.getCueValueAndReason()            
             if value > 0:
-                mappings['group'+str(group.number)] = value
+                mappings['group' + str(group.number)] = value
                 
         for channel in self.channelValues.values.values():
             value, _ = channel.getCueValueAndReason()
@@ -49,8 +61,35 @@ class CueList(object):
                 mappings[channel.number] = value
         
         cue = Cue.Cue(mappings, self.defaultUpDown)
-        cueIndex = cueName.replace(CUE,'')
+        cueIndex = cueName.replace(CUE, '')
         cueIndex = string_decimal.fromStr(cueIndex)
         self.data[cueIndex] = cue        
         self.saveFunc(self.toDict())
         
+    def getCues(self, numCues, fromEnd):
+        # return numCues, with current being one from the end.
+        if len(self.data) == 0:            
+            return [[], None]
+        else:
+            allKeys = list(self.data.keys())
+            #first, collect numCues cues...
+            if len(self.data) < numCues:
+                resultKeys = allKeys                
+            else:
+                pivotIndex = allKeys.index(self.currentCue)
+                startIndex, endIndex = alterPivot(len(allKeys), numCues, pivotIndex, fromEnd)                 
+                resultKeys = allKeys[startIndex:endIndex]
+            
+            indexCurrent = resultKeys.index(self.currentCue)
+            
+            finalResult = [[],indexCurrent]
+            for key in resultKeys:
+                finalResult[0].append([key,self.data[key]])
+                
+            return finalResult
+                    
+                
+if __name__ == '__main__':
+    for i in range(10):
+        print(alterPivot(10,6, i, 4),i)
+    

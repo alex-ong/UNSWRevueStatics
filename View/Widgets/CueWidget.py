@@ -51,6 +51,9 @@ class CompactValueFrame(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
         self.config(bg=BG)
+        self.columnconfigure(0, weight=1, uniform='UniformGroup1')
+        self.columnconfigure(1, weight=1, uniform='UniformGroup1')
+        
         self.values = []
         
         # generate 5x2 frame
@@ -58,11 +61,18 @@ class CompactValueFrame(tk.Frame):
             for y in range(5):
                 cgvc = ChannelGroupValueCompact(self)
                 cgvc.setValue('group' + str(y), '10', '10')
-                cgvc.grid(row=y, column=x)
+                cgvc.grid(row=y, column=x,sticky=tk.NSEW)
                 self.values.append(cgvc)
                 
-    def refresh(self, cue):
-        pass
+    def refresh(self, bindings):        
+        i = 0
+        for binding, value in bindings.items():
+            self.values[i].setValue(binding, value, None)
+            i += 1
+            
+        while i < len(self.values):
+            self.values[i].clear()
+            i += 1
     
 class CueNumberFrame(tk.Frame):
     def __init__(self, *args):
@@ -137,21 +147,26 @@ class CueWidget(tk.Frame):
         super().__init__(*args)
         self.config(bg='black')
         self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=0)
-        self.columnconfigure(1, weight=1)
+        self.columnconfigure(0, weight=0,minsize=50)
+        self.columnconfigure(1, weight=1,minsize=230)
         
-        cnf = CueNumberFrame(self)        
+        self.cnf = CueNumberFrame(self)        
         sd = string_decimal.fromStr('99.99')
-        cnf.refresh(sd)
+        self.cnf.refresh(sd)
         
-        ctf = CueTimingFrame(self)
-        ctf.refresh(5, 5, ('100%'))
+        self.ctf = CueTimingFrame(self)
+        self.ctf.refresh(5, 5, ('100%'))
         
-        cvf = CompactValueFrame(self)
+        self.cvf = CompactValueFrame(self)
         
-        cnf.grid(row=0, column=0, sticky=tk.NSEW)
-        ctf.grid(row=0, column=1, sticky=tk.EW)
-        cvf.grid(row=1, column=1, sticky=tk.NSEW)
+        self.cnf.grid(row=0, column=0, sticky=tk.NSEW)
+        self.ctf.grid(row=0, column=1, sticky=tk.EW)
+        self.cvf.grid(row=1, column=1, sticky=tk.NSEW)
+    
+    def refreshDisplay(self, cueName, cue, selected):        
+        self.cnf.refresh(cueName)
+        self.ctf.refresh(cue.upTime,cue.downTime, '')
+        self.cvf.refresh(cue.mappings)
     
 if __name__ == '__main__':
     root = tk.Tk()

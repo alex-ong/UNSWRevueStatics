@@ -55,6 +55,7 @@ class DeskView(tk.Frame):
     def setupCueList(self, cueList):
         cl = CueListWidget(cueList, self)
         cl.grid(row=0, column=0,rowspan=3, sticky=tk.NSEW)
+        self.cueListWidget = cl
         
     def handleInput(self, dictInput):
         self.channelFrame.handleInput(dictInput)
@@ -63,4 +64,4 @@ class DeskView(tk.Frame):
         self.channelFrame.refreshDisplay()
         self.faderFrame.refreshDisplay()
         self.consoleWidget.refreshDisplay()
-                
+        self.cueListWidget.refreshDisplay()
