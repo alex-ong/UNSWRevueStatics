@@ -3,11 +3,14 @@ import Model.Configuration.DMXBindingParser as DMXBindingParser
 import Model.Configuration.FaderBindingParser as FaderBindingParser
 import Model.Configuration.GeneralSettingParser as GeneralSettingParser
 import Model.Configuration.GroupBindingParser as GroupBindingParser
+import Model.Configuration.CueListParser as CueListParser
+
 DMX_BINDING = 'dmxBinding'
 SETTING_BINDING = 'settings'
 GROUP_BINDINGS = 'groupBindings'
 FADER_BINDINGS = 'faderBindings'
-    
+CUE_LIST = 'cueList'
+
 class ConfigReader(object):
     def __init__(self, metaConfigPath):
         self.metaConfigPath = metaConfigPath
@@ -49,7 +52,8 @@ class ConfigReader(object):
         return {DMX_BINDING:'config/dmxBinding.json',
                 SETTING_BINDING:'config/settings.json',
                 GROUP_BINDINGS: 'config/groupBindings.json',
-                FADER_BINDINGS: 'config/faderBindings.json'}
+                FADER_BINDINGS: 'config/faderBindings.json',
+                CUE_LIST: 'config/cueList.json'}
         
     def readDMXBindings(self, numChannels):
         return DMXBindingParser.openFile(self.paths[DMX_BINDING], numChannels)
@@ -75,3 +79,8 @@ class ConfigReader(object):
     def writeGeneralSettings(self, bindingDict):
         GeneralSettingParser.saveFile(bindingDict, self.paths[SETTING_BINDING])
         
+    def readCueList(self):
+        return CueListParser.openFile(self.paths[CUE_LIST])
+    
+    def writeCueList(self, cueList):
+        CueListParser.saveFile(cueList, self.paths[CUE_LIST])

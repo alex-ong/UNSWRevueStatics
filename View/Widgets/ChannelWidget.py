@@ -108,7 +108,7 @@ class ChannelWidget(tk.Frame):
                 self.groupValue.set(autoString(group))
                 self.playBackValue.set(autoString(playback))                
                         
-            (finalValue, reason) = self.channel.getCueValueAndReason() 
+            (finalValue, reason) = self.channel.getDisplayValueAndReason() 
             
             self.finalValue.set(autoString(finalValue, reason))
             

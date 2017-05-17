@@ -58,7 +58,7 @@ class Console(object):
             else:
                 print (result)
             self.tokens = []
-            return
+            return result
             
         # split into more tokens, or add as a token. or do conversion.
         # have to deal with lack of channel key... When we receive ints,

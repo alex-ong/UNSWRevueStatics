@@ -43,7 +43,7 @@ class Group(object):
         self.propagateValue()
     
     def propagateValue(self):
-        value = self.getCueValueAndReason()[0]
+        value = self.getDisplayValueAndReason()[0]
         for channel, proportion in self.channelMappings:
             channel.setGroupValue(self.number, round(value*proportion/100)) #TODO THIS
         
@@ -62,7 +62,7 @@ class Group(object):
     def clearRecord(self):
         self.recordValue = None
         
-    def getCueValueAndReason(self):
+    def getDisplayValueAndReason(self):
         # returns the value and either "direct", "playback", "group" or "record"
         if self.recordValue != None:
             return self.recordValue, ValueType.RECORD
@@ -79,4 +79,9 @@ class Group(object):
             elif maxValue == self.getDirectValue():
                 return self.directValue, ValueType.DIRECT
             elif maxValue == self.playbackValue:
-                return self.playbackValue, ValueType.PLAYBACK        
+                return self.playbackValue, ValueType.PLAYBACK 
+    
+    def getCueValueAndReason(self):
+        return self.getDisplayValueAndReason()    
+            
+    

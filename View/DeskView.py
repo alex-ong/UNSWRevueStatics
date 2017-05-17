@@ -3,7 +3,6 @@
 @date 2017-05-07
 '''
 import tkinter as tk
-import tkinter.ttk as ttk
 
 from View.Widgets.FaderFrame import FaderFrame
 from View.Widgets.ChannelWidget import ChannelWidget
@@ -21,11 +20,7 @@ class DeskView(tk.Frame):
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         root.wm_title("UNSW Revue Statics")
-        
-        # this stops widgets using style elements overwriting other widgets also using styles
-        self.style = ttk.Style(root)
-        self.style.theme_use("winnative")
-        
+                
         self.columnconfigure(0, weight=1)
         
         self.channelFrame = None

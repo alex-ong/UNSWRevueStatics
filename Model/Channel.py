@@ -58,16 +58,9 @@ class Channel(object):
             return 0
         else:
             values = self._groupValue.values()
-            return max(values)            
-        
-    # value that gets pushed out to dmx
-    def getCueValue(self):
-        if self.recordValue is not None:
-            return self.recordValue
-        else:  # todo: scan through direct,playback,group and do HTP 
-            return self.directValue
+            return max(values)                    
     
-    def getCueValueAndReason(self):
+    def getDisplayValueAndReason(self):
         # returns the value and either "direct", "playback", "group" or "record"
         if self.recordValue != None:
             return self.recordValue, ValueType.RECORD
@@ -90,7 +83,26 @@ class Channel(object):
                 return self.playbackValue, ValueType.PLAYBACK
             elif maxValue == groupValue:
                 return groupValue, ValueType.GROUP
-                            
+    
+    #same as above but we don't use groupValue
+    def getCueValueAndReason(self):
+        if self.recordValue != None:
+            return self.recordValue, ValueType.RECORD
+        else:
+            values = [0]
+            if self.getDirectValue() > 0:
+                values.append(self.getDirectValue())
+            if self.playbackValue is not None and self.playbackValue > 0:
+                values.append(self.playbackValue)            
+            
+            maxValue = max(values)
+            if maxValue == 0:
+                return 0, ValueType.NONE            
+            elif maxValue == self.getDirectValue():
+                return self.getDirectValue(), ValueType.DIRECT
+            elif maxValue == self.playbackValue:
+                return self.playbackValue, ValueType.PLAYBACK
+                                      
     def clearPlayback(self):                
         self.playbackValue = None
                 

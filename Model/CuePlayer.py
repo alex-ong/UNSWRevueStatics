@@ -1,6 +1,11 @@
 '''
 class that play a cue
 '''
+import math
+from Model.ChannelValues import ChannelValues
+
+def clamp(minimum, maximum, x):
+    return max(minimum, min(x, maximum))
 
 class PlayableCue(object):
     MODE_NONE = -1
@@ -26,11 +31,11 @@ class PlayableCue(object):
         self.target = newTarget
           
     def update(self, deltaTime):
-        if self.mode == MODE_PLAY:
+        if self.mode == PlayableCue.MODE_PLAY:
             self.timer += deltaTime
             self.timer = clamp(0.0, self.target, self.timer)
-        elif self.mode == MODE_STOP:
-            self.timer += deltaTIme
+        elif self.mode == PlayableCue.MODE_STOP:
+            self.timer += deltaTime
             self.timer = clamp(0.0, self.target, self.timer)
             if self._perc() == 1.0:
                 self.onFinished(self)
@@ -38,19 +43,20 @@ class PlayableCue(object):
     def _perc(self):
         return self.timer / self.target
     
-    def getValues():
+    def getValues(self):
         result = self.cue.getValues()
         multiplier = self._perc()
-        if self.mode == MODE_STOP:
+        if self.mode == PlayableCue.MODE_STOP:
             multiplier = 1.0 - multiplier
         for key, value in result.items():
-            result[key] = math.round(value * multiplier) 
+            result[key] = round(value * multiplier) 
         return result
     
 class CuePlayer(object):
-    def __init__(self, groupValues, cueValues):
+    def __init__(self, groupValues, channelValues):
         self.currentCues = []
-        
+        self.groupValues = groupValues
+        self.channelvalues = channelValues
     def removeCue(self, cue):
         try:
             index = self.currentCues.index(cue)
@@ -66,13 +72,13 @@ class CuePlayer(object):
             cue.update(deltaTime)
         
         # create group/channel playback dict
-        finalValues = { key:0 for key in groupValues.values.keys()}
-        finalValues2 = { key:0 for key in channelValues.values.keys()}
+        finalValues = { key:0 for key in self.groupValues.values.keys()}
+        finalValues2 = { key:0 for key in self.channelValues.values.keys()}
         finalValues.update(finalValues2)
         for cue in self.currentCues:
             cueValues = cue.getValues()
             for key, value in cueValues.items():
-                finalValues[key] = max(finalValues[key],value)
+                finalValues[key] = max(finalValues[key], value)
         
         return finalValues
         

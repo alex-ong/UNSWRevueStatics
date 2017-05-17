@@ -9,6 +9,7 @@ from Model import FaderValues
 import Model.Configuration.ConfigReader as ConfigReader
 from Model import Programmer
 from Model import Console
+from Model import CueList
 
 from _collections import OrderedDict
 
@@ -27,7 +28,9 @@ class DeskModel(object):
         
         self.currentfaderBinding = self.settings['lastFaderPage'] 
         self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
-        self.programmer = Programmer.Programmer(None,
+        cueListData = self.config.readCueList()
+        cueList = CueList.fromDict(cueListData, self.groupValues, self.channelValues, self.config.writeCueList)
+        self.programmer = Programmer.Programmer(cueList,
                                                 self.faderValues,
                                                 self.groupValues,
                                                 self.channelValues)

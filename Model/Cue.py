@@ -12,7 +12,7 @@ def fromDict(data):
     
 class Cue(object):
     def __init__(self, mappings, fadeTimes):
-        self.mappings = {}        
+        self.mappings = mappings     
         self.upTime = fadeTimes[0]
         self.downTime = fadeTimes[1]
         

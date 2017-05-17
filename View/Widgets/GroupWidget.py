@@ -94,7 +94,7 @@ class GroupWidget(tk.Frame):
                 self.playBackValue.set(autoString(playback))        
                 self.finalValue.set(autoString(record))
             
-            (finalValue, reason) = self.group.getCueValueAndReason() 
+            (finalValue, reason) = self.group.getDisplayValueAndReason() 
             
             self.finalValue.set(autoString(finalValue))
             

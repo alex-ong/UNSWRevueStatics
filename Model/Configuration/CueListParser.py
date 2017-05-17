@@ -7,29 +7,27 @@ import collections
 from libs.sorted_containers.sorteddict import SortedDict
 from Model.CueList import fromDict
 
-def openFile(targetFile, groupValues, channelValues):
+def openFile(targetFile):
     try:
         with open(targetFile, 'r') as f:
             result = json.load(f)
-        
-        result = fromDict(result,groupValues,channelValues)
     except:
-        result = defaultFile(targetFile,numChannels)
-        saveFile(result, targetFile) #turns keys into strings...
-        result = fromDict(result, groupValues,channelValues)
+        result = defaultFile(targetFile)
+        saveFile(result, targetFile) #turns keys into strings...        
         
     return result
  
 
-def defaultFile(targetFile, numChannels):
+def defaultFile(targetFile):
     result = {}
     saveFile(result, targetFile)
     return result
     
 def saveFile(data, targetFile):
+    print ("Writing ", type(data))
     try:
         with open(targetFile, 'w') as f:
-            json.dump(data, f, indent=4,sort_keys=True)
+            json.dump(data, f, indent=4)
     except:
         print ("Error saving binding file to", targetFile)
     

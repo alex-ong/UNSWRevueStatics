@@ -12,7 +12,7 @@ def fromStr(string):
     if len(pairs) > 1:
         return string_decimal(int(pairs[0]),int(pairs[1]))
     else:
-        return string_decimal(int(pairs[0]),int(pairs[1]))
+        return string_decimal(int(pairs[0]),0)
         
     
 # when sorting these (e.g. for cues), 1.10 > 1.9

@@ -9,7 +9,7 @@ from Model.CommandProgrammer.parser import  CUE, CHANNEL, GROUP
 class Programmer(object):
     def __init__(self, cueList, faderValues, groupValues, channelValues):
         self.currentlySelected = SortedSet()
-        self.cueList = None  # todo link this
+        self.cueList = cueList
         self.faderValues = faderValues
         self.groupValues = groupValues
         self.channelValues = channelValues
@@ -58,13 +58,25 @@ class Programmer(object):
                     
     
     def _doSelectAndSet(self, command):
-        pass
+        select = SelectCommand(command.target)
+        setValue = SetCommand(command.value)        
+        try:
+            self._doSelect(select)            
+        except:
+            return "Error when selecting items"
+        
+        try:
+            self._doSet(setValue)
+            return "Selected then set to: ", +str(setValue.value)
+        except:
+            return "Error when setting items"  
     
     def _doDelete(self, command):
         pass
     
     def _doRecord(self, command):
-        pass
+        if CUE in command.target:
+            self.cueList.recordCue(command.target,)
     
     def clear(self):
         self.groupValues.clearRecord()
