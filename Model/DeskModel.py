@@ -13,6 +13,8 @@ from Model import CueList
 
 from _collections import OrderedDict
 
+from .CueList import PLAYBACK_COMMANDS
+
 class DeskModel(object):
     def __init__(self):
         self.config = ConfigReader.ConfigReader('config/config.json')
@@ -74,7 +76,10 @@ class DeskModel(object):
                 self.groupValues[groupNumber].setDirectFlashValue(value)
                        
         elif buttonPressed:  # we only care about keyDown
-            self.handleConsoleInput(buttonName)                    
+            if buttonName in PLAYBACK_COMMANDS:
+                self.handlePlaybackCommand(buttonName)
+            else:
+                self.handleConsoleInput(buttonName)                    
         
     def getFaderBindings(self):
         bindings = self.faderBindings[self.currentfaderBinding]
@@ -93,4 +98,7 @@ class DeskModel(object):
     
     def handleConsoleInput(self, stringInput):
         self.console.parseString(stringInput)
+        
+    def handlePlaybackCommand(self, buttonName):
+        self.cueList.handleCueCommand(buttonName)
         

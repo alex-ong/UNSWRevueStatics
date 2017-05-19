@@ -29,6 +29,11 @@ def alterPivot(listLen, numIndices, index, fromEnd):
         endIndex += 1
     return (startIndex,endIndex)
 
+NEXT = 'Next'
+BACK = 'Back'
+RELEASE = 'Release'
+PLAYBACK_COMMANDS = [NEXT, BACK, RELEASE]
+
 class CueList(object):
     def __init__(self, sortedDict, groupValues, channelValues, saveFunc, defaultUpDown=[2.0, 0.0]):
         self.data = sortedDict
@@ -88,6 +93,18 @@ class CueList(object):
                 
             return finalResult
                     
+    def handleCueCommand(self, commandName):        
+        if commandName == NEXT:
+            self.player.playCue(self.data[self.currentCue])
+            allKeys = self.data.keys()
+            index = allKeys.index(self.currentCue)            
+            self.currentCue = allKeys[min(index+1, len(allKeys)-1)]
+        elif commandName == BACK:
+            pass
+        elif commandName == RELEASE:
+            pass
+        else:
+            print ('Unhandled Cue command:', commandName)
                 
 if __name__ == '__main__':
     for i in range(10):

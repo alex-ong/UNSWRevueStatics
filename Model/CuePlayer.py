@@ -1,5 +1,5 @@
 '''
-class that play a cue
+class that _play a cue
 '''
 import math
 from Model.ChannelValues import ChannelValues
@@ -18,17 +18,19 @@ class PlayableCue(object):
         self.cue = cue
         self.onFinished = onFinished
         self.timer = 0.0
+        self._play()
         
-    def play(self):
+    def _play(self):
         self.mode = PlayableCue.MODE_PLAY
         self.target = self.cue.upTime
         
     def stop(self):
-        self.mode = PlayableCue.MODE_STOP
-        newTarget = self.cue.downTime
-        startValue = (1.0 - self._perc()) * newTarget
-        self.timer = startValue
-        self.target = newTarget
+        if self.mode != PlayableCue.MODE_STOP:
+            self.mode = PlayableCue.MODE_STOP
+            newTarget = self.cue.downTime
+            startValue = (1.0 - self._perc()) * newTarget
+            self.timer = startValue
+            self.target = newTarget
           
     def update(self, deltaTime):
         if self.mode == PlayableCue.MODE_PLAY:
@@ -57,15 +59,21 @@ class CuePlayer(object):
         self.currentCues = []
         self.groupValues = groupValues
         self.channelvalues = channelValues
-    def removeCue(self, cue):
+    
+    def _removeCue(self, cue):
         try:
             index = self.currentCues.index(cue)
             del self.currentCues[index] 
         except:
             pass
-        
+    
+    def clear(self):
+        for cue in self.currentCues:
+            cue.stop()   
+    
     def playCue(self, cue):
-        self.currentCues.append(PlayableCue(cue, self.removeCue))
+        self.clear()
+        self.currentCues.append(PlayableCue(cue, self._removeCue))
         
     def update(self, deltaTime):
         for cue in self.currentCues:
@@ -82,5 +90,4 @@ class CuePlayer(object):
         
         return finalValues
         
-        
-                        
+    

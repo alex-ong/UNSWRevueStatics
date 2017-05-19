@@ -59,7 +59,7 @@ class Console(object):
                 print (result)
             self.tokens = []
             return result
-            
+        
         # split into more tokens, or add as a token. or do conversion.
         # have to deal with lack of channel key... When we receive ints,
         # we have to decide whether to combine ints, or add "Channel" in front of it.
