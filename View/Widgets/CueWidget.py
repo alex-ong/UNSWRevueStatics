@@ -124,6 +124,7 @@ class CueTimingFrame(tk.Frame):
         self.columnconfigure(3, minsize=40)  # down text
         self.columnconfigure(4, minsize=5)  # down arrow
         self.columnconfigure(5, minsize=60)  # runLabel
+        self.rowconfigure(0,weight=1)
         
         label1 = tk.Label(self, textvariable=self.upLabel, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
         label2 = tk.Label(self, text=UP_ARROW, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
@@ -160,7 +161,7 @@ class CueWidget(tk.Frame):
         self.cvf = CompactValueFrame(self)
         
         self.cnf.grid(row=0, column=0, sticky=tk.NSEW)
-        self.ctf.grid(row=0, column=1, sticky=tk.EW)
+        self.ctf.grid(row=0, column=1, sticky=tk.NSEW)
         self.cvf.grid(row=1, column=1, sticky=tk.NSEW)
     
     def refreshDisplay(self, cueName, cue, selected):        
