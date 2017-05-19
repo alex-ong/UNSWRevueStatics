@@ -11,7 +11,7 @@ class LogicController(object):
         self.view = view
         
         self.view.setupChannels(model.channelValues)
-        #self.view.setupGroups(model.groupValues)
+        # self.view.setupGroups(model.groupValues)
         self.view.setupFaders(model.faderValues)
         self.view.setupConsole(model.console)
         self.view.setupCueList(model.cueList)
@@ -25,8 +25,10 @@ class LogicController(object):
         msg = json.loads(msg)         
         self.inputEventMaster.addState(msg)
         
-    def update(self):  # occurs in main thread/same thread as tkinter
-        self.handleInput()        
+    def update(self, timeDelta):  # occurs in main thread/same thread as tkinter
+        self.handleInput()   
+        self.model.update(timeDelta)   
+          
             
     def handleInput(self):
         inputEvents = self.inputEventMaster.getEvents()
@@ -39,7 +41,7 @@ class LogicController(object):
                     for buttonEvent in buttonEvents:
                         self.handleButtonInput(key, buttonEvent.down)
         
-            self.view.refreshDisplay()
+        self.view.refreshDisplay()
             
     def handleSliderInput(self, sliderName, value):
         self.model.handleSliderInput(sliderName, value)

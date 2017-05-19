@@ -99,13 +99,18 @@ class CueList(object):
             allKeys = self.data.keys()
             index = allKeys.index(self.currentCue)            
             self.currentCue = allKeys[min(index+1, len(allKeys)-1)]
-        elif commandName == BACK:
-            pass
+        elif commandName == BACK:            
+            allKeys = self.data.keys()
+            index = allKeys.index(self.currentCue)            
+            self.currentCue = allKeys[max(index-1, 0)]
         elif commandName == RELEASE:
             pass
         else:
             print ('Unhandled Cue command:', commandName)
-                
+    
+    def update(self, timeDelta):
+        self.player.update(timeDelta)
+    
 if __name__ == '__main__':
     for i in range(10):
         print(alterPivot(10,6, i, 4),i)

@@ -101,4 +101,6 @@ class DeskModel(object):
         
     def handlePlaybackCommand(self, buttonName):
         self.cueList.handleCueCommand(buttonName)
-        
+    
+    def update(self, timeDelta):
+        self.cueList.update(timeDelta)

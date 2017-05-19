@@ -17,20 +17,22 @@ async def run_tk(root, controller, interval=GUI_REFRESH):
     '''
     printDeltas = False
     try:
-        timer = time.time()*1000
+        timer = time.time()
         while True:
             # update gui
+            newTime = time.time()
+            delta = newTime - timer            
+            if printDeltas:
+                print (delta)
             root.update()
             
             # update logic if required.
-            controller.update()
+            controller.update(delta)
                             
             await asyncio.sleep(interval)
             
             # keep track of deltaTimes for performance debugging
-            newTime = time.time() * 1000            
-            if printDeltas:
-                print (newTime - timer)
+
             timer = newTime
             
     except tkinter.TclError as e:
@@ -40,7 +42,7 @@ async def run_tk(root, controller, interval=GUI_REFRESH):
 if __name__ == '__main__':
     model = Model.DeskModel.DeskModel()
     view = DeskView.DeskView()
-    controller = Controller.LogicController.LogicController(model,view)
+    controller = Controller.LogicController.LogicController(model, view)
     
     # Start running the tkinter update() through an asyncio coroutine
     loop = asyncio.get_event_loop()

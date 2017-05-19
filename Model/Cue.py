@@ -15,9 +15,11 @@ class Cue(object):
         self.mappings = mappings     
         self.upTime = fadeTimes[0]
         self.downTime = fadeTimes[1]
+        self.playableCue = None
         
     def toDict(self):
         return {'mappings': self.mappings,  'fadeTimes': [self.upTime,self.downTime]}
     
     def getValues(self):
         return self.mappings
+    

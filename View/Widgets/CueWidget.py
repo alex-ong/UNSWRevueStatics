@@ -4,6 +4,7 @@ Widget that displays cue info
 
 import tkinter as tk
 from libs import string_decimal
+from .ChannelWidget import autoString
 
 FG_MAIN = 'white'
 from View.Widgets.ChannelWidget import COLOR_PLAYBACK as FG_PLAY
@@ -28,19 +29,19 @@ class ChannelGroupValueCompact(tk.Frame):
         cueLabel = tk.Label(self, textvariable=self.cueValue, bg=BG, fg=FG_MAIN, font=FONT)
         playLabel = tk.Label(self, textvariable=self.playValue, bg=BG, fg=FG_PLAY, font=FONT)
         
-        self.grid_columnconfigure(0, minsize=60, weight=1)
-        self.grid_columnconfigure(1, minsize=20, weight=0)
-        self.grid_columnconfigure(2, minsize=20, weight=0)
+        self.grid_columnconfigure(0, minsize=60, weight=0)
+        self.grid_columnconfigure(1, minsize=40, weight=0)
+        self.grid_columnconfigure(2, minsize=40, weight=0)
         
         titleLabel.grid(row=0, column=0, sticky=tk.W)        
         cueLabel.grid(row=0, column=1, sticky=tk.W)
-        playLabel.grid(row=0, column=2)
+        playLabel.grid(row=0, column=2,sticky=tk.NSEW)
         
     def setValue(self, title, cueValue, playValue):
-        self.title.set(title + ":")
+        self.title.set(str(title) + ":")
         self.cueValue.set(cueValue)
         if playValue is not None:
-            self.playValue.set('(' + playValue + ')')
+            self.playValue.set('(' + autoString(playValue) + ')')
         else:
             self.playValue.set('')
     
@@ -66,10 +67,22 @@ class CompactValueFrame(tk.Frame):
                 cgvc.grid(row=y, column=x, sticky=tk.NSEW)
                 self.values.append(cgvc)
                 
-    def refresh(self, bindings):        
+    def refresh(self, bindings, playableCue):        
         i = 0
-        for binding, value in bindings.items():
-            self.values[i].setValue(binding, value, None)
+        finalBindings = {}
+        for key, value in bindings.items():
+            if playableCue is None:
+                finalBindings[key] = [value, None]       
+            else:
+                finalBindings[key] = [value]
+                                             
+        if playableCue is not None:
+            bindings2 = playableCue.getValues()
+            for key, value in bindings2.items():
+                finalBindings[key].append(value)
+                
+        for key, value in finalBindings.items():            
+            self.values[i].setValue(key, value[0], value[1])
             i += 1
             
         while i < len(self.values):
@@ -121,11 +134,11 @@ class CueTimingFrame(tk.Frame):
         self.downLabel = tk.StringVar()
         self.runLabel = tk.StringVar()
         self.columnconfigure(0, minsize=30, weight=1)  # blank space
-        self.columnconfigure(1, minsize=40)  # up text
-        self.columnconfigure(2, minsize=5)  # up arrow
-        self.columnconfigure(3, minsize=40)  # down text
-        self.columnconfigure(4, minsize=5)  # down arrow
-        self.columnconfigure(5, minsize=60)  # runLabel
+        self.columnconfigure(1, minsize=40, weight=0)  # up text
+        self.columnconfigure(2, minsize=5, weight=0)  # up arrow
+        self.columnconfigure(3, minsize=40, weight=0)  # down text
+        self.columnconfigure(4, minsize=5, weight=0)  # down arrow
+        self.columnconfigure(5, minsize=80, weight=0)  # runLabel
         self.rowconfigure(0, weight=1)
         
         label1 = tk.Label(self, textvariable=self.upLabel, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
@@ -142,15 +155,18 @@ class CueTimingFrame(tk.Frame):
         
     def refresh(self, up, down, run):
         self.upLabel.set(str(up))
-        self.downLabel.set(str(down))
-        self.runLabel.set(str(run))
+        self.downLabel.set(str(down))    
+        if run is not None:    
+            self.runLabel.set(str(round(100 * run)) + '%')
+        else:
+            self.runLabel.set('')
         
 class CueActiveFrame(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
         self.config(bg=BG)
         self.lastColour = BG
-        self.label = tk.Label(self, text='>', bg=BG, fg=BG, 
+        self.label = tk.Label(self, text='>', bg=BG, fg=BG,
                               font=FONT_ACTIVE_CUE, justify=tk.CENTER)
         self.label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         
@@ -173,13 +189,13 @@ class CueWidget(tk.Frame):
         self.cnf.refresh(sd)
         
         self.ctf = CueTimingFrame(self)
-        self.ctf.refresh(5, 5, ('100%'))
+        self.ctf.refresh(5, 5, 1.0)
         
         self.caf = CueActiveFrame(self)
         self.caf.refresh(False)
         
         self.cvf = CompactValueFrame(self)
-        self.cvf.refresh({})
+        self.cvf.refresh({}, None)
                 
         self.cnf.grid(row=0, column=0, sticky=tk.NSEW)
         self.ctf.grid(row=0, column=1, sticky=tk.NSEW)
@@ -194,10 +210,11 @@ class CueWidget(tk.Frame):
             self.ctf.grid_forget()
             self.caf.grid_forget()
             self.cvf.grid_forget()              
-        self.cnf.refresh(cueName)
-        self.ctf.refresh(cue.upTime, cue.downTime, '')
+        self.cnf.refresh(cueName)        
+        self.ctf.refresh(cue.upTime, cue.downTime,
+                         cue.playableCue._perc() if cue.playableCue else None)
         self.caf.refresh(selected)
-        self.cvf.refresh(cue.mappings)
+        self.cvf.refresh(cue.mappings, cue.playableCue)
     
     def hide(self):
         if self.isVisible:

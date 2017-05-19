@@ -7,6 +7,12 @@ from Model.ChannelValues import ChannelValues
 def clamp(minimum, maximum, x):
     return max(minimum, min(x, maximum))
 
+def tryParseInt(token):
+    try:
+        int(token)
+    except:
+        return False
+    return True
 class PlayableCue(object):
     MODE_NONE = -1
     MODE_PLAY = 0
@@ -16,6 +22,7 @@ class PlayableCue(object):
         self.target = cue.upTime
         self.mode = PlayableCue.MODE_NONE
         self.cue = cue
+        self.cue.playableCue = self
         self.onFinished = onFinished
         self.timer = 0.0
         self._play()
@@ -33,20 +40,23 @@ class PlayableCue(object):
             self.target = newTarget
           
     def update(self, deltaTime):
-        if self.mode == PlayableCue.MODE_PLAY:
+        if self.mode == PlayableCue.MODE_PLAY:            
             self.timer += deltaTime
-            self.timer = clamp(0.0, self.target, self.timer)
+            self.timer = clamp(0.0, self.target, self.timer)            
         elif self.mode == PlayableCue.MODE_STOP:
             self.timer += deltaTime
             self.timer = clamp(0.0, self.target, self.timer)
             if self._perc() == 1.0:
+                self.cue.playableCue = None
                 self.onFinished(self)
                 
     def _perc(self):
+        if self.target == 0.0:
+            return 1.0
         return self.timer / self.target
     
     def getValues(self):
-        result = self.cue.getValues()
+        result = self.cue.getValues().copy()
         multiplier = self._perc()
         if self.mode == PlayableCue.MODE_STOP:
             multiplier = 1.0 - multiplier
@@ -58,7 +68,7 @@ class CuePlayer(object):
     def __init__(self, groupValues, channelValues):
         self.currentCues = []
         self.groupValues = groupValues
-        self.channelvalues = channelValues
+        self.channelValues = channelValues
     
     def _removeCue(self, cue):
         try:
@@ -80,12 +90,16 @@ class CuePlayer(object):
             cue.update(deltaTime)
         
         # create group/channel playback dict
-        finalValues = { key:0 for key in self.groupValues.values.keys()}
+        finalValues = { 'group'+str(key):0 for key in self.groupValues.values.keys()}        
         finalValues2 = { key:0 for key in self.channelValues.values.keys()}
         finalValues.update(finalValues2)
+
         for cue in self.currentCues:
             cueValues = cue.getValues()
             for key, value in cueValues.items():
+                if tryParseInt(key):  # handle channels
+                    key = int(key)
+                
                 finalValues[key] = max(finalValues[key], value)
         
         return finalValues
