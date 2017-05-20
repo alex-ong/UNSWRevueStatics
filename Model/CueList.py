@@ -106,7 +106,7 @@ class CueList(object):
             index = allKeys.index(self.currentCue)            
             self.currentCue = allKeys[max(index - 1, 0)]
         elif commandName == RELEASE:
-            pass
+            self.player.release()
         else:
             print ('Unhandled Cue command:', commandName)
     

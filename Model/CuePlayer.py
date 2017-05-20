@@ -26,6 +26,7 @@ class PlayableCue(object):
         self.onFinished = onFinished
         self.timer = 0.0        
         self._play()
+        self.canRemove = False
         
     def _play(self):
         self.mode = PlayableCue.MODE_PLAY
@@ -38,7 +39,11 @@ class PlayableCue(object):
             startValue = (1.0 - self._perc()) * newTarget
             self.timer = startValue
             self.target = newTarget
-          
+    
+    def instantStop(self):
+        self.stop()
+        self.timer = self.target
+        
     def update(self, deltaTime):
         if self.mode == PlayableCue.MODE_PLAY:            
             self.timer += deltaTime
@@ -48,7 +53,7 @@ class PlayableCue(object):
             self.timer = clamp(0.0, self.target, self.timer)
             if self._perc() == 1.0:
                 self.cue.playableCue = None
-                self.onFinished(self)
+                self.canRemove = True
                 
     def _perc(self):
         if self.target == 0.0:
@@ -86,14 +91,18 @@ class CuePlayer(object):
     def clear(self):
         for cue in self.currentCues:
             cue.stop()   
-    
+            
+    def release(self):
+        for cue in self.currentCues:
+            cue.instantStop()
+            
     def playCue(self, cue):
         self.clear()
         self.currentCues.append(PlayableCue(cue, self._removeCue))
         
     def update(self, deltaTime):
         for cue in self.currentCues:
-            cue.update(deltaTime)
+            cue.update(deltaTime)            
         
         # create group/channel playback dict
         finalValues = { 'group'+str(key):0 for key in self.groupValues.values.keys()}        
@@ -107,6 +116,10 @@ class CuePlayer(object):
                     key = int(key)
                 
                 finalValues[key] = max(finalValues[key], value)
+        
+        for i in range (len(self.currentCues)-1, -1, -1):
+            if self.currentCues[i].canRemove:
+                del self.currentCues[i]
         
         return finalValues
         
