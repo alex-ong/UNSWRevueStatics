@@ -35,20 +35,36 @@ class ChannelGroupValueCompact(tk.Frame):
         
         titleLabel.grid(row=0, column=0, sticky=tk.W)        
         cueLabel.grid(row=0, column=1, sticky=tk.W)
-        playLabel.grid(row=0, column=2,sticky=tk.NSEW)
+        playLabel.grid(row=0, column=2, sticky=tk.NSEW)
+        
+        self.prevTitle = None
+        self.prevCueValue = None
+        self.prevPlayValue = None
         
     def setValue(self, title, cueValue, playValue):
-        self.title.set(str(title) + ":")
-        self.cueValue.set(cueValue)
-        if playValue is not None:
-            self.playValue.set('(' + autoString(playValue) + ')')
-        else:
-            self.playValue.set('')
+        if self.prevTitle != title:
+            self.title.set(str(title) + ":")
+            self.prevTitle = title
+        if self.prevCueValue != cueValue:
+            self.cueValue.set(cueValue)
+            self.prevCueValue = cueValue
+        if self.prevPlayValue != playValue:
+            self.prevPlayValue = playValue
+            if playValue is not None:
+                self.playValue.set('(' + autoString(playValue) + ')')
+            else:
+                self.playValue.set('')
     
     def clear(self):
-        self.title.set('')
-        self.cueValue.set('')
-        self.playValue.set('')
+        if self.prevTitle != '':
+            self.title.set('')
+            self.prevTitle = ''
+        if self.prevCueValue != '':
+            self.cueValue.set('')
+            self.prevCueValue = ''
+        if self.prevPlayValue != '':
+            self.playValue.set('')
+            self.prevPlayValue = ''
 
 class CompactValueFrame(tk.Frame):    
     def __init__(self, *args):
@@ -113,6 +129,17 @@ class CueNumberFrame(tk.Frame):
         cueMainLabel.grid(row=0, column=0, sticky=tk.E)
         cueSubLabel.grid(row=0, column=1, sticky=tk.W)
         
+        self.prevCueMainStr = None
+        self.prevCueSubStr = None
+        
+    def _setValues(self, cueMainStr, cueSubStr):
+        if cueMainStr != self.prevCueMainStr:
+            self.cueMain.set(cueMainStr)
+            self.prevCueMainStr = cueMainStr
+        if cueSubStr != self.prevCueSubStr:
+            self.cueSub.set(cueSubStr)
+            self.prevCueSubStr = cueSubStr
+            
     def refresh(self, string_dec):
         if string_dec is None:
             self.cueMain.set('')
@@ -153,13 +180,23 @@ class CueTimingFrame(tk.Frame):
         label4.grid(row=0, column=4, sticky=tk.W)
         label5.grid(row=0, column=5, sticky=tk.E)
         
+        self.prevUp = None
+        self.prevDown = None
+        self.prevRun = None
+ 
     def refresh(self, up, down, run):
-        self.upLabel.set(str(up))
-        self.downLabel.set(str(down))    
-        if run is not None:    
-            self.runLabel.set(str(round(100 * run)) + '%')
-        else:
-            self.runLabel.set('')
+        if self.prevUp != up:            
+            self.upLabel.set(str(up))
+            self.prevUp = up
+        if self.prevDown != down:
+            self.downLabel.set(str(down))
+            self.prevDown = down
+        if self.prevRun != run:
+            self.prevRun = run            
+            if run is not None:    
+                self.runLabel.set(str(round(100 * run)) + '%')
+            else:
+                self.runLabel.set('')
         
 class CueActiveFrame(tk.Frame):
     def __init__(self, *args):

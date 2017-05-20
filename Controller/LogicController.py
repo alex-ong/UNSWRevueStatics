@@ -25,10 +25,10 @@ class LogicController(object):
         msg = json.loads(msg)         
         self.inputEventMaster.addState(msg)
         
-    def update(self, timeDelta):  # occurs in main thread/same thread as tkinter
-        self.handleInput()   
-        self.model.update(timeDelta)   
-          
+    def update(self, timeDelta):  # occurs in main thread/same thread as tkinter        
+        self.handleInput() #controller update        
+        self.model.update(timeDelta)   #model update        
+        self.view.refreshDisplay()  #view update                
             
     def handleInput(self):
         inputEvents = self.inputEventMaster.getEvents()
@@ -41,7 +41,7 @@ class LogicController(object):
                     for buttonEvent in buttonEvents:
                         self.handleButtonInput(key, buttonEvent.down)
         
-        self.view.refreshDisplay()
+        
             
     def handleSliderInput(self, sliderName, value):
         self.model.handleSliderInput(sliderName, value)

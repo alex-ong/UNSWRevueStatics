@@ -14,21 +14,19 @@ async def run_tk(root, controller, interval=GUI_REFRESH):
     Runs the tkinter loop through the asyncio event loop.
     This allows us to use asyncio coroutines, which are good for e.g loading image thumbnails from URL 
     From: https://www.reddit.com/r/Python/comments/33ecpl/neat_discovery_how_to_combine_asyncio_and_tkinter/
-    '''
-    printDeltas = False
+    '''    
     try:
         timer = time.time()
         while True:
             # update gui
             newTime = time.time()
             delta = newTime - timer            
-            if printDeltas:
-                print (delta)
-            root.update()
-            
+                                    
+            root.update()      
+             
             # update logic if required.
             controller.update(delta)
-                            
+            
             await asyncio.sleep(interval)
             
             # keep track of deltaTimes for performance debugging
