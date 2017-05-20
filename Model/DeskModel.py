@@ -31,7 +31,17 @@ class DeskModel(object):
         self.currentfaderBinding = self.settings['lastFaderPage'] 
         self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
         cueListData = self.config.readCueList()
-        self.cueList = CueList.fromDict(cueListData, self.groupValues, self.channelValues, self.config.writeCueList)
+        
+        try:
+            upDown = self.settings['upDown']
+        except KeyError:
+            upDown = [2, 1]
+            self.settings['upDown'] = upDown
+            self.saveSettings()
+            
+        self.cueList = CueList.fromDict(cueListData, self.groupValues,
+                                        self.channelValues, self.config.writeCueList,
+                                        upDown)
         
         self.programmer = Programmer.Programmer(self.cueList,
                                                 self.faderValues,
@@ -39,6 +49,9 @@ class DeskModel(object):
                                                 self.channelValues)
         self.console = Console.Console(self.programmer)
             
+    def saveSettings(self):
+        self.config.writeGeneralSettings(self.settings)
+        
     def Reset(self):
         # get configReader to reset everything, then load everything
         pass

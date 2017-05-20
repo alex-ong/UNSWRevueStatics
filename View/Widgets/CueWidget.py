@@ -209,10 +209,11 @@ class CueWidget(tk.Frame):
             self.cnf.grid_forget()
             self.ctf.grid_forget()
             self.caf.grid_forget()
-            self.cvf.grid_forget()              
-        self.cnf.refresh(cueName)        
+            self.cvf.grid_forget()  
+                        
+        self.cnf.refresh(cueName)            
         self.ctf.refresh(cue.upTime, cue.downTime,
-                         cue.playableCue._perc() if cue.playableCue else None)
+                         cue.playableCue.displayPerc() if cue.playableCue else None)
         self.caf.refresh(selected)
         self.cvf.refresh(cue.mappings, cue.playableCue)
     

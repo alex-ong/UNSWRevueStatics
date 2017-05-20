@@ -24,7 +24,7 @@ class PlayableCue(object):
         self.cue = cue
         self.cue.playableCue = self
         self.onFinished = onFinished
-        self.timer = 0.0
+        self.timer = 0.0        
         self._play()
         
     def _play(self):
@@ -55,6 +55,12 @@ class PlayableCue(object):
             return 1.0
         return self.timer / self.target
     
+    def displayPerc(self):
+        if self.mode == PlayableCue.MODE_PLAY:
+            return self._perc()
+        else:
+            return 1.0 - self._perc()
+        
     def getValues(self):
         result = self.cue.getValues().copy()
         multiplier = self._perc()

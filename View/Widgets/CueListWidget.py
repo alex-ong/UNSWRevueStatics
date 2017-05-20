@@ -23,6 +23,7 @@ class CueListWidget(tk.Frame):
         # get list of NUM_CUES current cues        
         cues, current = self.cueList.getCues(NUM_CUES, FROM_END)
         
+        i = 0
         for i in range (len(cues)):            
             cueName, cue = cues[i]
             self.widgets[i].refreshDisplay(cueName, cue, i == current)
