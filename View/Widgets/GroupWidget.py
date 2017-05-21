@@ -76,7 +76,8 @@ class GroupWidget(tk.Frame):
         record = self.group.recordValue            
         
             # figure out how many actual values we got.
-        if [direct, playback, record] != self.lastValues:            
+        if [direct, playback, record] != self.lastValues:
+            self.clearValues()            
             maxComps = []
             if direct is not None and direct != 0:
                 maxComps.append(direct)

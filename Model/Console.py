@@ -35,6 +35,7 @@ class Console(object):
                     self.tokens[-1] = newInt
             else:
                 self.tokens = self.tokens[:-1]
+                
     def checkValidOperator(self, string, operators):        
         if tryParseInt(string) and NUMBER in operators:
             return True

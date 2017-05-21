@@ -135,8 +135,16 @@ class CueList(object):
     def changeUpDown(self, upDown):
         self.defaultUpDown = upDown
         
-    def changeCueTiming(self, up, down):
+    def changeCueTiming(self, cueNumber, up, down):
         pass  # TODO
+    
+    def goto(self, target):
+        target = string_decimal.fromStr(target)
+        if target in self.data:
+            self.currentCue = target
+            return 'Successfully jumped to cue: ' + str(target)
+        else:
+            return 'Error; Cue does not exist: ' + str(target)
     
 if __name__ == '__main__':
     for i in range(10):
