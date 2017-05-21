@@ -23,13 +23,13 @@ class CueListWidget(tk.Frame):
         # get list of NUM_CUES current cues        
         cues, current = self.cueList.getCues(NUM_CUES, FROM_END)
         
-        i = 0
-        for i in range (len(cues)):            
+        i = 0        
+        while i < len(cues): #can't use forLoop since end value for i is too low
             cueName, cue = cues[i]
             self.widgets[i].refreshDisplay(cueName, cue, i == current)
+            i += 1
         
-        #if we didn't get enough cues we have to hide a few widgets
-        i += 1 #prev loop ends 1 lower than expected...        
+        #if we didn't get enough cues we have to hide a few widgets            
         while i < NUM_CUES:            
             self.widgets[i].hide()
             i += 1

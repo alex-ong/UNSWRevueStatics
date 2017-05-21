@@ -243,10 +243,10 @@ class CueWidget(tk.Frame):
     def refreshDisplay(self, cueName, cue, selected):
         if not self.isVisible:            
             self.isVisible = True
-            self.cnf.grid_forget()
-            self.ctf.grid_forget()
-            self.caf.grid_forget()
-            self.cvf.grid_forget()  
+            self.cnf.grid()
+            self.ctf.grid()
+            self.caf.grid()
+            self.cvf.grid()  
                         
         self.cnf.refresh(cueName)            
         self.ctf.refresh(cue.upTime, cue.downTime,
@@ -257,10 +257,10 @@ class CueWidget(tk.Frame):
     def hide(self):
         if self.isVisible:
             self.isVisible = False            
-            self.cnf.grid_forget()
-            self.ctf.grid_forget()
-            self.caf.grid_forget()
-            self.cvf.grid_forget()
+            self.cnf.grid_remove()
+            self.ctf.grid_remove()
+            self.caf.grid_remove()
+            self.cvf.grid_remove()
             
         
 if __name__ == '__main__':
