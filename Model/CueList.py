@@ -3,7 +3,7 @@
 @date 2017-05-07
 '''
 from Model.CuePlayer import CuePlayer
-from Model.CommandProgrammer.parser import CUE
+from Model.CommandProgrammer.parser import CUE, tryParseInt
 import Model.Cue as Cue
 import collections
 import libs.string_decimal as string_decimal
@@ -111,7 +111,15 @@ class CueList(object):
             print ('Unhandled Cue command:', commandName)
     
     def update(self, timeDelta):
-        self.player.update(timeDelta)
+        updateVals = self.player.update(timeDelta)        
+        for binding, value in updateVals.items():
+            if tryParseInt(binding):
+                channelNumber = int(binding)
+                self.channelValues[channelNumber].setPlaybackValue(value)
+            else:
+                groupNumber = int(binding.replace('group',''))
+                self.groupValues[groupNumber].setPlaybackValue(value)
+    
     
     def changeUpDown(self, upDown):
         self.defaultUpDown = upDown

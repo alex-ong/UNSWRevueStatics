@@ -25,10 +25,10 @@ class Channel(object):
         
         self.directValue = 0
         self.directFlashValue = 0
-        self.playbackValue = None
+        self.playbackValue = 0
         self._groupValue = {}
         self.recordValue = None        
-        
+    
     def setDMXAddress(self, newAddress):
         self._dmxAddress = newAddress
              
@@ -60,6 +60,9 @@ class Channel(object):
             values = self._groupValue.values()
             return max(values)                    
     
+    def setPlaybackValue(self, value):
+        self.playbackValue = value
+        
     def getDisplayValueAndReason(self):
         # returns the value and either "direct", "playback", "group" or "record"
         if self.recordValue != None:
@@ -104,7 +107,7 @@ class Channel(object):
                 return self.playbackValue, ValueType.PLAYBACK
                                       
     def clearPlayback(self):                
-        self.playbackValue = None
+        self.playbackValue = 0
                 
     def clearRecord(self):
         self.recordValue = None            

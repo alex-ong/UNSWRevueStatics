@@ -22,7 +22,7 @@ class Group(object):
         
         self.directValue = 0
         self.directFlashValue = 0
-        self.playbackValue = None
+        self.playbackValue = 0
         self.recordValue = None
         self.channelMappings = channelMappings
     
@@ -42,6 +42,10 @@ class Group(object):
         self.directFlashValue = value
         self.propagateValue()
     
+    def setPlaybackValue(self, value):
+        self.playbackValue = value
+        self.propagateValue()
+        
     def propagateValue(self):
         value = self.getDisplayValueAndReason()[0]
         for channel, proportion in self.channelMappings:
@@ -53,11 +57,11 @@ class Group(object):
     def reset(self):
         self.directValue = 0
         self.directFlashValue = 0
-        self.playbackValue = None
+        self.playbackValue = 0
         self.recordValue = None
     
     def clearPlayback(self):                
-        self.playbackValue = None
+        self.playbackValue = 0
                 
     def clearRecord(self):
         self.recordValue = None
