@@ -110,7 +110,8 @@ class DeskModel(object):
         return result
     
     def handleConsoleInput(self, stringInput):
-        self.console.parseString(stringInput)
+        result = self.console.parseString(stringInput)
+        return result
         
     def handlePlaybackCommand(self, buttonName):
         self.cueList.handleCueCommand(buttonName)

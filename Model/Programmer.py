@@ -29,7 +29,8 @@ class Programmer(object):
     def _doSelect(self, command):
         if len(command.target) > 0:
             if CUE in command.target[0]:
-                return self.cueList.goto(command.target[0])
+                cueTarget = command.target[0].replace(CUE,'')                
+                return self.cueList.goto(cueTarget)
             else:  # select group and or channel
                 self.currentlySelected = SortedSet(command.target)
                 return 'Selected:' + str(command.target)

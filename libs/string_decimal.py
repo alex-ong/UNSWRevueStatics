@@ -27,6 +27,28 @@ class string_decimal(object):
             return self.mantissa < other.mantissa
         else:
             return self.base < other.base
+    
+    def __gt__(self, other):
+        if other.base == self.base:
+            return self.mantissa > other.mantissa
+        else:
+            return self.base > other.base
         
+    def __eq__(self, other):
+        try:
+            if isinstance(other, string_decimal):
+                if (self.base == other.base and 
+                    self.mantissa == other.mantissa):
+                    return True
+        except:
+            pass
+        return False
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash((self.base,self.mantissa))
+    
     def __str__(self):
         return str(self.base) + '.' + str(self.mantissa)
