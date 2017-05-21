@@ -55,10 +55,9 @@ class CueList(object):
             
     def deleteCue(self, cueName):
         key = string_decimal.fromStr(cueName.replace(CUE,''))
-        print (key)
-        print (self.data[key])
         try:
             del self.data[key]
+            self.saveFunc(self.toDict())
             return ('Successfully Deleted: ' + str(cueName))
         except:
             print ('uh oh')
