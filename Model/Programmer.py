@@ -72,12 +72,15 @@ class Programmer(object):
             return "Error when setting items"  
     
     def _doDelete(self, command):
-        pass
-    
+        if CUE in command.target:
+            return self.cueList.deleteCue(command.target)
+        else:
+            print ("unhandled Command", command)
     def _doRecord(self, command):
         if CUE in command.target:
-            self.cueList.recordCue(command.target,)
-    
+            return self.cueList.recordCue(command.target)
+        else:
+            print ("unhandled Command", command)
     def clear(self):
         self.groupValues.clearRecord()
         self.channelValues.clearRecord()        

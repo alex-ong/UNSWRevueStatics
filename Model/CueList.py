@@ -53,6 +53,17 @@ class CueList(object):
             result[str(key)] = self.data[key].toDict()
         return result
             
+    def deleteCue(self, cueName):
+        key = string_decimal.fromStr(cueName.replace(CUE,''))
+        print (key)
+        print (self.data[key])
+        try:
+            del self.data[key]
+            return ('Successfully Deleted: ' + str(cueName))
+        except:
+            print ('uh oh')
+            return ('Could not delete:' + str(cueName) + '. Does not exist.')
+        
     def recordCue(self, cueName):
         mappings = collections.OrderedDict()
         for group in self.groupValues.values.values():            
@@ -65,7 +76,7 @@ class CueList(object):
             if value > 0:
                 mappings[channel.number] = value
         
-        cue = Cue.Cue(mappings, self.defaultUpDown)
+        cue = Cue.Cue(mappings, self.defiaultUpDown)
         cueIndex = cueName.replace(CUE, '')
         cueIndex = string_decimal.fromStr(cueIndex)
         self.data[cueIndex] = cue        

@@ -2,14 +2,15 @@
 @author: alex-ong
 @date 2017-05-07
 '''
-from Model import ChannelValues
-from Model import GroupValues
-from Model import FaderValues
+from . import ChannelValues
+from . import GroupValues
+from . import FaderValues
 
 import Model.Configuration.ConfigReader as ConfigReader
-from Model import Programmer
-from Model import Console
-from Model import CueList
+from . import Programmer
+from . import Console
+from . import CueList
+from . import OptionButtons
 
 from _collections import OrderedDict
 
@@ -48,7 +49,8 @@ class DeskModel(object):
                                                 self.groupValues,
                                                 self.channelValues)
         self.console = Console.Console(self.programmer)
-            
+        self.optionButtons = OptionButtons.OptionButtons()
+        
     def saveSettings(self):
         self.config.writeGeneralSettings(self.settings)
         
@@ -91,6 +93,9 @@ class DeskModel(object):
         elif buttonPressed:  # we only care about keyDown
             if buttonName in PLAYBACK_COMMANDS:
                 self.handlePlaybackCommand(buttonName)
+            elif buttonName in OptionButtons.RAW_BUTTONS:
+                buttonName = self.optionButtons.getCommand(buttonName)
+                self.handleConsoleInput(buttonName) 
             else:
                 self.handleConsoleInput(buttonName)                    
         

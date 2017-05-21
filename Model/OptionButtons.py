@@ -1,6 +1,8 @@
 '''
 File that lets you know the bindings for the S1->S4 buttons
 '''
+RAW_BUTTONS = ['S1', 'S2', 'S3', 'S4']
+
 
 DELETE = 'Delete'
 NEXT_FADERS = 'NextFaders'
@@ -22,7 +24,8 @@ class OptionButtons(object):
     def setState(self, state):
         self.currentState = state
             
-    def getCommand(self, index):
+    def getCommand(self, rawButton):
+        index = int(rawButton.replace('S','')) - 1        
         return self.currentState[index]
     
     def getNiceText(self):
@@ -33,9 +36,9 @@ class OptionButtons(object):
         
 if __name__ == '__main__':
     ob = OptionButtons()
-    print(ob.getCommand(0))
-    print(ob.getCommand(1))
-    print(ob.getCommand(2))
-    print(ob.getCommand(3))
+    print(ob.getCommand('S1'))
+    print(ob.getCommand('S2'))
+    print(ob.getCommand('S3'))
+    print(ob.getCommand('S4'))
     
     print(ob.getNiceText())

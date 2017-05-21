@@ -262,11 +262,11 @@ def validOperators(program):
     # TODO: complete this...
         
     if len(program) == 0:
-        return [AT, RECORD, GROUP, CUE, CHANNEL]
+        return [AT, RECORD, GROUP, CUE, CHANNEL, DELETE]
     
     lastSymbol = program[-1]
     
-    if program[0] == RECORD:  # program starts with @
+    if program[0] == RECORD:  # program starts with RECORD
         if len(program) == 1:
             return [GROUP, CUE, FADER]
         elif len(program) == 2:            
@@ -277,7 +277,18 @@ def validOperators(program):
             return [NUMBER]
         else:
             return [NUMBER]
-            
+    elif program[0] == DELETE:
+        if len(program) == 1:
+            return [GROUP, CUE, FADER]
+        elif len(program) == 2:            
+            return [NUMBER]
+        elif program[-2] == CUE:
+            return [NUMBER,DECIMAL]
+        elif program[-1] == DECIMAL:
+            return [NUMBER]
+        else:
+            return [NUMBER]
+        
     elif lastSymbol == AT:  # program ends with @
         return [NUMBER, FULL]
     elif AT in program:  # we are at [expression] @ number
