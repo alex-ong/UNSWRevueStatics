@@ -21,7 +21,7 @@ def fromDict(data, groupValues, channelValues, saveFunc, upDown):
 def alterPivot(listLen, numIndices, index, fromEnd):
     endIndex = index + fromEnd
     startIndex = index - numIndices + fromEnd
-    while endIndex >= listLen:
+    while endIndex > listLen:
         endIndex -= 1
         startIndex -= 1
     while startIndex < 0:
