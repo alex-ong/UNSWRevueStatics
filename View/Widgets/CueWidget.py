@@ -17,6 +17,7 @@ RELEASE = 'purple'
 FONT = ('Consolas', '10')
 FONT_HEADING = ('Consolas', '14', 'bold')
 FONT_ACTIVE_CUE = ('Consolas', '25', 'bold')
+FONT_DBO_CUE = ('Consolas', '16', 'bold')
 class ChannelGroupValueCompact(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
@@ -104,7 +105,14 @@ class CompactValueFrame(tk.Frame):
         while i < len(self.values):
             self.values[i].clear()
             i += 1
-    
+            
+class DBOChannelFrame(tk.Frame):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.config(bg=BG)
+        self.label = tk.Label(self, text='DBO (All values 0)', font=FONT_DBO_CUE, bg=BG,fg=FG_MAIN)
+        self.label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        
 class CueNumberFrame(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
@@ -172,7 +180,7 @@ class CueTimingFrame(tk.Frame):
         label2 = tk.Label(self, text=UP_ARROW, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
         label3 = tk.Label(self, textvariable=self.downLabel, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
         label4 = tk.Label(self, text=DOWN_ARROW, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
-        label5 = tk.Label(self, textvariable=self.runLabel, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
+        label5 = tk.Label(self, textvariable=self.runLabel, bg=BG_TITLE, fg=FG_PLAY, font=FONT_HEADING)
         
         label1.grid(row=0, column=1, sticky=tk.E)
         label2.grid(row=0, column=2, sticky=tk.W)
@@ -233,11 +241,14 @@ class CueWidget(tk.Frame):
         
         self.cvf = CompactValueFrame(self)
         self.cvf.refresh({}, None)
-                
+        
+        self.dbo = DBOChannelFrame(self)
+        
         self.cnf.grid(row=0, column=0, sticky=tk.NSEW)
         self.ctf.grid(row=0, column=1, sticky=tk.NSEW)
         self.caf.grid(row=1, column=0, sticky=tk.NSEW)
         self.cvf.grid(row=1, column=1, sticky=tk.NSEW)
+        self.dbo.grid(row=1, column=1, sticky=tk.NSEW)
         self.isVisible = True
         
     def refreshDisplay(self, cueName, cue, selected):
@@ -253,6 +264,10 @@ class CueWidget(tk.Frame):
                          cue.playableCue.displayPerc() if cue.playableCue else None)
         self.caf.refresh(selected)
         self.cvf.refresh(cue.mappings, cue.playableCue)
+        if cue.mappings == {}:
+            self.dbo.grid()
+        else:
+            self.dbo.grid_remove()
     
     def hide(self):
         if self.isVisible:
@@ -261,7 +276,7 @@ class CueWidget(tk.Frame):
             self.ctf.grid_remove()
             self.caf.grid_remove()
             self.cvf.grid_remove()
-            
+            self.dbo.grid_remove()
         
 if __name__ == '__main__':
     root = tk.Tk()
