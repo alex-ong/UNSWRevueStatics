@@ -4,7 +4,9 @@ Can receive arbitrary strings, and then attempt to tokenize them and parse them.
 '''
 from Model.CommandProgrammer.parser import (RECORD, THRU, GROUP, CHANNEL, CUE, FADER, AT,
                                             PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL,
-                                            tryParseInt, subContains, validOperators)
+                                            tryParseInt, subContains)
+
+from Model.CommandProgrammer.MainConsole import validOperators
 
 from Model.CommandProgrammer.parser import safeParse
 from Model.CommandProgrammer.Command import AbstractCommand
