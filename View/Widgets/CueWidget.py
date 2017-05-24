@@ -7,9 +7,9 @@ from libs import string_decimal
 from .ChannelWidget import autoString
 
 FG_MAIN = 'white'
-from View.Widgets.ChannelWidget import COLOR_PLAYBACK as FG_PLAY
-from View.Widgets.ChannelWidget import COLOR_NONE as BG
-from View.Widgets.ChannelWidget import COLOR_DIRECT as ACTIVE_CUE
+from View.ViewStyle import COLOR_PLAYBACK as FG_PLAY
+from View.ViewStyle import COLOR_NONE as BG
+from View.ViewStyle import COLOR_DIRECT as ACTIVE_CUE
 BG_TITLE = 'grey'
 FG_TITLE = 'black'
 RELEASE = 'purple'

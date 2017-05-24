@@ -9,6 +9,12 @@ class AbstractCommand():
     def __init__(self):
         pass
     
+class DecimalCommand(AbstractCommand):
+    def __init__(self, decimal):
+        self.value = decimal
+    def __str__(self):
+        return ('set to:', str(decimal))
+    
 class SelectCommand(AbstractCommand):
     def __init__(self, target):
         # list of channels/groups to select

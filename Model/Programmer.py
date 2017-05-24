@@ -3,7 +3,7 @@
 from libs.sorted_containers.sortedset import SortedSet
 
 from Model.CommandProgrammer.Command import (SelectCommand, SetCommand, SelectAndSetCommand,
-                                              DeleteCommand, RecordCommand)
+                                              DeleteCommand, RecordCommand,DecimalCommand)
 from Model.CommandProgrammer.parser import  CUE, CHANNEL, GROUP
 
 class Programmer(object):
@@ -25,6 +25,8 @@ class Programmer(object):
             return self._doDelete(command)
         elif isinstance(command, RecordCommand):
             return self._doRecord(command)
+        elif isinstance(command, DecimalCommand): #should never reach this
+            return ("Entering a decimal number isn't a command.")
         
     def _doSelect(self, command):
         if len(command.target) > 0:
@@ -75,13 +77,15 @@ class Programmer(object):
     def _doDelete(self, command):
         if CUE in command.target:
             return self.cueList.deleteCue(command.target)
-        else:
+        else: #todo delete groups
             print ("unhandled Command", command)
+            
     def _doRecord(self, command):
         if CUE in command.target:
             return self.cueList.recordCue(command.target)
-        else:
+        else: #todo record groups, faders
             print ("unhandled Command", command)
+            
     def clear(self):
         self.groupValues.clearRecord()
         self.channelValues.clearRecord()        

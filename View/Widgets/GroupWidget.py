@@ -14,13 +14,7 @@ def autoString(value):
 
 from Model import Channel
 
-from View.Widgets.ChannelWidget import COLOR_DIRECT
-from View.Widgets.ChannelWidget import COLOR_GROUP
-from View.Widgets.ChannelWidget import COLOR_PLAYBACK
-from View.Widgets.ChannelWidget import COLOR_RECORD
-from View.Widgets.ChannelWidget import COLOR_NONE 
-
-
+from View.ViewStyle import COLOR_DIRECT, COLOR_GROUP, COLOR_PLAYBACK, COLOR_RECORD, COLOR_NONE
 
 from View.Widgets.ChannelWidget import typeColourMapping
 
@@ -61,9 +55,9 @@ class GroupWidget(tk.Frame):
         row += 1        
         directLabel.grid(row=row, column=0)
         playbackLabel.grid(row=row, column=1)
-        row += 1 #put in black group-label to make this widget line up to channel widget
+        row += 1  # put in black group-label to make this widget line up to channel widget
         groupLabel = self.createButton(None, COLOR_NONE)
-        groupLabel.grid(row=row,columnspan=2)
+        groupLabel.grid(row=row, columnspan=2)
         self.lastValues = []        
         self.refreshDisplay()
         
