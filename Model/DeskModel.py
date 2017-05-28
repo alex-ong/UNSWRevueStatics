@@ -11,10 +11,13 @@ from . import Programmer
 from . import Console
 from . import CueList
 from . import OptionButtons
-
+from . import ModalContainer
 from _collections import OrderedDict
 
 from .CueList import PLAYBACK_COMMANDS
+
+#validOperators for main console
+from Model.CommandProgrammer.MainConsole import validOperators 
 
 class DeskModel(object):
     def __init__(self):
@@ -43,14 +46,20 @@ class DeskModel(object):
         self.cueList = CueList.fromDict(cueListData, self.groupValues,
                                         self.channelValues, self.config.writeCueList,
                                         upDown)
+       
+        self.modals = ModalContainer.ModalList()        
         
         self.programmer = Programmer.Programmer(self.cueList,
                                                 self.faderValues,
                                                 self.groupValues,
-                                                self.channelValues)
-        self.console = Console.Console(self.programmer)
+                                                self.channelValues,
+                                                self.modals)
+        
+        self.console = Console.Console(self.programmer, validOperators)
         self.optionButtons = OptionButtons.OptionButtons()
         
+        
+    
     def saveSettings(self):
         self.config.writeGeneralSettings(self.settings)
         
@@ -74,31 +83,35 @@ class DeskModel(object):
             self.groupValues[groupNumber].setDirectValue(value)
             
     def handleButtonInput(self, buttonName, buttonPressed):
-        if 'b_slider' in buttonName:  # todo check programmer state first.
-            faderNumber = int(buttonName.replace('b_slider', ''))
-            bindings = self.faderBindings[self.currentfaderBinding]
-            toChange = bindings[faderNumber]
-            
-            if buttonPressed: 
-                value = 100
-            else:
-                value = 0
+        if not self.modals.isEmpty():
+            if buttonPressed:
+                self.modals.handleInput(buttonName)
+        else:
+            if 'b_slider' in buttonName:  # todo check programmer state first.
+                faderNumber = int(buttonName.replace('b_slider', ''))
+                bindings = self.faderBindings[self.currentfaderBinding]
+                toChange = bindings[faderNumber]
                 
-            if isinstance(toChange, int):  # slider bound to channel            
-                self.channelValues[toChange].setDirectFlashValue(value)                
-            else:  # slider bound to group
-                groupNumber = int(toChange.replace('group', ''))
-                self.groupValues[groupNumber].setDirectFlashValue(value)
-                       
-        elif buttonPressed:  # we only care about keyDown
-            if buttonName in PLAYBACK_COMMANDS:
-                self.handlePlaybackCommand(buttonName)
-            elif buttonName in OptionButtons.RAW_BUTTONS:
-                buttonName = self.optionButtons.getCommand(buttonName)
-                self.handleConsoleInput(buttonName) 
-            else:
-                self.handleConsoleInput(buttonName)                    
-        
+                if buttonPressed: 
+                    value = 100
+                else:
+                    value = 0
+                    
+                if isinstance(toChange, int):  # slider bound to channel            
+                    self.channelValues[toChange].setDirectFlashValue(value)                
+                else:  # slider bound to group
+                    groupNumber = int(toChange.replace('group', ''))
+                    self.groupValues[groupNumber].setDirectFlashValue(value)
+                           
+            elif buttonPressed:  # we only care about keyDown
+                if buttonName in PLAYBACK_COMMANDS:
+                    self.handlePlaybackCommand(buttonName)
+                elif buttonName in OptionButtons.RAW_BUTTONS:
+                    buttonName = self.optionButtons.getCommand(buttonName)
+                    self.handleConsoleInput(buttonName) 
+                else:
+                    self.handleConsoleInput(buttonName)                    
+            
     def getFaderBindings(self):
         bindings = self.faderBindings[self.currentfaderBinding]
         result = OrderedDict()       
@@ -123,3 +136,11 @@ class DeskModel(object):
     
     def update(self, timeDelta):
         self.cueList.update(timeDelta)
+        
+    def popModalStack(self, modal):
+        self.modalStack.pop()
+        
+    def addModalToStack(self, modal):
+        self.modalStack.append(modal)
+        
+    

@@ -49,4 +49,9 @@ class DeleteCommand(AbstractCommand):
         self.target = target 
     def __str__(self):
         return ('Delete ' + self.target)
+
+class TimeCommand(AbstractCommand):
+    def __str__(self):
+        return ("Set current cue's up/down times")
+    
         

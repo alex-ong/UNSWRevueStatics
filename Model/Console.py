@@ -6,8 +6,6 @@ from Model.CommandProgrammer.parser import (RECORD, THRU, GROUP, CHANNEL, CUE, F
                                             PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL,
                                             tryParseInt, subContains)
 
-from Model.CommandProgrammer.MainConsole import validOperators
-
 from Model.CommandProgrammer.parser import safeParse
 from Model.CommandProgrammer.Command import AbstractCommand
 
@@ -16,9 +14,10 @@ CLEAR = 'Clear'
 ENTER = 'Enter'
                         
 class Console(object):
-    def __init__(self, programmer):
+    def __init__(self, programmer, validOperators):
         self.tokens = []
         self.programmer = programmer
+        self.validOperators = validOperators
         
     # returns autocomplete, if_error, and a list of strings
     def getTokens(self):
@@ -66,7 +65,7 @@ class Console(object):
         # split into more tokens, or add as a token. or do conversion.
         # have to deal with lack of channel key... When we receive ints,
         # we have to decide whether to combine ints, or add "Channel" in front of it.
-        validOps = validOperators(self.tokens)
+        validOps = self.validOperators(self.tokens)
         if self.checkValidOperator(string, validOps):
             if tryParseInt(string) and tryParseInt(self.tokens[-1]):
                 self.tokens[-1] = self.tokens[-1] + string
@@ -87,7 +86,7 @@ class Console(object):
             else:
                 print('Tried to enter ', string, 
                       'but valid operators are:', 
-                      validOperators(self.tokens))
+                      self.validOperators(self.tokens))
              
             
     # called when user hits clear 

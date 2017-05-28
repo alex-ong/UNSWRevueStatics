@@ -1,5 +1,5 @@
 from .parser import (RECORD, THRU, GROUP, CHANNEL, CUE, FADER, AT,
-                    PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL,
+                    PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL, TIME,
                     tryParseInt, subContains)
 
 # we could use this function in future to provide auto-complete features...
@@ -7,7 +7,7 @@ def validOperators(program):
     # TODO: complete this...
         
     if len(program) == 0:
-        return [AT, RECORD, GROUP, CUE, CHANNEL, DELETE]
+        return [AT, RECORD, GROUP, CUE, CHANNEL, DELETE, TIME]
     
     lastSymbol = program[-1]
     
@@ -17,7 +17,7 @@ def validOperators(program):
         elif len(program) == 2:            
             return [NUMBER]
         elif program[-2] == CUE:
-            return [NUMBER,DECIMAL]
+            return [NUMBER, DECIMAL]
         elif program[-1] == DECIMAL:
             return [NUMBER]
         else:
@@ -28,12 +28,13 @@ def validOperators(program):
         elif len(program) == 2:            
             return [NUMBER]
         elif program[-2] == CUE:
-            return [NUMBER,DECIMAL]
+            return [NUMBER, DECIMAL]
         elif program[-1] == DECIMAL:
             return [NUMBER]
         else:
             return [NUMBER]
-        
+    elif program[0] == TIME:
+        return []
     elif lastSymbol == AT:  # program ends with @
         return [NUMBER, FULL]
     elif AT in program:  # we are at [expression] @ number

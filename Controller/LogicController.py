@@ -15,6 +15,7 @@ class LogicController(object):
         self.view.setupFaders(model.faderValues)
         self.view.setupConsole(model.console)
         self.view.setupCueList(model.cueList)
+        self.view.setupModalForms(model.modals)
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
         
         self.inputEventMaster = IOConverter()

@@ -31,6 +31,10 @@ def expression(rbp=0):
     return left
 
 
+class time_token: #just time by itself is a command
+    def nud(self):
+        return Command.TimeCommand()     
+    
 class value_token:  # basically just numbers
     def __init__(self, value):
         if value == FULL:
@@ -203,6 +207,7 @@ NUMBER = 'Number'
 DECIMAL = '.'
 DELETE = 'Delete'
 FULL = 'Full'
+TIME = 'Time'
     
 # tokenizer. Convert from list of strings to tokens
 def tokenize(program):
@@ -233,6 +238,8 @@ def tokenize(program):
             yield value_token(token)
         elif FULL == token:
             yield value_token(token)
+        elif TIME == token:
+            yield time_token()
         else:        
             raise SyntaxError("unknown token")
     yield end_token()

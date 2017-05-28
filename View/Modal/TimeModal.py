@@ -14,7 +14,7 @@ TITLE_FONT = ('Consolas', 48)
 class TimeModal(tk.Toplevel):
     def __init__(self, data, *args):
         super().__init__(*args)        
-        self.data = None
+        self.data = data
         self.closeCallback = None
         self.config(bg=COLOR_NONE)
         
@@ -39,9 +39,11 @@ class TimeModal(tk.Toplevel):
         self.downArrow.grid(row=2,column=2,sticky=tk.NSEW)
         # centre Toplevel on screen.        
         self.border.pack()
-        self.border1.pack()
-        self.overrideredirect(True) #borderless
-        self.centreOnScreen()
+        self.border1.pack()        
+        self.centreOnScreen()  
+        self.overrideredirect(True)      
+        self.hide()
+        
         
     def centreOnScreen(self):
         self.update_idletasks() #refresh widget to get correct size
@@ -50,11 +52,18 @@ class TimeModal(tk.Toplevel):
         geoString = '%dx%d+%d+%d' % (w, h, 
                                      int(self.winfo_screenwidth() / 2 - 0.5* w),
                                      int(self.winfo_screenheight() / 2 - 0.5* h))        
-        self.geometry(geoString)
-    def show(self, data, callback):
-        self.data = data
+        self.geometry(geoString)    
+    
+    def show(self, data):
+        self.data = data        
+        self.deiconify()        
+        self.overrideredirect(True)
         # self.configure(self.winfo_screenwidth())
-                
+    
+    def hide(self):
+        self.overrideredirect(False)
+        self.withdraw()
+                        
     def reset(self, ):
         self.descriptionText2.config(fg=COLOR_NONE)
         

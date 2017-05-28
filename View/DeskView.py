@@ -10,7 +10,7 @@ from View.Widgets.GroupWidget import GroupWidget
 from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
 from View.Widgets.ConsoleWidget import ConsoleWidget
 from View.Widgets.CueListWidget import CueListWidget
-
+from View.Modal.ModalManager import ModalManager
 class DeskView(tk.Frame):
     def __init__(self):
         root = tk.Tk()        
@@ -28,6 +28,7 @@ class DeskView(tk.Frame):
         self.faderFrame = None
         self.consoleWidget = None
         self.cueListWidget = None
+        self.modalManager = None
         
     # called by model during setup
     def setupChannels(self, channels):
@@ -57,6 +58,10 @@ class DeskView(tk.Frame):
         cl.grid(row=0, column=0,rowspan=3, sticky=tk.NSEW)
         self.cueListWidget = cl
         
+    def setupModalForms(self, modalModel):
+        mm = ModalManager(modalModel)
+        self.modalManager = mm
+        
     def handleInput(self, dictInput):
         self.channelFrame.handleInput(dictInput)
         
@@ -65,3 +70,4 @@ class DeskView(tk.Frame):
         self.faderFrame.refreshDisplay()
         self.consoleWidget.refreshDisplay()
         self.cueListWidget.refreshDisplay()
+        self.modalManager.refreshDisplay()
