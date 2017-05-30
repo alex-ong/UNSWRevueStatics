@@ -65,7 +65,8 @@ class TimeModal(tk.Toplevel):
                 self.answer2.config(bg=COLOR_NONE)
             elif self.data.currentState == TimeState.ENTER_DOWN:
                 self.answer1.config(bg=COLOR_NONE)
-                self.answerStr.set(autoString(self.data.downTime))
+                self.answer2.config(bg='red')
+                self.answer2Str.set(autoString(self.data.downTime))
 
     def showRefresh(self):  # only called when show is called
         self.title.configure(text=self.data.description)

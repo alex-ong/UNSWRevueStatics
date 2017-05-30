@@ -41,7 +41,7 @@ class Programmer(object):
             return response
         else:
             print (response, data)
-        self.modals.pop()
+        self.modals.popStack()
         
     def _doSelect(self, command):
         if len(command.target) > 0:

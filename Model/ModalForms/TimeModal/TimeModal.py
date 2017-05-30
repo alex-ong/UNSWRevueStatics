@@ -3,6 +3,7 @@ from Model.CommandProgrammer.CueTimeConsole import validOperators
 from libs import string_decimal
 
 from enum import Enum
+from Model.CommandProgrammer.parser import value_token
 
 class TimeState(Enum):
     ENTER_UP = 0
@@ -30,11 +31,14 @@ class TimeModal(object):
         self.description = None
         self.currentState = TimeState.ENTER_UP
         
-    #calld on any user input when modal is active
+    # calld on any user input when modal is active
     def handleCommand(self, command):
-        #pass o console...
+        # pass o console...
         consoleResult = self.console.parseString(command)
-        #if consoleResult == CLEAR: #call onFinish
+        # if consoleResult == CLEAR: #call onFinish
+        #    print ("console clear pressed")
+        #    return
+            
         if self.currentState == TimeState.ENTER_UP:
             if len(self.console.tokens) > 0:                
                 self.upTime = ''.join(self.console.tokens)
@@ -46,14 +50,29 @@ class TimeModal(object):
             else:
                 self.downTime = None
         
-    
-    def handleExecuteCommand(self, command):
-        print ('Received', command)
-        
+    def handleExecuteCommand(self, command):        
+        if isinstance(command, int):
+            command = string_decimal.fromStr(str(command))
+            
+        if isinstance(command, string_decimal.string_decimal):
+            if self.currentState == TimeState.ENTER_UP:
+                self.upTime = str(command)
+                self.currentState = TimeState.ENTER_DOWN
+            elif self.currentState == TimeState.ENTER_DOWN:
+                self.downTime = str(command)
+                response = "success"
+                data = (self.upTime, self.downTime)
+                self.onFinish(response, data)
+        else:
+            print("Unsupported command:", str(command))
         
 class TimeModalProgramer(object):
     def __init__(self, timeModal):
         self.timeModal = timeModal
+    
+    def clear(self):
+        print('clear pressed in programmer')
         
-    def handleCommand(self, command):
-        self.timeModal.handleExecuteCommand(command)
+    def handleCommand(self, command):        
+        return self.timeModal.handleExecuteCommand(command)
+    

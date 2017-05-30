@@ -31,7 +31,7 @@ def expression(rbp=0):
     return left
 
 
-class time_token: #just time by itself is a command
+class time_token:  # just time by itself is a command
     def nud(self):
         return Command.TimeCommand()     
     
@@ -42,8 +42,8 @@ class value_token:  # basically just numbers
         else:
             self.value = int(value)
                 
-    def nud(self):
-        return self.value
+    def nud(self):        
+        return self.value    
     
 class abstract_operator_cgf_token:  # Channel/Group/Fader
     lbp = 90

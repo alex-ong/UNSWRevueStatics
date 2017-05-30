@@ -22,7 +22,7 @@ class ModalList(object):
     def addToStack(self, modalType):
         self.stack.append([modalType, self.getModal(modalType)])
     
-    def popStack(self, modal):
+    def popStack(self):
         self.stack.pop()
     
     def peekStack(self):

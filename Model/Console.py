@@ -8,6 +8,7 @@ from Model.CommandProgrammer.parser import (RECORD, THRU, GROUP, CHANNEL, CUE, F
 
 from Model.CommandProgrammer.parser import safeParse
 from Model.CommandProgrammer.Command import AbstractCommand
+from libs.string_decimal import string_decimal
 
 BACKSPACE = '<-'
 CLEAR = 'Clear'
@@ -57,8 +58,12 @@ class Console(object):
             result = safeParse(self.tokens)
             if isinstance(result, AbstractCommand): 
                 result = self.programmer.handleCommand(result)
+            elif isinstance(result, string_decimal):
+                result = self.programmer.handleCommand(result)
+            elif isinstance(result, int):                
+                result = self.programmer.handleCommand(result)
             else:
-                print (result)
+                print ("unknown result:", result)
             self.tokens = []
             return result
         
