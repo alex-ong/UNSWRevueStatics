@@ -51,11 +51,11 @@ class Console(object):
         if string == CLEAR:
             self.tokens = []
             self.programmer.clear()
-            return
+            return CLEAR
             
         if string == ENTER:
             result = safeParse(self.tokens)
-            if isinstance(result,AbstractCommand): 
+            if isinstance(result, AbstractCommand): 
                 result = self.programmer.handleCommand(result)
             else:
                 print (result)
@@ -67,13 +67,13 @@ class Console(object):
         # we have to decide whether to combine ints, or add "Channel" in front of it.
         validOps = self.validOperators(self.tokens)
         if self.checkValidOperator(string, validOps):
-            if tryParseInt(string) and tryParseInt(self.tokens[-1]):
+            if tryParseInt(string) and len(self.tokens) > 0 and tryParseInt(self.tokens[-1]):
                 self.tokens[-1] = self.tokens[-1] + string
             else:
                 self.tokens.append(string)
         elif len(validOps) > 0: 
             if tryParseInt(string):
-                #need to insert channel or group.
+                # need to insert channel or group.
                 if len(self.tokens) == 0:
                     self.tokens.append(CHANNEL)
                     self.tokens.append(string)
@@ -84,8 +84,8 @@ class Console(object):
                     self.tokens.append(CHANNEL)
                     self.tokens.append(string)
             else:
-                print('Tried to enter ', string, 
-                      'but valid operators are:', 
+                print('Tried to enter ', string,
+                      'but valid operators are:',
                       self.validOperators(self.tokens))
              
             

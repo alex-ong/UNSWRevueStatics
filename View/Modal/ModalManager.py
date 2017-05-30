@@ -22,7 +22,8 @@ class ModalManager():
             formType, form = self.modalContainer.stack[i]
             if i >= len(self.myStack): #add to stack
                 self.myStack.append(self.modalForms[formType])
-                self.myStack[i].show(form)            
+                self.myStack[i].show(form)  
+            self.myStack[i].refresh()                      
             i += 1
         
         while i < len(self.myStack):
