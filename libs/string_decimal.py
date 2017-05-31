@@ -51,4 +51,10 @@ class string_decimal(object):
         return hash((self.base,self.mantissa))
     
     def __str__(self):
-        return str(self.base) + '.' + str(self.mantissa)
+        if self.mantissa == 0:
+            return str(self.base)
+        else:
+            return str(self.base) + '.' + str(self.mantissa)
+    
+    def toFloat(self):
+        return float(str(self.base) + '.' + str(self.mantissa))

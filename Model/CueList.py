@@ -8,6 +8,7 @@ import Model.Cue as Cue
 import collections
 import libs.string_decimal as string_decimal
 from libs.sorted_containers.sorteddict import SortedDict 
+from libs.string_decimal import fromStr
 
 def fromDict(data, groupValues, channelValues, saveFunc, upDown):
     parsedData = SortedDict()
@@ -38,7 +39,7 @@ class CueList(object):
     def __init__(self, sortedDict, groupValues, channelValues, saveFunc, defaultUpDown):
         self.data = sortedDict
         self.player = CuePlayer(groupValues, channelValues)
-        self.defaultUpDown = defaultUpDown
+        self.defaultUpDown = (fromStr(defaultUpDown[0]),fromStr(defaultUpDown[1]))
         self.currentCue = None
         if len(self.data.keys()) > 0:
             self.currentCue = self.data.keys()[0]        
@@ -75,7 +76,7 @@ class CueList(object):
             if value > 0:
                 mappings[channel.number] = value
         
-        cue = Cue.Cue(mappings, self.defiaultUpDown)
+        cue = Cue.Cue(mappings, self.defaultUpDown)
         cueIndex = cueName.replace(CUE, '')
         cueIndex = string_decimal.fromStr(cueIndex)
         self.data[cueIndex] = cue        
@@ -131,12 +132,18 @@ class CueList(object):
                 self.groupValues[groupNumber].setPlaybackValue(value)
     
     
-    def changeUpDown(self, upDown):
+    def changeDefaultCueTime(self, upDown):
         self.defaultUpDown = upDown
         
-    def changeCueTiming(self, cueNumber, up, down):
-        pass  # TODO
-    
+    # changes cue timing for currently selected cue.
+    # up and down are strings
+    def changeCueTime(self, up, down):
+        cue = self.data[self.currentCue]
+        cue.upTime = fromStr(up)
+        cue.downTime = fromStr(down)
+        self.saveFunc(self.toDict())
+        return ("Changed Cue" + str(self.currentCue) + "'s timings")
+         
     def goto(self, target):
         target = string_decimal.fromStr(target)
         if target in self.data:

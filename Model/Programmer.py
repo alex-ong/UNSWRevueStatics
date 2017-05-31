@@ -7,6 +7,7 @@ from Model.CommandProgrammer.Command import (SelectCommand, SetCommand, SelectAn
 from Model.CommandProgrammer.parser import  CUE, CHANNEL, GROUP
 
 from Model.ModalContainer import TIME_MODAL
+from libs.string_decimal import string_decimal
 
 class Programmer(object):
     def __init__(self, cueList, faderValues, groupValues, channelValues, modals):
@@ -31,16 +32,22 @@ class Programmer(object):
         elif isinstance(command, DecimalCommand):  # should never reach this
             return ("Entering a decimal number isn't a command.")
         elif isinstance(command, TimeCommand):
+            return self._doTime()
+        
+    def _doTime(self):
+        if (self.cueList.currentCue is not None):
             self.modals.addToStack(TIME_MODAL)
             cueLabel = str(self.cueList.currentCue)
-            self.modals.peekStack().show(cueLabel, self.finishTimeModal)
-            return None
-        
-    def finishTimeModal(self, response, data):
-        if data is None:
-            return response
+            self.modals.peekStack().show(cueLabel, self._finishTimeModal)
+            return ("Enter times into form")
         else:
-            print (response, data)
+            return ("Error: No Cues. Can't modify time")
+    
+    def _finishTimeModal(self, response, data):
+        if data is None: #user cancelled.
+            pass
+        else:
+            self.cueList.changeCueTime(data[0],data[1])
         self.modals.popStack()
         
     def _doSelect(self, command):

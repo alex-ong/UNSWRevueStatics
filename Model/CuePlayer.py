@@ -19,7 +19,7 @@ class PlayableCue(object):
     MODE_STOP = 1
     
     def __init__(self, cue, onFinished):
-        self.target = cue.upTime
+        self.target = None
         self.mode = PlayableCue.MODE_NONE
         self.cue = cue
         self.cue.playableCue = self
@@ -30,12 +30,12 @@ class PlayableCue(object):
         
     def _play(self):
         self.mode = PlayableCue.MODE_PLAY
-        self.target = self.cue.upTime
+        self.target = self.cue.upTime.toFloat()
         
     def stop(self):
         if self.mode != PlayableCue.MODE_STOP:
             self.mode = PlayableCue.MODE_STOP
-            newTarget = self.cue.downTime
+            newTarget = self.cue.downTime.toFloat()
             startValue = (1.0 - self._perc()) * newTarget
             self.timer = startValue
             self.target = newTarget
@@ -105,7 +105,7 @@ class CuePlayer(object):
             cue.update(deltaTime)            
         
         # create group/channel playback dict
-        finalValues = { 'group'+str(key):0 for key in self.groupValues.values.keys()}        
+        finalValues = { 'group' + str(key):0 for key in self.groupValues.values.keys()}        
         finalValues2 = { key:0 for key in self.channelValues.values.keys()}
         finalValues.update(finalValues2)
 
@@ -117,7 +117,7 @@ class CuePlayer(object):
                 
                 finalValues[key] = max(finalValues[key], value)
         
-        for i in range (len(self.currentCues)-1, -1, -1):
+        for i in range (len(self.currentCues) - 1, -1, -1):
             if self.currentCues[i].canRemove:
                 del self.currentCues[i]
         

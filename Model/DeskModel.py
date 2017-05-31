@@ -39,7 +39,7 @@ class DeskModel(object):
         try:
             upDown = self.settings['upDown']
         except KeyError:
-            upDown = [2, 1]
+            upDown = ["2", "1"]
             self.settings['upDown'] = upDown
             self.saveSettings()
             
