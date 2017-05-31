@@ -13,6 +13,7 @@ DESC_TEXT1 = 'Input Up time'
 DESC_TEXT2 = 'Input Down time'
 FONT = ('Consolas', 28)
 TITLE_FONT = ('Consolas', 48)
+COLOR_CONSOLE = 'red'
 def autoString(value):
     if value is None:
         return ''
@@ -35,8 +36,8 @@ class TimeModal(tk.Toplevel):
         self.descriptionText2 = tk.Label(self.border, bg=COLOR_NONE, fg=FG, text=DESC_TEXT2, font=FONT)
         self.answer1Str = tk.StringVar()
         self.answer2Str = tk.StringVar()
-        self.answer1 = tk.Label(self.border, bg='red', fg=FG, textvariable=self.answer1Str, justify=tk.RIGHT, font=FONT)
-        self.answer2 = tk.Label(self.border, bg='red', fg=FG, textvariable=self.answer2Str, font=FONT)
+        self.answer1 = tk.Label(self.border, bg=COLOR_CONSOLE, fg=FG, textvariable=self.answer1Str, justify=tk.RIGHT, font=FONT)
+        self.answer2 = tk.Label(self.border, bg=COLOR_CONSOLE, fg=FG, textvariable=self.answer2Str, font=FONT)
         self.upArrow = tk.Label(self.border, bg=COLOR_NONE, fg=FG, text=UP_ARROW, font=FONT)
         self.downArrow = tk.Label(self.border, bg=COLOR_NONE, fg=FG, text=DOWN_ARROW, font=FONT)
 
@@ -54,22 +55,26 @@ class TimeModal(tk.Toplevel):
         self.overrideredirect(True)
         self.isVisible = False      
         self.hide()
+        
         # todo store old values to compare every frame
-        # prevAnswer1Value = None
-        # prevAnswer2Value = None
+        self.prevAnswer1Value = None
+        self.prevAnswer2Value = None
+        self.prevAnswer1Color = None
+        self.prevAnswer2Color = None
         
     def refresh(self):  # called every frame when this form is visible
         if self.isVisible:        
             if self.data.currentState == TimeState.ENTER_UP:
-                self.answer1Str.set(autoString(self.data.upTime))
-                self.answer2.config(bg=COLOR_NONE)
+                self.setAnswer1Str(autoString(self.data.upTime))
+                self.setAnswer2Color(COLOR_NONE)
             elif self.data.currentState == TimeState.ENTER_DOWN:
-                self.answer1.config(bg=COLOR_NONE)
-                self.answer2.config(bg='red')
-                self.answer2Str.set(autoString(self.data.downTime))
+                self.setAnswer1Color(COLOR_NONE)
+                self.setAnswer2Color(COLOR_CONSOLE)
+                self.setAnswer2Str(autoString(self.data.downTime))
 
     def showRefresh(self):  # only called when show is called
         self.title.configure(text=self.data.description)
+        self.reset()
         self.refresh()
         
     def centreOnScreen(self):
@@ -94,14 +99,35 @@ class TimeModal(tk.Toplevel):
         self.isVisible = False
                         
     def reset(self,):
-        self.descriptionText2.config(fg=COLOR_NONE)
+        self.setAnswer1Color(COLOR_CONSOLE)
+        self.setAnswer2Color(COLOR_NONE)
+        self.setAnswer1Str('')
+        self.setAnswer2Str('')
+        
+    def setAnswer1Str(self, string):
+        if self.prevAnswer1Value != string:
+            self.answer1Str.set(string)
+            self.prevAnswer1Value = string        
+    
+    def setAnswer2Str(self, string):
+        if self.prevAnswer2Value != string:
+            self.answer2Str.set(string)
+            self.prevAnswer2Value = string
+    
+    def setAnswer1Color(self, color):
+        if self.prevAnswer1Color != color:
+            self.answer1.config(bg=color)
+            self.prevAnswer1Color = color
+    
+    def setAnswer2Color(self, color):
+        if self.prevAnswer2Color != color:
+            self.answer2.config(bg=color)
+            self.prevAnswer2Color = color
         
     def done(self, result):
         self.closeCallback(result)
         
-    
-        
-        
+
 if __name__ == '__main__':
     root = tk.Tk()
     tm = TimeModal(root)

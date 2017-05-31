@@ -1,6 +1,7 @@
 from Model import Console
 from Model.CommandProgrammer.CueTimeConsole import validOperators
 from libs import string_decimal
+from Model.Console import BACKSPACE, CLEAR, ENTER
 
 from enum import Enum
 from Model.CommandProgrammer.parser import value_token
@@ -9,6 +10,8 @@ class TimeState(Enum):
     ENTER_UP = 0
     ENTER_DOWN = 1
      
+MAX_COMMAND_LENGTH = 5 #max number of characters we support for time.
+
 class TimeModal(object):
     
     def __init__(self):
@@ -31,10 +34,19 @@ class TimeModal(object):
         self.description = None
         self.currentState = TimeState.ENTER_UP
         
-    # calld on any user input when modal is active
+    def currentCommandLength(self):
+        fullString = ''.join(self.console.tokens)
+        return len(fullString)
+    
+    # called on any user input when modal is active
     def handleCommand(self, command):
-        # pass o console...
-        consoleResult = self.console.parseString(command)
+        # pass to console...
+        # quickly check length of console. We will not accept any input if it is too long
+        
+        if (command in [ENTER, BACKSPACE, CLEAR] or 
+            self.currentCommandLength() < MAX_COMMAND_LENGTH):
+            consoleResult = self.console.parseString(command)
+        
         # if consoleResult == CLEAR: #call onFinish
         #    print ("console clear pressed")
         #    return
