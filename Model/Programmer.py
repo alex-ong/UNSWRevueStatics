@@ -39,7 +39,7 @@ class Programmer(object):
             self.modals.addToStack(TIME_MODAL)
             cueLabel = str(self.cueList.currentCue)
             self.modals.peekStack().show(cueLabel, self._finishTimeModal)
-            return ("Enter times into form")
+            return None
         else:
             return ("Error: No Cues. Can't modify time")
     
@@ -47,7 +47,7 @@ class Programmer(object):
         if data is None: #user cancelled.
             pass
         else:
-            self.cueList.changeCueTime(data[0],data[1])
+            self.cueList.changeCueTime(data[0],data[1])            
         self.modals.popStack()
         
     def _doSelect(self, command):

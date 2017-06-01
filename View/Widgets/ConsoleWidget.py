@@ -40,11 +40,14 @@ class ConsoleWidget(tk.Entry):
         self.s.set(' '.join(tokens))
         self.configure(state=tk.DISABLED)
         self.lastTokens = tokens
-        
+        self.lastCommandResult = None
     def setExecuted(self):
+        self.configure(state=tk.NORMAL)
         self.configure({BG:EXECUTED_COMMAND_BG})
         self.s.set(self.console.lastCommandResult)
+        self.configure(state=tk.DISABLED)
         self.lastCommandResult = self.console.lastCommandResult
+        self.lastTokens = None
         
     def refreshDisplay(self):
         if self.console.lastCommandResult is not None:
@@ -52,4 +55,5 @@ class ConsoleWidget(tk.Entry):
                 self.setExecuted()
         elif self.lastTokens != self.console.tokens:
             self.setValue(self.console.tokens.copy())
+            self.lastCommandResult = None
             

@@ -2,7 +2,7 @@ from Model import Console
 from Model.CommandProgrammer.CueTimeConsole import validOperators
 from libs import string_decimal
 from Model.Console import BACKSPACE, CLEAR, ENTER
-
+from Model.ModalForms import AbstractModal
 from enum import Enum
 from Model.CommandProgrammer.parser import value_token
 
@@ -10,23 +10,22 @@ class TimeState(Enum):
     ENTER_UP = 0
     ENTER_DOWN = 1
      
-MAX_COMMAND_LENGTH = 5 #max number of characters we support for time.
+MAX_COMMAND_LENGTH = 5  # max number of characters we support for time.
 
-class TimeModal(object):
+class TimeModal(AbstractModal.AbstractModal):
     
     def __init__(self):
+        super().__init__()
         self.upTime = None
         self.downTime = None
         self.description = None
         self.programmer = TimeModalProgramer(self)
-        self.console = Console.Console(self.programmer, validOperators)
-        self.onFinish = None        
+        self.console = Console.Console(self.programmer, validOperators)                
         self.currentState = TimeState.ENTER_UP
         
     def show(self, description, onFinish):
-        self.reset()
-        self.description = description
-        self.onFinish = onFinish
+        super().show(description, onFinish)
+        self.description = description        
         
     def reset(self):
         self.upTime = None
