@@ -29,6 +29,7 @@ class ConsoleWidget(tk.Entry):
         self.configure(state=tk.DISABLED)
         self.setValue([])
         self.lastTokens = []
+        self.lastCommandResult = None
         #self.executed = False #todo: implement
         
     def setValue(self, tokens):
@@ -40,11 +41,15 @@ class ConsoleWidget(tk.Entry):
         self.configure(state=tk.DISABLED)
         self.lastTokens = tokens
         
-    def executeCommand(self):
+    def setExecuted(self):
         self.configure({BG:EXECUTED_COMMAND_BG})
-        #self.executed = True
+        self.s.set(self.console.lastCommandResult)
+        self.lastCommandResult = self.console.lastCommandResult
         
     def refreshDisplay(self):
-        if self.lastTokens != self.console.tokens:
+        if self.console.lastCommandResult is not None:
+            if self.lastCommandResult != self.console.lastCommandResult:
+                self.setExecuted()
+        elif self.lastTokens != self.console.tokens:
             self.setValue(self.console.tokens.copy())
             

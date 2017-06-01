@@ -91,11 +91,11 @@ class Programmer(object):
             return "Error when selecting items"
         
         try:
-            self._doSet(setValue)
-            return "Selected then set to: ", +str(setValue.value)
+            self._doSet(setValue)            
+            return ("Selected then set to: " + str(command.value))
         except:
             return "Error when setting items"  
-    
+        
     def _doDelete(self, command):
         if CUE in command.target:
             return self.cueList.deleteCue(command.target)

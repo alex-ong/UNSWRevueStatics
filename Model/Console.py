@@ -19,6 +19,7 @@ class Console(object):
         self.tokens = []
         self.programmer = programmer
         self.validOperators = validOperators
+        self.lastCommandResult = None
         
     # returns autocomplete, if_error, and a list of strings
     def getTokens(self):
@@ -47,11 +48,11 @@ class Console(object):
     def parseString(self, string):        
         if string == BACKSPACE:
             self.handleBackspace()
+            self.lastCommandResult = None
             return
         
         if string == CLEAR:
-            self.tokens = []
-            self.programmer.clear()
+            self.reset()
             return CLEAR
             
         if string == ENTER:
@@ -64,6 +65,7 @@ class Console(object):
                 result = self.programmer.handleCommand(result)
             else:
                 print ("unknown result:", result)
+            self.lastCommandResult = result
             self.tokens = []
             return result
         
@@ -92,9 +94,11 @@ class Console(object):
                 print('Tried to enter ', string,
                       'but valid operators are:',
                       self.validOperators(self.tokens))
-             
+        self.lastCommandResult = None     
             
     # called when user hits clear 
     def reset(self):
         self.tokens = []
+        self.lastCommandResult = None
+        self.programmer.clear()
         
