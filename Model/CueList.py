@@ -56,12 +56,21 @@ class CueList(object):
             
     def deleteCue(self, cueName):
         key = string_decimal.fromStr(cueName.replace(CUE,''))
-        try:
+        if key in self.data:
+            if key == self.currentCue:
+                allKeys = self.data.keys()
+                index = allKeys.index(key)
+                if len(allKeys) == 1:
+                    self.currentCue = None
+                elif index == len(allKeys) - 1:
+                    self.currentCue = allKeys[index - 1]
+                else:
+                    self.currentCue = allKeys[index + 1]
+                    
             del self.data[key]
-            self.saveFunc(self.toDict())
+            self.saveFunc(self.toDict())   
             return ('Successfully Deleted: ' + str(cueName))
-        except:
-            print ('uh oh')
+        else:            
             return ('Could not delete:' + str(cueName) + '. Does not exist.')
         
     def recordCue(self, cueName):
