@@ -77,13 +77,16 @@ class TimeModal(object):
                 self.onFinish(response, data)
         else:
             print("Unsupported command:", str(command))
+    
+    def handleClear(self):
+        self.onFinish("Cancelled timeInput", None)
         
 class TimeModalProgramer(object):
     def __init__(self, timeModal):
         self.timeModal = timeModal
     
     def clear(self):
-        print('clear pressed in programmer')
+        self.timeModal.handleClear()
         
     def handleCommand(self, command):        
         return self.timeModal.handleExecuteCommand(command)
