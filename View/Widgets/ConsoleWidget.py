@@ -41,6 +41,7 @@ class ConsoleWidget(tk.Entry):
         self.configure(state=tk.DISABLED)
         self.lastTokens = tokens
         self.lastCommandResult = None
+        
     def setExecuted(self):
         self.configure(state=tk.NORMAL)
         self.configure({BG:EXECUTED_COMMAND_BG})

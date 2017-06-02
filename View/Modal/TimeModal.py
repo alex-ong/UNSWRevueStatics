@@ -4,7 +4,7 @@ import tkinter as tk
 from View.ViewStyle import COLOR_NONE
 from View.ViewStyle import COLOR_DIRECT as TITLE
 from View.Widgets.CueWidget import UP_ARROW, DOWN_ARROW
-
+from . import AbstractModal
 from Model.ModalForms.TimeModal.TimeModal import TimeState
 
 FG = 'white'
@@ -20,11 +20,11 @@ def autoString(value):
     else:
         return str(value)
     
-class TimeModal(tk.Toplevel):
+class TimeModal(AbstractModal.AbstractModal):
     def __init__(self, data, *args):
-        super().__init__(*args)        
-        self.data = data
-        self.closeCallback = None
+        super().__init__(data, *args)
+    
+    def subClassSetup(self):        
         self.config(bg=COLOR_NONE)
         
         self.border1 = tk.Frame(self, bg='grey', borderwidth=16)
@@ -50,11 +50,7 @@ class TimeModal(tk.Toplevel):
         self.downArrow.grid(row=2, column=2, sticky=tk.NSEW)
         # centre Toplevel on screen.        
         self.border.pack()
-        self.border1.pack()        
-        self.centreOnScreen()  
-        self.overrideredirect(True)
-        self.isVisible = False      
-        self.hide()
+        self.border1.pack()                
         
         # todo store old values to compare every frame
         self.prevAnswer1Value = None
@@ -62,42 +58,19 @@ class TimeModal(tk.Toplevel):
         self.prevAnswer1Color = None
         self.prevAnswer2Color = None
         
-    def refresh(self):  # called every frame when this form is visible
-        if self.isVisible:        
-            if self.data.currentState == TimeState.ENTER_UP:
-                self.setAnswer1Str(autoString(self.data.upTime))
-                self.setAnswer2Color(COLOR_NONE)
-            elif self.data.currentState == TimeState.ENTER_DOWN:
-                self.setAnswer1Color(COLOR_NONE)
-                self.setAnswer2Color(COLOR_CONSOLE)
-                self.setAnswer2Str(autoString(self.data.downTime))
+    def subclassRefresh(self):  # called every frame when this form is visible                
+        if self.data.currentState == TimeState.ENTER_UP:
+            self.setAnswer1Str(autoString(self.data.upTime))
+            self.setAnswer2Color(COLOR_NONE)
+        elif self.data.currentState == TimeState.ENTER_DOWN:
+            self.setAnswer1Color(COLOR_NONE)
+            self.setAnswer2Color(COLOR_CONSOLE)
+            self.setAnswer2Str(autoString(self.data.downTime))
 
     def showRefresh(self):  # only called when show is called
-        self.title.configure(text=self.data.description)
-        self.reset()
-        self.refresh()
+        super().showRefresh()
+        self.title.configure(text=self.data.description)        
         
-    def centreOnScreen(self):
-        self.update_idletasks()  # refresh widget to get correct size
-        w = self.winfo_width()
-        h = self.winfo_height()
-        geoString = '%dx%d+%d+%d' % (w, h,
-                                     int(self.winfo_screenwidth() / 2 - 0.5 * w),
-                                     int(self.winfo_screenheight() / 2 - 0.5 * h))        
-        self.geometry(geoString)    
-    
-    def show(self, data):
-        self.data = data        
-        self.deiconify()        
-        self.overrideredirect(True)
-        self.isVisible = True        
-        self.showRefresh()
-        
-    def hide(self):
-        self.overrideredirect(False)
-        self.withdraw()
-        self.isVisible = False
-                        
     def reset(self,):
         self.setAnswer1Color(COLOR_CONSOLE)
         self.setAnswer2Color(COLOR_NONE)
@@ -124,8 +97,7 @@ class TimeModal(tk.Toplevel):
             self.answer2.config(bg=color)
             self.prevAnswer2Color = color
         
-    def done(self, result):
-        self.closeCallback(result)
+    
         
 
 if __name__ == '__main__':

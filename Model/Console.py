@@ -7,13 +7,14 @@ from Model.CommandProgrammer.parser import (RECORD, THRU, GROUP, CHANNEL, CUE, F
                                             tryParseInt, subContains)
 
 from Model.CommandProgrammer.parser import safeParse
-from Model.CommandProgrammer.Command import AbstractCommand
+from Model.CommandProgrammer.Command import AbstractCommand, MenuCommand
 from libs.string_decimal import string_decimal
 
 BACKSPACE = '<-'
 CLEAR = 'Clear'
 ENTER = 'Enter'
-                        
+MENU = 'Menu'
+                    
 class Console(object):
     def __init__(self, programmer, validOperators):
         self.tokens = []
@@ -67,6 +68,12 @@ class Console(object):
                 print ("unknown result:", result)
             self.lastCommandResult = result
             self.tokens = []
+            return result
+        
+        if string == MENU:
+            self.reset()
+            self.tokens = []
+            result = self.programmer.handleCommand(MenuCommand())
             return result
         
         # split into more tokens, or add as a token. or do conversion.

@@ -1,6 +1,7 @@
 from .ModalForms.TimeModal import TimeModal
+from .ModalForms.MainMenuModal import MainMenuModal
 TIME_MODAL = 'TimeModal'
-
+MENU_MODAL = 'MenuModal'
 '''
 This class has an instance of every possible modal.
 it also has a stack for you to add and interact with modal forms. 
@@ -15,6 +16,7 @@ class ModalList(object):
         
     def setupModals(self):
         self.data[TIME_MODAL] = TimeModal.TimeModal()
+        #self.data[MENU_MODAL] = MainMenuModal.MainMenuModal()
     
     def getModal(self, modalType):
         return self.data[modalType]

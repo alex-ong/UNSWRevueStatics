@@ -6,8 +6,10 @@ Our parser outputs Commands which the Model can interpret
 '''
     
 class AbstractCommand():
-    def __init__(self):
-        pass
+    pass
+    
+class MenuCommand(AbstractCommand):
+    pass
     
 class DecimalCommand(AbstractCommand):
     def __init__(self, decimal):

@@ -3,10 +3,11 @@
 from libs.sorted_containers.sortedset import SortedSet
 
 from Model.CommandProgrammer.Command import (SelectCommand, SetCommand, SelectAndSetCommand,
-                                              DeleteCommand, RecordCommand, DecimalCommand, TimeCommand)
+                                              DeleteCommand, RecordCommand, DecimalCommand, TimeCommand,
+                                              MenuCommand)
 from Model.CommandProgrammer.parser import  CUE, CHANNEL, GROUP
 
-from Model.ModalContainer import TIME_MODAL
+from Model.ModalContainer import TIME_MODAL, MENU_MODAL
 from libs.string_decimal import string_decimal
 
 class Programmer(object):
@@ -33,6 +34,18 @@ class Programmer(object):
             return ("Entering a decimal number isn't a command.")
         elif isinstance(command, TimeCommand):
             return self._doTime()
+        elif isinstance(command, MenuCommand):
+            return self._doMenu()
+            
+        
+    def _doMenu(self):
+        self.modals.addToStack(MENU_MODAL)
+        #Todo: forward all data required...
+        self.modals.peekStack().show(None, self._finishMenuModal)
+        return None
+    
+    def _finishMenuModal(self):
+        self.modals.popStack()
         
     def _doTime(self):
         if (self.cueList.currentCue is not None):
