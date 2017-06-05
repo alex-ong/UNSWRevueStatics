@@ -16,7 +16,7 @@ class ModalList(object):
         
     def setupModals(self):
         self.data[TIME_MODAL] = TimeModal.TimeModal()
-        #self.data[MENU_MODAL] = MainMenuModal.MainMenuModal()
+        self.data[MENU_MODAL] = MainMenuModal.MainMenuModal()
     
     def getModal(self, modalType):
         return self.data[modalType]

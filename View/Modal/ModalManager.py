@@ -1,8 +1,9 @@
 from Model.ModalContainer import TIME_MODAL, MENU_MODAL
 
 from . import TimeModal
+from . import MainMenuModal
 modalMapping = { TIME_MODAL: TimeModal.TimeModal,
-                 MENU_MODAL: None } #todo!
+                 MENU_MODAL: MainMenuModal.MainMenuModal} #todo!
 
 
 class ModalManager():

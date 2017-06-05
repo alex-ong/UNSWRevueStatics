@@ -1,4 +1,5 @@
 from Model.ModalForms.AbstractModal import AbstractModal
+from Model.Console import MENU
 
 mainMenuOptions = [
                    ("Patch Menu", None),
@@ -22,4 +23,7 @@ class MainMenuModal(AbstractModal):
         pass
     
     def handleCommand(self, command):
-        print("MainMenuModal got command", command)
+        if command == MENU:
+            self.onFinish()
+        else:
+            print("MainMenuModal got command", command)

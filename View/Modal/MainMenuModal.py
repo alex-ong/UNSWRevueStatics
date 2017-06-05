@@ -26,7 +26,7 @@ class MainMenuModal(AbstractModal.AbstractModal):
                               text='Main Menu', font=TITLE_FONT)
         self.options = []
         
-        for option in data.mainMenuOptions:
+        for option in self.data.mainMenuOptions:
             string, _ = option
             index = len(self.options) + 1
             stringOpt = tk.Label(self, bg=COLOR_NONE, fg=FG,
