@@ -11,11 +11,13 @@ class MainMenuModal(AbstractModal):
     def __init__(self):
         super().__init__()
         self.currentSelection = None
+        self.mainMenuOptions = mainMenuOptions
         
     def show(self, onShowArguments, onFinish):
         super().show(onShowArguments,onFinish)
         self.defaultFadeTimes = onShowArguments
         print("woot, showing mainMenuModal")
+        
     def reset(self):
         pass
     
