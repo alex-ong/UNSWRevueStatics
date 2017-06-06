@@ -15,6 +15,7 @@ from . import ModalContainer
 from _collections import OrderedDict
 
 from .CueList import PLAYBACK_COMMANDS
+from Model.ModalForms.ModalFormConsts import MENU_MODAL
 
 #validOperators for main console
 from Model.CommandProgrammer.MainConsole import validOperators 
@@ -47,7 +48,9 @@ class DeskModel(object):
                                         self.channelValues, self.config.writeCueList,
                                         upDown)
        
-        self.modals = ModalContainer.ModalList()        
+        self.modals = ModalContainer.ModalList()    
+        #todo break this breakage of abstraction    
+        self.modals.data[MENU_MODAL].setModel(self) 
         
         self.programmer = Programmer.Programmer(self.cueList,
                                                 self.faderValues,

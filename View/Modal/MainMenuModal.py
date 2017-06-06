@@ -16,7 +16,7 @@ class MainMenuModal(AbstractModal.AbstractModal):
         
     def subClassSetup(self):
         self.config(bg=COLOR_NONE)
-        self.rowconfigure(0, weight=1) # top pad
+        self.rowconfigure(0, weight=1)  # top pad
         self.columnconfigure(0, weight=1)  # left pad
         self.columnconfigure(1, weight=0)  # label
         self.columnconfigure(2, weight=0)  # meta info
@@ -24,31 +24,49 @@ class MainMenuModal(AbstractModal.AbstractModal):
         
         self.title = tk.Label(self, bg=COLOR_NONE, fg=FG,
                               text='Main Menu', font=TITLE_FONT)
-        self.options = []
+        
+        self.options = []  # label/bool pairs. The bool represents selected. 
         
         for option in self.data.mainMenuOptions:
-            string, _ = option
+            string = option[0]
             index = len(self.options) + 1
             stringOpt = tk.Label(self, bg=COLOR_NONE, fg=FG,
                                  text=str(index) + ' - ' + string,
                                  justify=tk.LEFT, font=FONT)
-            self.options.append(stringOpt)
+            self.options.append([stringOpt, False])
+            
         row = 1
         self.title.grid(row=row, column=1, columnspan=2)
         row += 1
         for option in self.options:
-            option.grid(row=row, column=1, sticky = tk.W)
+            option[0].grid(row=row, column=1, sticky=tk.W)
             row += 1
-        self.rowconfigure(row, weight=1) # bottom padding
+        self.rowconfigure(row, weight=1)  # bottom padding
         self.scaleToScreen()
         
     def scaleToScreen(self):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         self.geometry("%dx%d" % (screen_width, screen_height))
-    def reset(self):
-        pass
     
+    def setOptionSelected(self, index, selected):    
+        if (self.options[index][1] != selected):            
+            self.options[index][1] = selected
+            colour = SELECTED if selected else FG
+            self.options[index][0].config(fg=colour)
+            
+    def resetSelected(self):
+        for index in range(len(self.options)):
+            self.setOptionSelected(index, False)
+    
+    def reset(self):
+        self.resetSelected()
+        
+    def subclassRefresh(self):        
+        self.resetSelected()
+        if self.data.currentSelection is not None:
+            self.setOptionSelected(self.data.currentSelection, True)
+        
 class Tester():
     def __init__(self):
         self.mainMenuOptions = [('option1', None),
