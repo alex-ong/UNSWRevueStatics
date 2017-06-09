@@ -142,6 +142,11 @@ class CueList(object):
     
     
     def changeDefaultCueTime(self, upDown):
+        up = upDown[0]
+        down = upDown[1]
+        if not isinstance(up, string_decimal.string_decimal):
+            up = fromStr(up)
+            down = fromStr(down)            
         self.defaultUpDown = upDown
         
     # changes cue timing for currently selected cue.

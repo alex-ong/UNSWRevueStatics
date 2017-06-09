@@ -9,7 +9,7 @@ class AbstractModal(object):
         self.onFinish = onFinish
     
     def reset(self):
-        raise NotImplementedError
+        raise NotImplementedError()
     
     def handleCommand(self, command):
         raise NotImplementedError()

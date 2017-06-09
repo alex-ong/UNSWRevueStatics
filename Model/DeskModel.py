@@ -146,4 +146,10 @@ class DeskModel(object):
     def addModalToStack(self, modal):
         self.modalStack.append(modal)
         
-    
+    #assumes up and down times as strings
+    def updateFadeTimes(self, up, down):                
+        upDown = [up, down]
+        self.settings['upDown'] = upDown
+        self.saveSettings()
+        self.cueList.changeDefaultCueTime(upDown)
+        
