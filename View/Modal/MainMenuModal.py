@@ -14,6 +14,9 @@ class MainMenuModal(AbstractModal.AbstractModal):
     def __init__(self, data, *args):
         super().__init__(data, *args)
         
+    def menuName(self):
+        return 'Main Menu'
+    
     def subClassSetup(self):
         self.config(bg=COLOR_NONE)
         self.rowconfigure(0, weight=1)  # top pad
@@ -23,7 +26,7 @@ class MainMenuModal(AbstractModal.AbstractModal):
         self.columnconfigure(3, weight=1)  # right pad
         
         self.title = tk.Label(self, bg=COLOR_NONE, fg=FG,
-                              text='Main Menu', font=TITLE_FONT)
+                              text=self.menuName(), font=TITLE_FONT)
         
         self.options = []  # label/bool pairs. The bool represents selected. 
         

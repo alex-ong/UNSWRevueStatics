@@ -44,7 +44,8 @@ class Programmer(object):
         self.modals.peekStack().show(None, self._finishMenuModal)
         return None
     
-    def _finishMenuModal(self):
+    def _finishMenuModal(self, response, data):
+        # we ignore the response and data.
         self.modals.popStack()
         
     def _doTime(self):

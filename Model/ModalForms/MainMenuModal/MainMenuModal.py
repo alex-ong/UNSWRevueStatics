@@ -5,7 +5,7 @@ from Model.ModalForms import SubMenuHandlers
                              
 #menu options. Option Description, Modal to open, modal's fixed arguments.
 mainMenuOptions = [
-                   ("Patch Menu", None),
+                   ("Patch Menu", PATCH_MODAL),
                    ("Clear all Cues", None),
                    ("Default Fade times", TIME_MODAL),
                    ("Backup show", None)
@@ -14,26 +14,23 @@ mainMenuOptions = [
 # only works up to 9 though.                   
 numbers = [str(i + 1) for i in range(len(mainMenuOptions))]                    
 class MainMenuModal(AbstractModal):
-    def __init__(self, modalContainer):
+    def __init__(self, modalContainer, model):
         super().__init__()
         self.currentSelection = None
         self.mainMenuOptions = self.getMenuOptions()
         self.modalMenus = None
         self.modalContainer = modalContainer
-        self.model = None
+        self.model = model
         self.subMenuFinish = []
         self.subMenuSelect = []
+        self.setupSubMenuOnSelect()
+        self.setupSubMenuOnFinish()
     
     def getMenuOptions(self):
         return mainMenuOptions
     
     def getNumbers(self):
         return numbers
-    
-    def setModel(self, model):
-        self.model = model
-        self.setupSubMenuOnSelect()
-        self.setupSubMenuOnFinish()
         
     def setupSubMenuOnSelect(self):
         for mainMenuOption in self.mainMenuOptions:
@@ -59,7 +56,7 @@ class MainMenuModal(AbstractModal):
     
     def handleCommand(self, command):
         if command == MENU:
-            self.onFinish()            
+            self.onFinish(None, None)            
         elif command in self.getNumbers():
             self.currentSelection = int(command) - 1
         elif command in [BACKSPACE, CLEAR]:

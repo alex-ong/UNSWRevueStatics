@@ -48,9 +48,7 @@ class DeskModel(object):
                                         self.channelValues, self.config.writeCueList,
                                         upDown)
        
-        self.modals = ModalContainer.ModalList()    
-        #todo break this breakage of abstraction    
-        self.modals.data[MENU_MODAL].setModel(self) 
+        self.modals = ModalContainer.ModalList(self)     
         
         self.programmer = Programmer.Programmer(self.cueList,
                                                 self.faderValues,

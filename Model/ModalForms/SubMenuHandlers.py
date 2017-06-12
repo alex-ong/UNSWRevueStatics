@@ -1,13 +1,19 @@
-from Model.ModalForms.ModalFormConsts import TIME_MODAL
+from Model.ModalForms.ModalFormConsts import TIME_MODAL, PATCH_MODAL
 
 def GenerateSelectHandler(menuType, model, modalContainer):
     if menuType == TIME_MODAL:
         return TimeSubMenuSelectHandler(model, modalContainer)
+    elif menuType == PATCH_MODAL:
+        return PatchSubMenuSelectHandler(model, modalContainer)
+    
     return None
 
 def GenerateFinishHandler(menuType, model, modalContainer):
     if menuType == TIME_MODAL:
         return TimeSubMenuFinishHandler(model, modalContainer)
+    elif menuType == PATCH_MODAL:
+        return PatchSubMenuFinishHandler(model, modalContainer)
+    
     return None
 
 class AbstractMainMenuFinishHandler(object):
@@ -63,10 +69,11 @@ class PatchSubMenuSelectHandler(AbstractMainMenuSelectHandler):
         return PATCH_MODAL
     
     def subClassGetFormData(self):
+        print ("patchsubmenu select handler summoned!")
         # hard link to patch dictionary, reference to saveFile func.
         return (self.model.patching, self.model.config.writeDMXBindings) 
     
-class PatchSubMenuFinishHandler(AbstractMainMenuSelectHandler):
+class PatchSubMenuFinishHandler(AbstractMainMenuFinishHandler):
     def getMenuType(self):
         return PATCH_MODAL
     

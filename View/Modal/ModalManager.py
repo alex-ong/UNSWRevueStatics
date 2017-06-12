@@ -1,9 +1,12 @@
-from Model.ModalContainer import TIME_MODAL, MENU_MODAL
+from Model.ModalContainer import TIME_MODAL, MENU_MODAL, PATCH_MODAL
 
 from . import TimeModal
 from . import MainMenuModal
+from . import PatchModal
+
 modalMapping = { TIME_MODAL: TimeModal.TimeModal,
-                 MENU_MODAL: MainMenuModal.MainMenuModal} #todo!
+                 MENU_MODAL: MainMenuModal.MainMenuModal,
+                 PATCH_MODAL: PatchModal.PatchModal}  # todo!
 
 
 class ModalManager():
@@ -17,12 +20,12 @@ class ModalManager():
             self.modalForms[key] = viewClass(value)
             
             
-    #ensure our stack corresponds to model layer stack.
-    def refreshDisplay(self): #TOOD make this frame-agnostic instead of assuming only one change/frame
+    # ensure our stack corresponds to model layer stack.
+    def refreshDisplay(self):  # TOOD make this frame-agnostic instead of assuming only one change/frame
         i = 0
         while i < len(self.modalContainer.stack):
             formType, form = self.modalContainer.stack[i]
-            if i >= len(self.myStack): #add to stack
+            if i >= len(self.myStack):  # add to stack
                 self.myStack.append(self.modalForms[formType])
                 self.myStack[i].show(form)  
             self.myStack[i].refresh()                      
@@ -33,3 +36,5 @@ class ModalManager():
             i += 1
             
         self.myStack = self.myStack[:len(self.modalContainer.stack)]
+        
+        

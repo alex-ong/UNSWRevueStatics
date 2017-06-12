@@ -9,15 +9,16 @@ Some modals can be stacked (e.g. menu modal, then time modal)
 '''
 
 class ModalList(object):
-    def __init__(self):
+    def __init__(self, model):
         self.data = {}
         self.stack = []
-        self.setupModals()
+        self.setupModals(model)
         
-    def setupModals(self):
+    def setupModals(self, model):
         self.data[TIME_MODAL] = TimeModal.TimeModal()
-        self.data[MENU_MODAL] = MainMenuModal.MainMenuModal(self)
-        #self.data[PATCH_MODAL] = PatchModal.PatchModal(self)
+        self.data[MENU_MODAL] = MainMenuModal.MainMenuModal(self, model)
+        self.data[PATCH_MODAL] = PatchModal.PatchModal(self, model)
+        
         
     def getModal(self, modalType):
         return self.data[modalType]
