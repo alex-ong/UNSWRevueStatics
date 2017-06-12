@@ -1,5 +1,6 @@
 from .ModalForms.TimeModal import TimeModal
 from .ModalForms.MainMenuModal import MainMenuModal
+from .ModalForms.PatchModal import PatchModal
 from .ModalForms.ModalFormConsts import *
 '''
 This class has an instance of every possible modal.
@@ -16,7 +17,8 @@ class ModalList(object):
     def setupModals(self):
         self.data[TIME_MODAL] = TimeModal.TimeModal()
         self.data[MENU_MODAL] = MainMenuModal.MainMenuModal(self)
-    
+        #self.data[PATCH_MODAL] = PatchModal.PatchModal(self)
+        
     def getModal(self, modalType):
         return self.data[modalType]
 

@@ -1,7 +1,7 @@
 from Model.ModalForms.AbstractModal import AbstractModal
 from Model.Console import MENU, BACKSPACE, CLEAR, ENTER
 from Model.ModalForms.ModalFormConsts import *
-from . import SubMenuHandlers
+from Model.ModalForms import SubMenuHandlers
                              
 #menu options. Option Description, Modal to open, modal's fixed arguments.
 mainMenuOptions = [
@@ -17,13 +17,19 @@ class MainMenuModal(AbstractModal):
     def __init__(self, modalContainer):
         super().__init__()
         self.currentSelection = None
-        self.mainMenuOptions = mainMenuOptions
+        self.mainMenuOptions = self.getMenuOptions()
         self.modalMenus = None
         self.modalContainer = modalContainer
         self.model = None
         self.subMenuFinish = []
         self.subMenuSelect = []
-        
+    
+    def getMenuOptions(self):
+        return mainMenuOptions
+    
+    def getNumbers(self):
+        return numbers
+    
     def setModel(self, model):
         self.model = model
         self.setupSubMenuOnSelect()
@@ -54,7 +60,7 @@ class MainMenuModal(AbstractModal):
     def handleCommand(self, command):
         if command == MENU:
             self.onFinish()            
-        elif command in numbers:
+        elif command in self.getNumbers():
             self.currentSelection = int(command) - 1
         elif command in [BACKSPACE, CLEAR]:
             self.currentSelection = None

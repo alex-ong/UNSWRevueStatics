@@ -43,11 +43,12 @@ class AbstractMainMenuSelectHandler(object):
 class TimeSubMenuFinishHandler(AbstractMainMenuFinishHandler):    
     def getMenuType(self):
         return TIME_MODAL
+    
     def closeFormSubclass(self, response, data):
         if data is not None:
             upTime = data[0]
             downTime = data[1]
-            self.model.updateFadeTimes(upTime,downTime)
+            self.model.updateFadeTimes(upTime, downTime)
             
         
 class TimeSubMenuSelectHandler(AbstractMainMenuSelectHandler):    
@@ -56,3 +57,18 @@ class TimeSubMenuSelectHandler(AbstractMainMenuSelectHandler):
     
     def subClassGetFormData(self):
         return 'Default Fade'
+    
+class PatchSubMenuSelectHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return PATCH_MODAL
+    
+    def subClassGetFormData(self):
+        # hard link to patch dictionary, reference to saveFile func.
+        return (self.model.patching, self.model.config.writeDMXBindings) 
+    
+class PatchSubMenuFinishHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return PATCH_MODAL
+    
+    def closeFormSubclss(self, response, data):
+        pass  # we ignore this since we do all the model updates inside
