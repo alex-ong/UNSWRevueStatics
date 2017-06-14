@@ -7,6 +7,10 @@ class AbstractModal(object):
         self.reset()
         self.onShowArguments = onShowArguments
         self.onFinish = onFinish
+        self.subclassShow()
+        
+    def subclassShow(self):
+        pass
     
     def reset(self):
         raise NotImplementedError()
