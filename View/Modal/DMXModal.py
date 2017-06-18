@@ -7,12 +7,14 @@ from View.Modal import AbstractModal
 from View.Widgets import ConsoleWidget
 
 FG = 'white'
+FG_NONE = 'red'
 HEADING_BG = '#444444'
 HEADING_BG2 = '#bbbbbb'
 FONT = ('Consolas', 10)
 TITLE_FONT = ('Consolas', 48)
+SIZE_UNIVERSE = 512
 NUM_ROWS = 32
-NUM_COLS = int(512 / NUM_ROWS)
+NUM_COLS = int(SIZE_UNIVERSE  / NUM_ROWS)
 
 class DMXModal(AbstractModal.AbstractModal):
     def __init__(self, data, *args):
@@ -23,13 +25,13 @@ class DMXModal(AbstractModal.AbstractModal):
     
     def subClassSetup(self):
         self.dmxFrame = DMXModalFrame(self.menuName(), self)
-        #self.consoleWidget = ConsoleWidget.ConsoleWidget(console, self)
+        self.consoleWidget = ConsoleWidget.ConsoleWidget(self.data.console, self)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         
         self.scaleToScreen()                        
         self.dmxFrame.grid(sticky=tk.NSEW)     
-        #self.consoleWidget.grid(sticky=tk.NSEW)   
+        self.consoleWidget.grid(sticky=tk.NSEW)   
         
     def scaleToScreen(self):
         screen_width = self.winfo_screenwidth()
@@ -40,8 +42,8 @@ class DMXModal(AbstractModal.AbstractModal):
         pass
     
     def subclassRefresh(self):                
-        #self.consoleWidget.refreshDisplay()
-        self.dmxFrame.refreshDisplay()
+        self.consoleWidget.refreshDisplay()
+        self.dmxFrame.refreshDisplay(self.data.data)
     
 class DMXModalFrame(tk.Frame):
     def __init__(self, menuName, *args):
@@ -66,6 +68,8 @@ class DMXModalFrame(tk.Frame):
         self.title = tk.Label(self, bg=COLOR_NONE, fg=FG,
                               text=self.menuName, font=TITLE_FONT)
         self.title.grid(row=1, column=1, columnspan=NUM_COLS * 2)
+        self.channels = []
+        self.addresses = []
         
         channelNumber = 1
         for c in range(NUM_COLS * 2):
@@ -82,17 +86,22 @@ class DMXModalFrame(tk.Frame):
                 if c % 2 == 0:             
                     label = tk.Label(self, bg=COLOR_NONE, fg=FG,
                                      text="C" + str(channelNumber),
-                                     font=FONT)
+                                     font=FONT)                    
+                    self.channels.append(label)
                     channelNumber += 1
                 else:
-                    label = tk.Label(self, bg=COLOR_NONE, fg=FG,
-                                     text="D" + str(channelNumber),
+                    label = tk.Label(self, bg=COLOR_NONE, fg=FG,                                     
                                      font=FONT)
+                    self.addresses.append(label)                    
                 label.grid(row=r + 3, column=c + 1, sticky=tk.E)
 
-    def refreshDisplay(self):
-        pass
-    
+    def refreshDisplay(self, data):
+        for i in range (1, SIZE_UNIVERSE + 1):
+            if i in data:
+                self.addresses[i-1].config(text=str(data[i]), fg=FG)
+            else:
+                self.addresses[i-1].config(text="None",fg=FG_NONE)
+                
 if __name__ == '__main__':
     root = tk.Tk()
     modal = DMXModal(None)
