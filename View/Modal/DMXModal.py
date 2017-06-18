@@ -4,6 +4,7 @@ from View.ViewStyle import COLOR_NONE
 from View.ViewStyle import COLOR_DIRECT as SELECTED
 from View.Widgets.CueWidget import UP_ARROW, DOWN_ARROW
 from View.Modal import AbstractModal
+from View.Widgets import ConsoleWidget
 
 FG = 'white'
 HEADING_BG = '#444444'
@@ -16,18 +17,19 @@ NUM_COLS = int(512 / NUM_ROWS)
 class DMXModal(AbstractModal.AbstractModal):
     def __init__(self, data, *args):
         super().__init__(data, *args)
-        self.dmxFrame = None
-        
+
     def menuName(self):
         return 'DMX Patch'
     
     def subClassSetup(self):
         self.dmxFrame = DMXModalFrame(self.menuName(), self)
+        #self.consoleWidget = ConsoleWidget.ConsoleWidget(console, self)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        self.scaleToScreen()                        
-        self.dmxFrame.grid(sticky=tk.NSEW)
         
+        self.scaleToScreen()                        
+        self.dmxFrame.grid(sticky=tk.NSEW)     
+        #self.consoleWidget.grid(sticky=tk.NSEW)   
         
     def scaleToScreen(self):
         screen_width = self.winfo_screenwidth()
@@ -38,7 +40,8 @@ class DMXModal(AbstractModal.AbstractModal):
         pass
     
     def subclassRefresh(self):                
-        pass
+        #self.consoleWidget.refreshDisplay()
+        self.dmxFrame.refreshDisplay()
     
 class DMXModalFrame(tk.Frame):
     def __init__(self, menuName, *args):
@@ -87,7 +90,9 @@ class DMXModalFrame(tk.Frame):
                                      font=FONT)
                 label.grid(row=r + 3, column=c + 1, sticky=tk.E)
 
-        
+    def refreshDisplay(self):
+        pass
+    
 if __name__ == '__main__':
     root = tk.Tk()
     modal = DMXModal(None)

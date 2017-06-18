@@ -1,11 +1,12 @@
-from Model.ModalForms.ModalFormConsts import TIME_MODAL, PATCH_MODAL
+from Model.ModalForms.ModalFormConsts import TIME_MODAL, PATCH_MODAL, DMX_MODAL
 
 def GenerateSelectHandler(menuType, model, modalContainer):
     if menuType == TIME_MODAL:
         return TimeSubMenuSelectHandler(model, modalContainer)
     elif menuType == PATCH_MODAL:
         return PatchSubMenuSelectHandler(model, modalContainer)
-    
+    elif menuType == DMX_MODAL:
+        return DmxSubMenuSelectHandler(model, modalContainer)
     return None
 
 def GenerateFinishHandler(menuType, model, modalContainer):
@@ -13,7 +14,8 @@ def GenerateFinishHandler(menuType, model, modalContainer):
         return TimeSubMenuFinishHandler(model, modalContainer)
     elif menuType == PATCH_MODAL:
         return PatchSubMenuFinishHandler(model, modalContainer)
-    
+    elif menuType == DMX_MODAL:
+        return DmxSubMenuFinishHandler(model, modalContainer)
     return None
 
 class AbstractMainMenuFinishHandler(object):
@@ -71,7 +73,7 @@ class PatchSubMenuSelectHandler(AbstractMainMenuSelectHandler):
     def subClassGetFormData(self):
         print ("patchsubmenu select handler summoned!")
         # hard link to patch dictionary, reference to saveFile func.
-        return (self.model.patching, self.model.config.writeDMXBindings) 
+        return None 
     
 class PatchSubMenuFinishHandler(AbstractMainMenuFinishHandler):
     def getMenuType(self):
@@ -79,3 +81,18 @@ class PatchSubMenuFinishHandler(AbstractMainMenuFinishHandler):
     
     def closeFormSubclss(self, response, data):
         pass  # we ignore this since we do all the model updates inside
+
+class DmxSubMenuSelectHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return DMX_MODAL
+    
+    def subClassGetFormData(self):        
+        return (self.model.patching, self.model.config.writeDMXBindings) 
+    
+class DmxSubMenuFinishHandler(AbstractMainMenuFinishHandler):
+    def getMenuType(self):
+        return DMX_MODAL
+    
+    def closeFormSubclass(self, response, data):
+        pass  # we ignore this since we do all the model updates inside
+

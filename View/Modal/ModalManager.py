@@ -1,12 +1,14 @@
-from Model.ModalContainer import TIME_MODAL, MENU_MODAL, PATCH_MODAL
+from Model.ModalContainer import TIME_MODAL, MENU_MODAL, PATCH_MODAL, DMX_MODAL
 
 from . import TimeModal
 from . import MainMenuModal
 from . import PatchModal
+from . import DMXModal
 
 modalMapping = { TIME_MODAL: TimeModal.TimeModal,
                  MENU_MODAL: MainMenuModal.MainMenuModal,
-                 PATCH_MODAL: PatchModal.PatchModal}  # todo!
+                 PATCH_MODAL: PatchModal.PatchModal,
+                 DMX_MODAL: DMXModal.DMXModal}  # todo!
 
 
 class ModalManager():
