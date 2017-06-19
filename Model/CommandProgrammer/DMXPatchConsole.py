@@ -10,14 +10,21 @@ def validOperators(program):
     if len(program) == 0:
         return [CHANNEL]       
     elif len(program) == 2:
-        return [AT, THRU]
-    elif len(program) == 4:
-        return [AT]
+        return [NUMBER, AT, THRU]    
     elif program[-1] == THRU:
         return [CHANNEL]
     elif program[-1] == AT:
         return [NUMBER]    
     elif program[-1] == CHANNEL:
         return [NUMBER] 
+    elif tryParseInt(program[-1]):
+        if len(program) == 5:
+            return [AT, NUMBER]
+        else:
+            return [NUMBER]    
+    else:
+        print ("WTF", program, len(program))
+        return None
+        
         
     

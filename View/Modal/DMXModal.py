@@ -27,11 +27,13 @@ class DMXModal(AbstractModal.AbstractModal):
         self.dmxFrame = DMXModalFrame(self.menuName(), self)
         self.consoleWidget = ConsoleWidget.ConsoleWidget(self.data.console, self)
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure(0, weight=10)
         
         self.scaleToScreen()                        
         self.dmxFrame.grid(sticky=tk.NSEW)     
-        self.consoleWidget.grid(sticky=tk.NSEW)   
+        self.consoleWidget.grid(sticky=tk.NSEW)
+        #emptyness at botom since windows taskbar gets in the way.  
+        self.rowconfigure(2,weight=1) 
         
     def scaleToScreen(self):
         screen_width = self.winfo_screenwidth()
@@ -70,7 +72,7 @@ class DMXModalFrame(tk.Frame):
         self.title.grid(row=1, column=1, columnspan=NUM_COLS * 2)
         self.channels = []
         self.addresses = []
-        
+        self.prevDMXAddresses= [None for i in range(SIZE_UNIVERSE)]
         channelNumber = 1
         for c in range(NUM_COLS * 2):
             if c % 2 == 0:
@@ -90,17 +92,21 @@ class DMXModalFrame(tk.Frame):
                     self.channels.append(label)
                     channelNumber += 1
                 else:
-                    label = tk.Label(self, bg=COLOR_NONE, fg=FG,                                     
-                                     font=FONT)
+                    label = tk.Label(self, bg=COLOR_NONE, fg=FG_NONE,                                     
+                                     font=FONT, text = "None")
                     self.addresses.append(label)                    
                 label.grid(row=r + 3, column=c + 1, sticky=tk.E)
 
     def refreshDisplay(self, data):
         for i in range (1, SIZE_UNIVERSE + 1):
             if i in data:
-                self.addresses[i-1].config(text=str(data[i]), fg=FG)
+                if self.prevDMXAddresses[i-1] != data[i]:
+                    self.prevDMXAddresses[i-1] = data[i]
+                    self.addresses[i-1].config(text=str(data[i]), fg=FG)
             else:
-                self.addresses[i-1].config(text="None",fg=FG_NONE)
+                if self.prevDMXAddresses[i-1] != None:
+                    self.prevDMXAddresses[i-1] = None
+                    self.addresses[i-1].config(text="None",fg=FG_NONE)
                 
 if __name__ == '__main__':
     root = tk.Tk()
