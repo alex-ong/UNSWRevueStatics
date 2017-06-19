@@ -22,10 +22,35 @@ class DMXModal(AbstractModal.AbstractModal):
     # handle commands caused by a list of raw buttons.
     def handleConsoleCommand(self, command):
         if isinstance(command, MenuCommand):
-            self.onFinish(None,None)
+            self.onFinish(None, None)
         elif isinstance(command, SelectAndSetCommand):
-            print ('set and select', command)    
-    
+            self.HandleSelectAndSet(command)    
+        else:
+            print ("Unsupported command", command)
+            
+    def HandleSelectAndSet(self, command):
+        target = command.target        
+        value = command.value
+        targetDMX = [i + value for i in range(len(target))]
+        targetIndex = [int(target[i].replace('Channel', '')) 
+                       for i in range(len(target))]
+        pairs = [(targetIndex[i], targetDMX[i]) for i in range(len(targetDMX))]
+                        
+        # check to see if any of the indices are above 512
+        # remove all offending pairs
+        for i in range(len(pairs)-1,-1,-1):
+            if pairs[i][1] > 512:
+                pairs.pop(i); #todo right function call
+                            
+        # remove everything that has targetDMX
+        for key, value in self.data.items():
+            if value in targetDMX:
+                self.data[key] = None
+        # finally, set everything
+        for key, value in pairs:
+            self.data[key] = value
+        self.updateModel(self.data)
+        
     def reset(self):
         self.console.reset()
         
