@@ -25,6 +25,7 @@ class ModalManager():
     # ensure our stack corresponds to model layer stack.
     def refreshDisplay(self):  # TOOD make this frame-agnostic instead of assuming only one change/frame
         i = 0
+        unstack = False
         while i < len(self.modalContainer.stack):
             formType, form = self.modalContainer.stack[i]
             if i >= len(self.myStack):  # add to stack
@@ -35,8 +36,14 @@ class ModalManager():
         
         while i < len(self.myStack):
             self.myStack[i].hide()
+            unstack = True
             i += 1
             
         self.myStack = self.myStack[:len(self.modalContainer.stack)]
+        
+        if unstack and len(self.myStack) > 0: #force bring end of stack to view
+            formType, form = self.modalContainer.stack[-1]
+            self.myStack[-1].show(form)
+            
         
         
