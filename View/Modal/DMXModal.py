@@ -59,9 +59,9 @@ class DMXModalFrame(tk.Frame):
         self.columnconfigure(0, weight=10)  # left pad
         for i in range(1, NUM_COLS * 2):  # setup data columns            
             if i % 2 == 0:
-                self.columnconfigure(i, weight=0)
+                self.columnconfigure(i, weight=0, minsize=40)
             else:
-                self.columnconfigure(i, weight=1)
+                self.columnconfigure(i, weight=1, minsize=40)
                 
         self.columnconfigure(NUM_COLS * 2 + 1, weight=10)  # right pad
         

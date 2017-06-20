@@ -43,9 +43,14 @@ class DMXModal(AbstractModal.AbstractModal):
                 pairs.pop(i); #todo right function call
                             
         # remove everything that has targetDMX
+        keysToDelete = []
         for key, value in self.data.items():
             if value in targetDMX:
-                self.data[key] = None
+                keysToDelete.append(key)
+        # do the deleting
+        for key in keysToDelete:
+            del self.data[key]
+            
         # finally, set everything
         for key, value in pairs:
             self.data[key] = value
