@@ -3,6 +3,8 @@ from Model.CommandProgrammer.DMXPatchConsole import validOperators
 from Model.CommandProgrammer.Command import MenuCommand, SelectAndSetCommand
 
 from Model import Console
+DMX_MAX = 512
+CHANNEL_MAX = 96
 class DMXModal(AbstractModal.AbstractModal):
     def __init__(self):
         super().__init__()
@@ -38,15 +40,18 @@ class DMXModal(AbstractModal.AbstractModal):
                         
         # check to see if any of the indices are above 512
         # remove all offending pairs
-        for i in range(len(pairs)-1,-1,-1):
-            if pairs[i][1] > 512:
-                pairs.pop(i); #todo right function call
+        for i in range(len(pairs) - 1, -1, -1):
+            if pairs[i][1] > DMX_MAX:
+                pairs.pop(i);  # todo right function call
+            elif pairs[i][0] > CHANNEL_MAX:
+                pairs.pop(i);
                             
         # remove everything that has targetDMX
         keysToDelete = []
         for key, value in self.data.items():
             if value in targetDMX:
                 keysToDelete.append(key)
+                
         # do the deleting
         for key in keysToDelete:
             del self.data[key]

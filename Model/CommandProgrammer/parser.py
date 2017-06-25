@@ -7,7 +7,6 @@ inspired by:
 http://effbot.org/zone/simple-top-down-parsing.htm
 '''
 
-from libs.sorted_containers.sortedset import SortedSet
 from Model.CommandProgrammer.Command import SelectCommand
 from libs.string_decimal import string_decimal
 
@@ -52,7 +51,7 @@ class abstract_operator_cgf_token:  # Channel/Group/Fader
     def nud(self):
         right = expression(90)
         if self.validateRight(right):
-            return SortedSet([self.getStartString() + str(right)])    
+            return [self.getStartString() + str(right)]    
     def validateRight(self, value):        
         if tryParseInt(value):        
             return True
@@ -77,11 +76,11 @@ class operator_cue_token():
         right = expression(90)    
         if (isinstance(right, int) or 
             isinstance(right, string_decimal)):
-            return SortedSet([self.getStartString() + str(right)])        
+            return [self.getStartString() + str(right)]        
 
 class collection_token:
     def __init__(self, value):
-        self.value = SortedSet([value])        
+        self.value = [value]        
     def nud(self):
         return self.value
                     
@@ -89,13 +88,21 @@ class operator_add_token:
     lbp = 20
     def led(self, left):
         right = expression(10)
-        return left | right
+        result = left[:]
+        for item in right:
+            if item not in left:
+                result.append(item)
+        return result
     
 class operator_sub_token:
     lbp = 20
     def led(self, left):
         right = expression(10)
-        return left.difference(right)
+        result = left[:]
+        for item in right:
+            if item in left:
+                left.popitem(item)
+        return result
     
 class operator_thru_token:
     lbp = 30
@@ -116,7 +123,7 @@ class operator_at_token:
     lbp = 10
     def led(self, left):
         # you an only use left if you are selecting groups/channels
-        if isinstance(left, SortedSet):
+        if isinstance(left, list):
             if not subContainsList(left, [FADER, CUE]):
                 right = expression(5)
                 return evaluate_at_value(left, right)       
@@ -157,7 +164,7 @@ def evaluate_thru_value(lo, hi):
     # make sure lo/hi are right way round
     loNum, hiNum = min(loNum, hiNum), max(loNum, hiNum) 
         
-    result = SortedSet([(loType + str(num)) for num in range(loNum, hiNum + 1)])
+    result = [(loType + str(num)) for num in range(loNum, hiNum + 1)]
     return result
 
 def evaluate_at_value(left, right):
@@ -168,7 +175,7 @@ def evaluate_at_value(left, right):
         return Command.SelectAndSetCommand(left, right)
 
 def evaluate_record_value(right):    
-    if isinstance(right, SortedSet):
+    if isinstance(right, list):
         if len(right) > 1:
             raise ValueError('Record expects a SINGLE cue, group or fader!')
         else:
@@ -177,7 +184,7 @@ def evaluate_record_value(right):
         raise ValueError('Record expects a Cue, Group, or Fader')
 
 def evaluate_delete_value(right):
-    if isinstance(right, SortedSet):
+    if isinstance(right, list):
         if len(right) > 1:
             raise ValueError('Record expects a SINGLE cue, group or fader!')
         else:
@@ -250,7 +257,7 @@ def parse(program):
     token = next(tokenGenerator)
     result = expression()
     # final check. If it's a set, we issue a selection
-    if isinstance(result, SortedSet):
+    if isinstance(result, list):
         return SelectCommand(result)
     else:
         return result
