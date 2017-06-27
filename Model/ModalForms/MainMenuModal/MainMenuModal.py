@@ -6,7 +6,7 @@ from Model.ModalForms import SubMenuHandlers
 #menu options. Option Description, Modal to open, modal's fixed arguments.
 mainMenuOptions = [
                    ("Patch Menu", PATCH_MODAL),
-                   ("Clear all Cues", None),
+                   ("Clear all Cues", DELETE_CUES_MODAL),
                    ("Default Fade times", TIME_MODAL),
                    ("Backup show", None)
                    ]

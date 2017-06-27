@@ -2,7 +2,9 @@ from .ModalForms.TimeModal import TimeModal
 from .ModalForms.MainMenuModal import MainMenuModal
 from .ModalForms.PatchModal import PatchModal
 from .ModalForms.DMXModal import DMXModal
+from .ModalForms.ConfirmationModal import ConfirmationModal
 from .ModalForms.ModalFormConsts import *
+
 '''
 This class has an instance of every possible modal.
 it also has a stack for you to add and interact with modal forms. 
@@ -20,6 +22,7 @@ class ModalList(object):
         self.data[MENU_MODAL] = MainMenuModal.MainMenuModal(self, model)
         self.data[PATCH_MODAL] = PatchModal.PatchModal(self, model)
         self.data[DMX_MODAL] = DMXModal.DMXModal()
+        self.data[CONFIRMATION_MODAL] = ConfirmationModal.ConfirmationModal()
         
     def getModal(self, modalType):
         return self.data[modalType]
@@ -42,4 +45,3 @@ class ModalList(object):
     def handleInput(self, input):
         self.peekStack().handleCommand(input)
         
-    

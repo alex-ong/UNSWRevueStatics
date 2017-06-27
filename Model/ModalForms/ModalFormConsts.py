@@ -4,3 +4,5 @@ PATCH_MODAL = 'PatchModal'
 PAGE_MODAL = 'PageModal' #todo: check circular reference in patching...
 DMX_MODAL = 'DmxModal'
 GROUP_MODAL = 'GroupModal'
+CONFIRMATION_MODAL = 'ConfirmationModal'
+DELETE_CUES_MODAL = 'DeleteCuesModal'

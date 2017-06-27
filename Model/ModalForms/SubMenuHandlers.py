@@ -1,4 +1,4 @@
-from Model.ModalForms.ModalFormConsts import TIME_MODAL, PATCH_MODAL, DMX_MODAL
+from Model.ModalForms.ModalFormConsts import *
 
 def GenerateSelectHandler(menuType, model, modalContainer):
     if menuType == TIME_MODAL:
@@ -7,6 +7,8 @@ def GenerateSelectHandler(menuType, model, modalContainer):
         return PatchSubMenuSelectHandler(model, modalContainer)
     elif menuType == DMX_MODAL:
         return DmxSubMenuSelectHandler(model, modalContainer)
+    elif menuType == DELETE_CUES_MODAL:
+        return ClearCueSelectHandler(model, modalContainer)
     return None
 
 def GenerateFinishHandler(menuType, model, modalContainer):
@@ -16,6 +18,8 @@ def GenerateFinishHandler(menuType, model, modalContainer):
         return PatchSubMenuFinishHandler(model, modalContainer)
     elif menuType == DMX_MODAL:
         return DmxSubMenuFinishHandler(model, modalContainer)
+    elif menuType == DELETE_CUES_MODAL:
+        return ClearCueFinishHandler(model, modalContainer)
     return None
 
 class AbstractMainMenuFinishHandler(object):
@@ -95,4 +99,28 @@ class DmxSubMenuFinishHandler(AbstractMainMenuFinishHandler):
     
     def closeFormSubclass(self, response, data):
         pass  # we ignore this since we do all the model updates inside
+
+class ClearCueFinishHandler(AbstractMainMenuFinishHandler):    
+    def getMenuType(self):
+        return CONFIRMATION_MODAL
+    
+    def closeForm(self, response, data):
+        self.closeFormSubclass(response, data)
+        self.modalContainer.popStack()
+    
+    def closeFormSubclass(self, response, data):
+        if (response): #confirm delete all
+            self.model.deleteAllCues()
+            
+class ClearCueSelectHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return CONFIRMATION_MODAL
+    
+    def openForm(self, finishHandler):
+        self.modalContainer.addToStack(self.getMenuType())
+        self.modalContainer.peekStack().show(self.subClassGetFormData(),
+                                             finishHandler)    
+    def subClassGetFormData(self):
+        return "Do you really want to delete all cues?" 
+    
 
