@@ -150,4 +150,6 @@ class DeskModel(object):
         self.settings['upDown'] = upDown
         self.saveSettings()
         self.cueList.changeDefaultCueTime(upDown)
-        
+    
+    def deleteAllCues(self):
+        self.cueList.deleteAllCues()

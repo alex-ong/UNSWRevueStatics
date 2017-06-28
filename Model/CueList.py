@@ -166,6 +166,11 @@ class CueList(object):
         else:
             return 'Error; Cue does not exist: ' + str(target)
     
+    def deleteAllCues(self):
+        self.data.clear()
+        self.currentCue = None
+        self.saveFunc(self.toDict())
+        
 if __name__ == '__main__':
     for i in range(10):
         print(alterPivot(10, 6, i, 4), i)
