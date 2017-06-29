@@ -22,15 +22,15 @@ class ConfirmationModal(AbstractModal.AbstractModal):
         self.border1.columnconfigure(0, weight=1)
         self.border1.rowconfigure(0, weight=1)
         self.border = tk.Frame(self.border1, bg=COLOR_NONE, borderwidth=32)
-        self.border.columnconfigure(0, minsize=400)
-        self.border.rowconfigure(0, minsize=100)
+        self.border.columnconfigure(0, minsize=400, weight=0)
+        self.border.rowconfigure(0, minsize=100, weight=0)
         
-        self.title = tk.Label(self.border, bg=COLOR_NONE, fg=TITLE,
+        self.title = tk.Label(self.border, bg=COLOR_NONE, fg=FG,
                               text=self.splitWords('This is a super long message that is too long'),
                               font=FONT)
         self.title.grid(sticky=tk.NSEW)
         
-        self.confirmationLabel = tk.Label(self.border, bg=COLOR_NONE, fg=TITLE,
+        self.confirmationLabel = tk.Label(self.border, bg=COLOR_NONE, fg=FG,
                                           text='Enter: Confirm\nMenu/Clear: Cancel')
         self.confirmationLabel.grid(sticky=tk.NSEW)
         # centre Toplevel on screen.        
