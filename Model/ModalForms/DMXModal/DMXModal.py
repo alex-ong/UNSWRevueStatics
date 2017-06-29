@@ -1,6 +1,6 @@
 from Model.ModalForms import AbstractModal
 from Model.CommandProgrammer.DMXPatchConsole import validOperators
-from Model.CommandProgrammer.Command import MenuCommand, SelectAndSetCommand
+from Model.CommandProgrammer.Command import MenuCommand, SelectAndSetCommand, DeleteCommand
 
 from Model import Console
 DMX_MAX = 512
@@ -26,7 +26,9 @@ class DMXModal(AbstractModal.AbstractModal):
         if isinstance(command, MenuCommand):
             self.onFinish(None, None)
         elif isinstance(command, SelectAndSetCommand):
-            self.HandleSelectAndSet(command)    
+            self.HandleSelectAndSet(command)
+        elif isinstance(command, DeleteCommand):
+            self.HandleDeleteCommand(command)    
         else:
             print ("Unsupported command", command)
             
@@ -60,6 +62,9 @@ class DMXModal(AbstractModal.AbstractModal):
         for key, value in pairs:
             self.data[key] = value
         self.updateModel(self.data)
+        
+    def HandleDelete(self, command):
+        print("TODO: Handle Delete command")
         
     def reset(self):
         self.console.reset()

@@ -10,7 +10,7 @@ patchOptions = [
                    
 # only works up to 9 though.                   
 numbers = [str(i + 1) for i in range(len(patchOptions))]                    
-class PatchModal(MainMenuModal.MainMenuModal):    
+class PatchMenuModal(MainMenuModal.MainMenuModal):    
     def getMenuOptions(self):
         return patchOptions
     

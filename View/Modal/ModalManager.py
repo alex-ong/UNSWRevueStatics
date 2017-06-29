@@ -2,13 +2,13 @@ from Model.ModalContainer import *
 
 from . import TimeModal
 from . import MainMenuModal
-from . import PatchModal
+from View.Modal import PatchMenuModal
 from . import DMXModal
 from . import ConfirmationModal
 
 modalMapping = { TIME_MODAL: TimeModal.TimeModal,
                  MENU_MODAL: MainMenuModal.MainMenuModal,
-                 PATCH_MODAL: PatchModal.PatchModal,
+                 PATCH_MODAL: PatchMenuModal.PatchMenuModal,
                  DMX_MODAL: DMXModal.DMXModal,
                  CONFIRMATION_MODAL: ConfirmationModal.ConfirmationModal}  # todo!
 

@@ -1,6 +1,6 @@
 from .ModalForms.TimeModal import TimeModal
 from .ModalForms.MainMenuModal import MainMenuModal
-from .ModalForms.PatchModal import PatchModal
+from Model.ModalForms.PatchMenuModal import PatchMenuModal
 from .ModalForms.DMXModal import DMXModal
 from .ModalForms.ConfirmationModal import ConfirmationModal
 from .ModalForms.ModalFormConsts import *
@@ -20,7 +20,7 @@ class ModalList(object):
     def setupModals(self, model):
         self.data[TIME_MODAL] = TimeModal.TimeModal()
         self.data[MENU_MODAL] = MainMenuModal.MainMenuModal(self, model)
-        self.data[PATCH_MODAL] = PatchModal.PatchModal(self, model)
+        self.data[PATCH_MODAL] = PatchMenuModal.PatchMenuModal(self, model)
         self.data[DMX_MODAL] = DMXModal.DMXModal()
         self.data[CONFIRMATION_MODAL] = ConfirmationModal.ConfirmationModal()
         
