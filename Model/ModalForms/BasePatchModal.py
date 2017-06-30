@@ -10,8 +10,7 @@ class BasePatchModal(AbstractModal.AbstractModal):
         self.updateModel = None
         self.basePatchSubclassInit()
     
-    def basePatchSubclassInit(self):
-        
+    def basePatchSubclassInit(self):    
         self.programmer = BasePatchModalProgrammer(self)
         self.console = Console.Console(self.programmer, self.basePatchSubclassGetValidOperators())
     
@@ -22,9 +21,7 @@ class BasePatchModal(AbstractModal.AbstractModal):
         #    from Model.CommandProgrammer.DMXPatchConsole import validOperators
         #    return validOperators
         return (lambda x: [])
-     
-    def basePatchCreateProgrammer(self):
-        pass #override with your programmer
+         
     
     def subclassShow(self):
         self.data = self.onShowArguments[0]

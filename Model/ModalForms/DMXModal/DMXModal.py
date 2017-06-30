@@ -3,35 +3,17 @@ from Model.CommandProgrammer.DMXPatchConsole import validOperators
 from Model.CommandProgrammer.Command import MenuCommand, SelectAndSetCommand, DeleteCommand
 
 from Model import Console
+from Model.ModalForms.BasePatchModal import BasePatchModal
+
 DMX_MAX = 512
 CHANNEL_MAX = 96
-class DMXModal(AbstractModal.AbstractModal):
+class DMXModal(BasePatchModal):
     def __init__(self):
         super().__init__()
-        self.data = None
-        self.updateModel = None
-        self.programmer = DMXModalProgrammer(self)
-        self.console = Console.Console(self.programmer, validOperators)
-        
-    def subclassShow(self):
-        self.data = self.onShowArguments[0]
-        self.updateModel = self.onShowArguments[1]
-         
-    # handle raw buttons
-    def handleCommand(self, command):
-        self.console.parseString(command)
-            
-    # handle commands caused by a list of raw buttons.
-    def handleConsoleCommand(self, command):
-        if isinstance(command, MenuCommand):
-            self.onFinish(None, None)
-        elif isinstance(command, SelectAndSetCommand):
-            self.HandleSelectAndSet(command)
-        elif isinstance(command, DeleteCommand):
-            self.HandleDeleteCommand(command)    
-        else:
-            print ("Unsupported command", command)
-            
+
+    def basePatchSubclassGetValidOperators(self):
+        return validOperators
+    
     def HandleSelectAndSet(self, command):
         target = command.target        
         value = command.value
@@ -64,17 +46,7 @@ class DMXModal(AbstractModal.AbstractModal):
         self.updateModel(self.data)
         
     def HandleDelete(self, command):
-        print("TODO: Handle Delete command")
+        target = int(command.target.replace('Channel', ''))
+        if target in self.data:
+            del self.data[target]
         
-    def reset(self):
-        self.console.reset()
-        
-class DMXModalProgrammer(object):
-    def __init__(self, dmxModal):
-        self.dmxModal = dmxModal
-        
-    def clear(self):
-        pass
-        
-    def handleCommand(self, command):
-        self.dmxModal.handleConsoleCommand(command)
