@@ -25,10 +25,10 @@ class DeskModel(object):
         self.config = ConfigReader.ConfigReader('config/config.json')
         self.settings = self.config.readGeneralSettings()
         numFaders = self.settings['faders']
-        numChannels = self.settings['channels']
+        defaultChannels = self.settings['defaultChannels']
         
-        self.patching = self.config.readDMXBindings(numChannels)
-        self.faderBindings = self.config.readFaderBindings(numFaders, numChannels)
+        self.patching = self.config.readDMXBindings(defaultChannels)
+        self.faderBindings = self.config.readFaderBindings(numFaders, defaultChannels)
         self.groupBindings = self.config.readGroupBindings(numFaders)
         self.channelValues = ChannelValues.ChannelValues(self.patching)    
         self.groupValues = GroupValues.GroupValues(self.groupBindings, self.channelValues)

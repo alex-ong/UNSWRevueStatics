@@ -38,7 +38,7 @@ class BasePatchModal(AbstractModal.AbstractModal):
         elif isinstance(command, SelectAndSetCommand):
             self.HandleSelectAndSet(command)
         elif isinstance(command, DeleteCommand):
-            self.HandleDeleteCommand(command)    
+            self.HandleDelete(command)    
         else:
             print ("Unsupported command", command)
             

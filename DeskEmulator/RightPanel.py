@@ -2,7 +2,7 @@ import tkinter as tk
 import SliderPlusButton
 import CherryButton
 
-buttons = [['<-', '???', '-', '+', '', 'Clear', 'Menu'],
+buttons = [['<-', 'Delete', '-', '+', '', 'Clear', 'Menu'],
            ['7', '8', '9', 'Thru', '', 'Cue', 'S1'],
            ['4', '5', '6', 'Full', '', 'Group', 'S2'],
            ['1', '2', '3', '@', '', 'Time', 'S3'],

@@ -6,9 +6,15 @@ from .parser import (RECORD, THRU, GROUP, CHANNEL, CUE, FADER, AT,
 
 # support Channel x @ y
 # support Channel x THRU y @ z
+# support Delete Channel x
+
 def validOperators(program):      
     if len(program) == 0:
-        return [CHANNEL]       
+        return [CHANNEL, DELETE]
+    elif len(program) == 1 and program[0] == DELETE:
+        return [CHANNEL]
+    elif program[0] == DELETE and len(program) >= 2:
+        return [NUMBER]     
     elif len(program) == 2:
         return [NUMBER, AT, THRU]    
     elif program[-1] == THRU:

@@ -6,7 +6,7 @@ import json
 import collections
 
 DEFAULT_FADERS = 27
-DEFAULT_CHANNELS = 84
+DEFAULT_CHANNELS = 96
 
 def openFile(targetFile):
     try:
@@ -20,7 +20,7 @@ def openFile(targetFile):
  
     
 def defaultFile(targetFile=None):
-    result = {'channels':DEFAULT_CHANNELS,
+    result = {'defaultChannels':DEFAULT_CHANNELS,
               'faders':DEFAULT_FADERS,
               'lastFaderPage': 0}
     saveFile(result, targetFile)

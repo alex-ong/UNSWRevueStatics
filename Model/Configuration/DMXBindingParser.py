@@ -13,7 +13,9 @@ def openFile(targetFile,numChannels):
         for key, value in result.items():
             finalResult[int(key)] = value
         result = finalResult
-    except:
+    except Exception as e:
+        print ("Exception opening DMXBinding file. Autogenerating default")
+        print(e)
         result = defaultFile(targetFile,numChannels)
         saveFile(result, targetFile) #turns keys into strings...
         

@@ -85,8 +85,8 @@ class Console(object):
                 self.tokens[-1] = self.tokens[-1] + string
             else:
                 self.tokens.append(string)
-        elif len(validOps) > 0: 
-            if tryParseInt(string):
+        elif len(validOps) > 0:  
+            if tryParseInt(string): #got int but int not in list
                 # need to insert channel or group.
                 if len(self.tokens) == 0:
                     self.tokens.append(CHANNEL)
@@ -95,6 +95,9 @@ class Console(object):
                     self.tokens.append(self.tokens[-3])
                     self.tokens.append(string)
                 elif self.tokens[-1] in [PLUS, MINUS]:
+                    self.tokens.append(CHANNEL)
+                    self.tokens.append(string)
+                elif CHANNEL in validOps:
                     self.tokens.append(CHANNEL)
                     self.tokens.append(string)
             else:

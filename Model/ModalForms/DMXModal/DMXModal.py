@@ -38,7 +38,7 @@ class DMXModal(BasePatchModal):
                 
         # do the deleting
         for key in keysToDelete:
-            del self.data[key]
+            self.data[key] = None
             
         # finally, set everything
         for key, value in pairs:
@@ -48,5 +48,5 @@ class DMXModal(BasePatchModal):
     def HandleDelete(self, command):
         target = int(command.target.replace('Channel', ''))
         if target in self.data:
-            del self.data[target]
-        
+            self.data[target] = None
+        self.updateModel(self.data)
