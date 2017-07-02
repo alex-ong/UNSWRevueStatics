@@ -8,8 +8,8 @@ from Model.ModalForms.BasePatchModal import BasePatchModal
 DMX_MAX = 512
 CHANNEL_MAX = 96
 class DMXModal(BasePatchModal):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,model=None):
+        super().__init__(model)
 
     def basePatchSubclassGetValidOperators(self):
         return validOperators

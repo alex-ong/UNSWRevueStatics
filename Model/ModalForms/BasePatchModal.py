@@ -1,11 +1,13 @@
 from Model.ModalForms import AbstractModal
-from Model.CommandProgrammer.Command import MenuCommand, SelectAndSetCommand, DeleteCommand
+from Model.CommandProgrammer.Command import (MenuCommand, SelectAndSetCommand,
+                                             DeleteCommand, RecordCommand)
 
 from Model import Console
 
 class BasePatchModal(AbstractModal.AbstractModal):
-    def __init__(self):
+    def __init__(self, model=None):
         super().__init__()
+        self.model = model
         self.data = None
         self.updateModel = None
         self.basePatchSubclassInit()
@@ -15,9 +17,9 @@ class BasePatchModal(AbstractModal.AbstractModal):
         self.console = Console.Console(self.programmer, self.basePatchSubclassGetValidOperators())
     
     def basePatchSubclassGetValidOperators(self):
-        #override me!
+        # override me!
         
-        #e.g. 
+        # e.g. 
         #    from Model.CommandProgrammer.DMXPatchConsole import validOperators
         #    return validOperators
         return (lambda x: [])
@@ -39,6 +41,8 @@ class BasePatchModal(AbstractModal.AbstractModal):
             self.HandleSelectAndSet(command)
         elif isinstance(command, DeleteCommand):
             self.HandleDelete(command)    
+        elif isinstance(command, RecordCommand):
+            self.HandleRecord(command)
         else:
             print ("Unsupported command", command)
             
@@ -46,7 +50,13 @@ class BasePatchModal(AbstractModal.AbstractModal):
         print ("HandleSelectAndSet: Override me!")
                 
     def HandleDelete(self, command):
-        print("HndleDelete: Override me!")
+        print("HandleDelete: Override me!")
+        
+    def HandleRecord(self, command):
+        print("HandleRecord: Override me!")
+        
+    def HandleClear(self):
+        pass
         
     def reset(self):
         self.console.reset()
@@ -56,7 +66,7 @@ class BasePatchModalProgrammer(object):
         self.basePatchModal = basePatchModal
         
     def clear(self):
-        pass
+        self.basePatchModal.HandleClear()
         
     def handleCommand(self, command):
         self.basePatchModal.handleConsoleCommand(command)

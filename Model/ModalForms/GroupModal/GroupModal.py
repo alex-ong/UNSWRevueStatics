@@ -1,44 +1,48 @@
-from Model.ModalForms import AbstractModal
-#from Model.CommandProgrammer.GroupConsole import validOperators
-from Model.CommandProgrammer.Command import MenuCommand, SelectAndSetCommand, DeleteCommand 
+from Model.CommandProgrammer.GroupPatchConsole import validOperators
+from Model.ModalForms.BasePatchModal import BasePatchModal
+from Model.ModalForms.DMXModal.DMXModal import CHANNEL_MAX
 
-from Model import Console
-
-class GroupModal(AbstractModal.AbstractModal):
-    def __init__(self):
-        super().__init__()
-        self.data = None
-        self.updateModel = None
-        self.programmer = GroupModalProgrammer(self)
-        self.console = Console.Console(self.programmer, validOperators)
-        
-    def subclassShow(self):
-        self.data = self.onShowArguments[0]
-        self.updateModel= self.onShowArguments[1]
+class GroupModal(BasePatchModal):
+    def __init__(self, model):
+        super().__init__(model)
+        self.currentMappings = { x:0 for x in range(1,CHANNEL_MAX+1)}
     
-    def handleCommand(self, command):
-        self.console.parseString(command)
+    def basePatchSubclassGetValidOperators(self):
+        return validOperators
+    
+    def HandleSelectAndSet(self, command):
+        targets = command.target
+        indices = []
+        # quick data validation        
+        for target in targets:
+            if target.contains('Channel'):
+                target = int(target.replace('Channel',''))
+                indices.append(target)
+            else:
+                print ("Warning - following was selected:" + target)
+        value = command.value
+        value = min(100,value) #cap value at 100
+        for target in indices:
+             self.currentMappings[target] = value
         
-    def handleConsoleCommand(self, command):
-        if isinstance(command, MenuCommand):
-            self.onFinish(None, None)
-        elif isinstance(command, SelectAndSetCommand):
-            self.HandleSelectAndSet(command)
-        elif isinstance(command, DeleteCommand):
-            self.HandleDelete(command)    
-        else:
-            print ("Unsupported command", command)
+    def getCurrentMapping(self):
+        result = []
+        for key, value in self.currentMappings:
+            if value != 0:
+                result.append([key,value])
+        return result
+    
+    def HandleRecord(self, command):
+        target = command.target
+        groupNumber = int(target.replace('Group',''))        
+        self.data.recordGroup(groupNumber, self.getCurrentMapping())
+    
+    def HandleDelete(self, command):
+        target = command.target
+        groupNumber = int(target.replace('Group',''))        
+        self.data.recordGroup(groupNumber, [])
+        self.data.changeGroupName(groupNumber, None)
         
-    def reset(self):
-        self.console.reset()
-        
-        
-class GroupModalProgrammer(object):
-    def __init__(self, dmxModal):
-        self.dmxModal = dmxModal
-        
-    def clear(self):
-        pass
-        
-    def handleCommand(self, command):
-        self.dmxModal.handleConsoleCommand(command)
+    def HandleClear(self):
+        for index in self.currentMappings.keys():
+            self.currentMappings[index] = 0

@@ -47,7 +47,14 @@ def validOperators(program):
             return [NUMBER]
         elif tryParseInt(lastSymbol):  # isNumber
             if program[-2] in [GROUP, CHANNEL]:
-                return [NUMBER, THRU, PLUS, MINUS, AT]
+                result = [NUMBER, PLUS, MINUS, AT]
+                # can't have thru if thru was prev operator
+                # THRU CHANNEL 1
+                #  -3   -2     -1 
+                if (len(program) < 3 or 
+                    (len(program) >= 3 and program[-3] != THRU)):
+                    result.append(THRU)
+                return result
             elif program[-2] == CUE:
                 return [NUMBER, DECIMAL]
             else:

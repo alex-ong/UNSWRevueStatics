@@ -16,7 +16,7 @@ class DeskView(tk.Frame):
         root = tk.Tk()        
         root.config(bg='red')
         super().__init__(root)
-        # root.overrideredirect(True) # change to windowless border                
+        root.overrideredirect(True) # change to windowless border                
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         root.wm_title("UNSW Revue Statics")

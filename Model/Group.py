@@ -16,16 +16,19 @@ import math
 class Group(object):
     def __init__(self, number, label, channelMappings):
         self.number = number        
-        if label is None:
-            label = "Group " + str(self.number)
-        self.label = label        
+        self.label = None
+        self.setLabel(label)        
         
         self.directValue = 0
         self.directFlashValue = 0
         self.playbackValue = 0
         self.recordValue = None
         self.channelMappings = channelMappings
-    
+        
+    def setLabel(self, label):
+        if label is None:
+            label = "Group " + str(self.number)
+        self.label = label
         
     def setDirectValue(self, value):
         self.directValue = value

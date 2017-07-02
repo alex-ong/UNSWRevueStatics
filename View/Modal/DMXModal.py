@@ -98,16 +98,16 @@ class DMXModalFrame(tk.Frame):
                     self.addresses.append(label)                    
                 label.grid(row=r + 3, column=c + 1, sticky=tk.E)
 
-    def refreshDisplay(self, data):
-        for i in range (1, MAX_CHANNELS + 1):
-            if i in data:
-                if self.prevDMXAddresses[i - 1] != data[i]:
-                    self.prevDMXAddresses[i - 1] = data[i]
-                    self.addresses[i - 1].config(text=str(data[i]), fg=FG)
-            else:
-                if self.prevDMXAddresses[i - 1] != None:
-                    self.prevDMXAddresses[i - 1] = None
+    def refreshDisplay(self, data):        
+        for i in range (1, MAX_CHANNELS + 1):            
+            if self.prevDMXAddresses[i - 1] != data[i]:
+                self.prevDMXAddresses[i - 1] = data[i]
+                if data[i] is None:
                     self.addresses[i - 1].config(text="None", fg=FG_NONE)
+                else:
+                    self.addresses[i - 1].config(text=str(data[i]), fg=FG)
+        
+                    
                 
 if __name__ == '__main__':
     root = tk.Tk()
