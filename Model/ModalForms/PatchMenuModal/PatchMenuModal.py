@@ -1,9 +1,10 @@
 from Model.ModalForms.MainMenuModal import MainMenuModal     
-from Model.ModalForms.ModalFormConsts import DMX_MODAL                        
+from Model.ModalForms.ModalFormConsts import DMX_MODAL, GROUP_MODAL
+           
 # menu options. Option Description, Modal to open
 patchOptions = [
                    ("DMX Address Binding Menu", DMX_MODAL),
-                   ("Group Menu", None),
+                   ("Group Menu", GROUP_MODAL),
                    ("Fader Menu", None),
                    ("Reset DMX, Groups, Faders to defaults", None)
                ]

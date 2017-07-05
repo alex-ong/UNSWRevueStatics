@@ -7,6 +7,9 @@ class GroupModal(BasePatchModal):
         super().__init__(model)
         self.currentMappings = { x:0 for x in range(1,CHANNEL_MAX+1)}
     
+    def getModelGroups(self):
+        return self.model.groupValues
+    
     def basePatchSubclassGetValidOperators(self):
         return validOperators
     
@@ -17,7 +20,10 @@ class GroupModal(BasePatchModal):
         for target in targets:
             if target.contains('Channel'):
                 target = int(target.replace('Channel',''))
-                indices.append(target)
+                if target > 0 and target < CHANNEL_MAX:
+                    indices.append(target)
+                else:
+                    print ("Warning - tried to select Channel", target)
             else:
                 print ("Warning - following was selected:" + target)
         value = command.value

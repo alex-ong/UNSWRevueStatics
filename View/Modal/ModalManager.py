@@ -2,14 +2,15 @@ from Model.ModalContainer import *
 
 from . import TimeModal
 from . import MainMenuModal
-from View.Modal import PatchMenuModal
+from . import PatchMenuModal
 from . import DMXModal
 from . import ConfirmationModal
-
+from . import GroupModal
 modalMapping = { TIME_MODAL: TimeModal.TimeModal,
                  MENU_MODAL: MainMenuModal.MainMenuModal,
                  PATCH_MODAL: PatchMenuModal.PatchMenuModal,
                  DMX_MODAL: DMXModal.DMXModal,
+                 GROUP_MODAL: GroupModal.GroupModal,
                  CONFIRMATION_MODAL: ConfirmationModal.ConfirmationModal}  # todo!
 
 
@@ -33,6 +34,7 @@ class ModalManager():
             if i >= len(self.myStack):  # add to stack
                 self.myStack.append(self.modalForms[formType])
                 self.myStack[i].show(form)  
+                print ("Showing", formType)
             self.myStack[i].refresh()                      
             i += 1
         

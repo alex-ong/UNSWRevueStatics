@@ -9,6 +9,12 @@ def GenerateSelectHandler(menuType, model, modalContainer):
         return DmxSubMenuSelectHandler(model, modalContainer)
     elif menuType == DELETE_CUES_MODAL:
         return ClearCueSelectHandler(model, modalContainer)
+    elif menuType == GROUP_MODAL:
+        return GroupModalSelectHandler(model, modalContainer)
+    elif menuType is None:
+        return None
+    else:
+        print ("unknown menu type", menuType)
     return None
 
 def GenerateFinishHandler(menuType, model, modalContainer):
@@ -20,8 +26,17 @@ def GenerateFinishHandler(menuType, model, modalContainer):
         return DmxSubMenuFinishHandler(model, modalContainer)
     elif menuType == DELETE_CUES_MODAL:
         return ClearCueFinishHandler(model, modalContainer)
+    elif menuType == GROUP_MODAL:
+        return GroupModalFinishHandler(model, modalContainer)
+    elif menuType is None:
+        return None
+    else:
+        print ("unknown menu type", menuType)
     return None
 
+############################
+# Base Select/Finish Handlers
+############################
 class AbstractMainMenuFinishHandler(object):
     def __init__(self, model, modalContainer):
         self.modalContainer = modalContainer
@@ -52,6 +67,9 @@ class AbstractMainMenuSelectHandler(object):
     def subClassGetFormData(self):
         return None
     
+############################
+# TIME SETTING MODAL
+############################
 class TimeSubMenuFinishHandler(AbstractMainMenuFinishHandler):    
     def getMenuType(self):
         return TIME_MODAL
@@ -70,6 +88,9 @@ class TimeSubMenuSelectHandler(AbstractMainMenuSelectHandler):
     def subClassGetFormData(self):
         return 'Default Fade'
     
+############################
+# PATCH MENU
+############################
 class PatchSubMenuSelectHandler(AbstractMainMenuSelectHandler):
     def getMenuType(self):
         return PATCH_MODAL
@@ -85,7 +106,9 @@ class PatchSubMenuFinishHandler(AbstractMainMenuFinishHandler):
     
     def closeFormSubclss(self, response, data):
         pass  # we ignore this since we do all the model updates inside
-
+############################
+# DMX Patch
+############################
 class DmxSubMenuSelectHandler(AbstractMainMenuSelectHandler):
     def getMenuType(self):
         return DMX_MODAL
@@ -100,6 +123,9 @@ class DmxSubMenuFinishHandler(AbstractMainMenuFinishHandler):
     def closeFormSubclass(self, response, data):
         pass  # we ignore this since we do all the model updates inside
 
+############################
+# CLEAR CUE
+############################
 class ClearCueFinishHandler(AbstractMainMenuFinishHandler):    
     def getMenuType(self):
         return CONFIRMATION_MODAL
@@ -122,5 +148,28 @@ class ClearCueSelectHandler(AbstractMainMenuSelectHandler):
                                              finishHandler)    
     def subClassGetFormData(self):
         return "Do you really want to delete all cues?" 
+    
+
+############################
+# Group modal
+############################
+class GroupModalFinishHandler(AbstractMainMenuFinishHandler):    
+    def getMenuType(self):
+        return GROUP_MODAL
+    
+    def closeForm(self, response, data):
+        self.closeFormSubclass(response, data)
+        self.modalContainer.popStack()
+    
+    def closeFormSubclass(self, response, data):
+        pass
+            
+            
+class GroupModalSelectHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return GROUP_MODAL
+    
+    def subClassGetFormData(self):        
+        return (self.model.groupBindings, self.model.config.writeGroupBindings)  
     
 
