@@ -74,12 +74,12 @@ class GroupFrame(tk.Frame):
         
         data = self.data.getModelGroups()
         for i in range(1, MAX_GROUPS+1):            
-            row = i // NUM_COLS
-            col = i % NUM_COLS             
+            row = (i-1) // NUM_COLS
+            col = (i-1) % NUM_COLS             
             if i in data:
                 groupWidget = GroupPatchWidget(data[i], self) 
                 groupWidget.grid(row=row+2, column=col + 1, sticky=tk.E)
-        
+                self.widgets.append(groupWidget)
     def refreshDisplay(self):        
         for widget in self.widgets:
             widget.refreshDisplay()

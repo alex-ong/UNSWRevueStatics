@@ -29,7 +29,7 @@ class DeskModel(object):
         
         self.patching = self.config.readDMXBindings(defaultChannels)
         self.faderBindings = self.config.readFaderBindings(numFaders, defaultChannels)
-        self.groupBindings = self.config.readGroupBindings(numFaders)
+        self.groupBindings = self.config.readGroupBindings(numFaders*2)
         self.channelValues = ChannelValues.ChannelValues(self.patching)    
         self.groupValues = GroupValues.GroupValues(self.groupBindings, self.channelValues)
         

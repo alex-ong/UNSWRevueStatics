@@ -159,12 +159,9 @@ class GroupModalFinishHandler(AbstractMainMenuFinishHandler):
     
     def closeForm(self, response, data):
         self.closeFormSubclass(response, data)
-        self.modalContainer.popStack()
-    
-    def closeFormSubclass(self, response, data):
-        pass
+        self.modalContainer.popStack()    
             
-            
+ 
 class GroupModalSelectHandler(AbstractMainMenuSelectHandler):
     def getMenuType(self):
         return GROUP_MODAL
