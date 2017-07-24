@@ -18,7 +18,7 @@ class GroupModal(BasePatchModal):
         indices = []
         # quick data validation        
         for target in targets:
-            if target.contains('Channel'):
+            if 'Channel' in target:
                 target = int(target.replace('Channel',''))
                 if target > 0 and target < CHANNEL_MAX:
                     indices.append(target)
@@ -38,16 +38,25 @@ class GroupModal(BasePatchModal):
                 result.append([key,value])
         return result
     
+    def writeGroupMapping(self, groupNumber, mapping):
+        self.data[groupNumber]["channels"] = mapping
+        
+    def writeGroupLabel(self, groupNumber, label = None):
+        if label is None:
+            label = "Group" + str(groupNumber)
+        self.data[groupNumber]["name"] = label
+         
     def HandleRecord(self, command):
         target = command.target
-        groupNumber = int(target.replace('Group',''))        
-        self.data.recordGroup(groupNumber, self.getCurrentMapping())
+        groupNumber = int(target.replace('Group',''))
+        self.writeGroupMapping(groupNumber, self.getCurrentMapping())                
     
     def HandleDelete(self, command):
         target = command.target
-        groupNumber = int(target.replace('Group',''))        
-        self.data.recordGroup(groupNumber, [])
-        self.data.changeGroupName(groupNumber, None)
+        groupNumber = int(target.replace('Group',''))   
+        
+        self.writeGroupMapping(groupNumber, [])
+        self.writeGroupLabel(groupNumber, None)        
         
     def HandleClear(self):
         for index in self.currentMappings.keys():

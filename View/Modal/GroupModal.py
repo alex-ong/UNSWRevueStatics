@@ -16,7 +16,7 @@ FONT = ('Consolas', 18)
 TITLE_FONT = ('Consolas', 48)
 
 MAX_GROUPS = 54
-NUM_ROWS = 5
+NUM_ROWS = 6
 NUM_COLS = int(MAX_GROUPS / NUM_ROWS)
 
 class GroupModal(AbstractModal.AbstractModal):
@@ -34,7 +34,7 @@ class GroupModal(AbstractModal.AbstractModal):
         self.groupFrame.grid(sticky=tk.NSEW)     
         self.consoleWidget.grid(sticky=tk.NSEW)
         # emptyness at botom since windows taskbar gets in the way.  
-        self.rowconfigure(2, weight=1) 
+        self.rowconfigure(2, weight=1,minsize=50) 
         
     def scaleToScreen(self):
         screen_width = self.winfo_screenwidth()
@@ -78,8 +78,9 @@ class GroupFrame(tk.Frame):
             col = (i-1) % NUM_COLS             
             if i in data:
                 groupWidget = GroupPatchWidget(data[i], self) 
-                groupWidget.grid(row=row+2, column=col + 1, sticky=tk.E)
+                groupWidget.grid(row=row+2, column=col + 1, sticky=tk.NSEW)
                 self.widgets.append(groupWidget)
+    
     def refreshDisplay(self):        
         for widget in self.widgets:
             widget.refreshDisplay()

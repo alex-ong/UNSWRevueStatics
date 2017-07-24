@@ -26,17 +26,19 @@ class GroupPatchWidget(tk.Frame):
         self.group = group
         self.config(bg='black')
         
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)                    
-        self.rowconfigure(1, weight=1)
+        self.columnconfigure(0, weight=0, minsize=100)
+        self.columnconfigure(1, weight=0, minsize=100)                    
+        self.rowconfigure(1, weight=0, minsize=100)
+        
         self.groupNumberLabel = tk.Label(self, text=str(self.group.number).zfill(2),
                                          fg='black', bg='white', font=HEADING_FONT)
         self.groupLabel = tk.Label(self, text=str(self.group.label),
                                    fg='black', bg='white', font=HEADING_FONT)
-        self.label = tk.Label(self, text=str(self.group.number).zfill(2),
+        # patching string
+        self.label = tk.Label(self, text="",
                               fg='white', bg='black', font=FONT)
-        self.groupNumberLabel.grid(row=0, column=0, sticky='nsw')        
-        self.groupLabel.grid(row=0, column=1, sticky='nse')
+        self.groupNumberLabel.grid(row=0, column=0, sticky='nsew')        
+        self.groupLabel.grid(row=0, column=1, sticky='nsew')
         self.label.grid(row=1, columnspan=2, sticky=tk.NSEW)
         self.lastValue = SortedDict()
         

@@ -20,7 +20,12 @@ def validOperators(program):
     else: #len program >= 1
         lastSymbol = program[-1]
         if AT in program:
-            return [NUMBER]
+            if lastSymbol == AT:
+                return [NUMBER, FULL]
+            elif lastSymbol == FULL:
+                return []
+            else:
+                return [NUMBER]
         else: #no at in program yet
             if lastSymbol == CHANNEL:
                 return [NUMBER]
