@@ -22,7 +22,8 @@ from Model.CommandProgrammer.MainConsole import validOperators
 
 class DeskModel(object):
     def refreshGroupBindings(self):
-        self.groupValues = GroupValues.GroupValues(self.groupBindings, self.channelValues)
+        self.groupBindings = self.config.readGroupBindings(self.settings['faders']*2) 
+        self.groupValues.refreshGroupBindings(self.groupBindings, self.channelValues)
         
     def __init__(self):
         self.config = ConfigReader.ConfigReader('config/config.json')

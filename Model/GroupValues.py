@@ -23,6 +23,15 @@ class GroupValues(object):
             mapping = [[channelValues[pair[0]], pair[1]] for pair in mapping]
             self.values[groupNumber] = Group.Group(groupNumber, label, mapping)        
         
+    def refreshGroupBindings(self, groupsConfiguration, channelValues):
+        for groupNumber, value in groupsConfiguration.items():
+            mapping = value['channels']
+            label = value['name']
+            #remap from pair of channelNum/maxValue to Channel.Channel/maxValue
+            mapping = [[channelValues[pair[0]], pair[1]] for pair in mapping]            
+            self.values[groupNumber].label = label
+            self.values[groupNumber].channelMappings = mapping
+                        
     def __iter__(self):
         return iter(self.values)
     
