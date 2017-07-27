@@ -33,19 +33,21 @@ class GroupModal(BasePatchModal):
         
     def getCurrentMapping(self):
         result = []
-        for key, value in self.currentMappings:
+        for key, value in self.currentMappings.items():
             if value != 0:
                 result.append([key,value])
         return result
     
     def writeGroupMapping(self, groupNumber, mapping):
         self.data[groupNumber]["channels"] = mapping
+        self.updateModel(self.data)
         
     def writeGroupLabel(self, groupNumber, label = None):
         if label is None:
             label = "Group" + str(groupNumber)
         self.data[groupNumber]["name"] = label
-         
+        self.updateModel(self.data)
+        
     def HandleRecord(self, command):
         target = command.target
         groupNumber = int(target.replace('Group',''))

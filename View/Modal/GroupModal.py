@@ -33,7 +33,7 @@ class GroupModal(AbstractModal.AbstractModal):
         self.scaleToScreen()                        
         self.groupFrame.grid(sticky=tk.NSEW)     
         self.consoleWidget.grid(sticky=tk.NSEW)
-        # emptyness at botom since windows taskbar gets in the way.  
+        # emptyness at bottom since windows taskbar gets in the way.  
         self.rowconfigure(2, weight=1,minsize=50) 
         
     def scaleToScreen(self):
