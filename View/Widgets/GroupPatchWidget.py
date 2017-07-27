@@ -1,9 +1,10 @@
 '''
 @author: alex-ong
 @date 2017-05-07
-k'''
+'''
 import tkinter as tk
 from libs.sorted_containers.sorteddict import SortedDict
+from math import ceil
 
 def autoString(value):        
     if value is None:
@@ -21,18 +22,18 @@ HEADING_FONT = ('Consolas', 10)
 FONT = ('Consolas', 8)
 
 class GroupPatchWidget(tk.Frame):
-    def __init__(self, group, *args):
+    def __init__(self, groupNumber, *args):
         super().__init__(*args)
-        self.group = group
+        
         self.config(bg='black')
         
         self.columnconfigure(0, weight=0, minsize=100)
         self.columnconfigure(1, weight=0, minsize=100)                    
         self.rowconfigure(1, weight=0, minsize=100)
         
-        self.groupNumberLabel = tk.Label(self, text=str(self.group.number).zfill(2),
+        self.groupNumberLabel = tk.Label(self, text=str(groupNumber).zfill(2),
                                          fg='black', bg='white', font=HEADING_FONT)
-        self.groupLabel = tk.Label(self, text=str(self.group.label),
+        self.groupLabel = tk.Label(self, text=str("Group1"),
                                    fg='black', bg='white', font=HEADING_FONT)
         # patching string
         self.label = tk.Label(self, text="",
@@ -40,13 +41,17 @@ class GroupPatchWidget(tk.Frame):
         self.groupNumberLabel.grid(row=0, column=0, sticky='nsew')        
         self.groupLabel.grid(row=0, column=1, sticky='nsew')
         self.label.grid(row=1, columnspan=2, sticky=tk.NSEW)
-        self.lastValue = SortedDict()
+        self.lastValue = []
+        self.lastLabel = ""
         
     def patchString(self, items):
+        if len(items) == 0:
+            return []
         result = []
+        print ("refresh patchString", items)
         for item in items:
             chan, val = item
-            result.append("Chan" + str(chan.number).zfill(2) + " @ " + autoString(val))
+            result.append("Chan" + str(chan).zfill(2) + " @ " + autoString(val))
         if len(result) > 10:
             result = result[:10]
             result.append('...')
@@ -54,7 +59,8 @@ class GroupPatchWidget(tk.Frame):
     
     def finalPatchString(self, substrings):
         result = []
-        split = len(substrings) // 2
+        
+        split = ceil(len(substrings) / 2)
         for i in range(split):
             lhs = substrings[i]
             rhs = ""
@@ -64,13 +70,16 @@ class GroupPatchWidget(tk.Frame):
         result = '\n'.join(result)
         return result
 
-    def refreshDisplay(self):    
-        items = self.group.channelMappings.copy()
-        if self.lastValue != items:
+    def refreshDisplay(self, newPatch, newLabel):    
+        items = newPatch.copy()
+        if self.lastValue != items:            
             self.lastValue = items
             finalString = self.finalPatchString(self.patchString(items))
             self.label.config(text=finalString)
         
-    
+        if self.lastLabel != newLabel:
+            self.groupLabel.config(text=newLabel)
+            self.lastLabel = newLabel
+            
     def clearValues(self):
         self.label.config(text='')

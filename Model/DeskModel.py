@@ -21,6 +21,9 @@ from Model.ModalForms.ModalFormConsts import MENU_MODAL
 from Model.CommandProgrammer.MainConsole import validOperators 
 
 class DeskModel(object):
+    def refreshGroupBindings(self):
+        self.groupValues = GroupValues.GroupValues(self.groupBindings, self.channelValues)
+        
     def __init__(self):
         self.config = ConfigReader.ConfigReader('config/config.json')
         self.settings = self.config.readGeneralSettings()

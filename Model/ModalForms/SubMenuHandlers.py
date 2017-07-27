@@ -166,7 +166,11 @@ class GroupModalSelectHandler(AbstractMainMenuSelectHandler):
     def getMenuType(self):
         return GROUP_MODAL
     
+    def writeReadBindings(self, bindings):
+        self.model.config.writeGroupBindings(bindings)
+        self.model.refreshGroupBindings()
+        
     def subClassGetFormData(self):        
-        return (self.model.groupBindings, self.model.config.writeGroupBindings)  
+        return (self.model.groupBindings, self.writeReadBindings)  
     
 
