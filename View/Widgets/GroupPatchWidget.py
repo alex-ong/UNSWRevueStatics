@@ -48,7 +48,7 @@ class GroupPatchWidget(tk.Frame):
         if len(items) == 0:
             return []
         result = []
-        print ("refresh patchString", items)
+        
         for item in items:
             chan, val = item
             result.append("Chan" + str(chan).zfill(2) + " @ " + autoString(val))

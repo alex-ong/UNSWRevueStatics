@@ -7,6 +7,7 @@ from View.Modal import AbstractModal
 from View.Widgets import ConsoleWidget
 from View.Widgets.GroupWidget import GroupWidget
 from View.Widgets.GroupPatchWidget import GroupPatchWidget
+from View.Widgets.CompactChannelValueWidget import  CompactChannelValueWidget
 
 FG = 'white'
 FG_NONE = 'red'
@@ -64,9 +65,11 @@ class GroupFrame(tk.Frame):
         for i in range(1, NUM_COLS):  # setup data columns                    
             self.columnconfigure(i, weight=1, minsize=80)
         self.columnconfigure(NUM_COLS + 1, weight=10)  # left pad
+        
         for i in range(1, NUM_ROWS):
             self.rowconfigure(i, weight=1, minsize=100)
-        self.rowconfigure(NUM_ROWS + 2, weight=1)  # bottom padding
+        self.rowconfigure(NUM_ROWS + 2, weight=1,minsize=200)  # bottom padding
+        self.rowconfigure(NUM_ROWS + 3, weight=1)  # bottom padding
         
         self.title = tk.Label(self, bg=COLOR_NONE, fg=FG,
                               text="Group Menu", font=TITLE_FONT)
@@ -80,11 +83,15 @@ class GroupFrame(tk.Frame):
             groupWidget.grid(row=row+2, column=col + 1, sticky=tk.NSEW)
             self.widgets.append(groupWidget)
     
+        self.currentValues = CompactChannelValueWidget(self.data.currentMappings, self)
+        self.currentValues.grid(columnspan=NUM_COLS,sticky=tk.NSEW)
+    
     def refreshDisplay(self):
         data = self.data.data
         for i in range(1, MAX_GROUPS+1):                
             widget = self.widgets[i-1]
             widget.refreshDisplay(data[i]['channels'],data[i]['name'])
+        self.currentValues.refreshDisplay()
                 
 if __name__ == '__main__':
     root = tk.Tk()
