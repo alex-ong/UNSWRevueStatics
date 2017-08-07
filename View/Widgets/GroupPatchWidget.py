@@ -61,12 +61,14 @@ class GroupPatchWidget(tk.Frame):
         result = []
         
         split = ceil(len(substrings) / 2)
-        for i in range(split):
-            lhs = substrings[i]
-            rhs = ""
-            if i + split < len(substrings):
-                rhs = substrings[i + split]
-            result.append(lhs + "   " + rhs)
+        i = 0
+        while len(substrings) > 0:
+            end = min(2, len(substrings))  # find end index safely
+            lineArray = substrings[0:end]  # get subArray
+            line = '   '.join(lineArray)  # generate...
+            result.append(line)  # and store line
+            substrings = substrings[end:]  # chop front of array
+            
         result = '\n'.join(result)
         return result
 
