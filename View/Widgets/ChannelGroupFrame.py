@@ -11,11 +11,11 @@ def GroupLayout():
     layout = ' ' + layout + ' ' 
     return layout
 
-from View.Widgets.ChannelWidget import ChannelWidget
-from View.Widgets.GroupWidget import GroupWidget
-  
+from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
+from View.ViewStyle import CHANNEL, GROUP
+
 class ChannelGroupFrame(tk.Frame):
-    def __init__(self, values, WidgetType, *args):
+    def __init__(self, values, layoutType, *args):
         super().__init__(*args)     
         self.configure(bg='black')
         self.widgets = {}
@@ -23,9 +23,9 @@ class ChannelGroupFrame(tk.Frame):
         # setup layout. Groups of 6 with gaps between elements,
         # double gaps between groups.
         
-        if WidgetType == GroupWidget:
+        if layoutType == GROUP:
             layout = GroupLayout()
-        elif WidgetType == ChannelWidget:
+        elif layoutType == CHANNEL:
             layout = ChannelLayout() 
         
         itemIndex = 0
@@ -48,7 +48,7 @@ class ChannelGroupFrame(tk.Frame):
             if layoutItem == 'x':
                 value = values[itemIndex]
                 itemIndex += 1
-                cw = WidgetType(value, False, self)
+                cw = ChannelGroupWidget(value, False, self)
                 cw.grid(row=row + 1, column=col)
                 self.widgets[itemIndex] = cw
             layoutIndex += 1

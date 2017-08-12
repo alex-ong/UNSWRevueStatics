@@ -5,12 +5,13 @@
 import tkinter as tk
 
 from View.Widgets.FaderFrame import FaderFrame
-from View.Widgets.ChannelWidget import ChannelWidget
-from View.Widgets.GroupWidget import GroupWidget
 from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
 from View.Widgets.ConsoleWidget import ConsoleWidget
 from View.Widgets.CueListWidget import CueListWidget
 from View.Modal.ModalManager import ModalManager
+from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
+from View.ViewStyle import CHANNEL, GROUP
+
 class DeskView(tk.Frame):
     def __init__(self):
         root = tk.Tk()        
@@ -32,13 +33,13 @@ class DeskView(tk.Frame):
         
     # called by model during setup
     def setupChannels(self, channels):
-        cf = ChannelGroupFrame(channels, ChannelWidget, self)
+        cf = ChannelGroupFrame(channels, CHANNEL, self)
         cf.grid(row=0, column=1, sticky=tk.NSEW)
-        self.channelFrame = cf
+        self.channelFrame = cf    
     
-        
+    # not used
     def setupGroups(self, groups):
-        gf = ChannelGroupFrame(groups, GroupWidget, self)
+        gf = ChannelGroupFrame(groups, GROUP, self)
         gf.grid(sticky=tk.NSEW)
         self.groupFrame = gf
         

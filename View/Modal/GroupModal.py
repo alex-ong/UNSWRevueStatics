@@ -5,7 +5,7 @@ from View.ViewStyle import COLOR_DIRECT as SELECTED
 from View.Widgets.CueWidget import UP_ARROW, DOWN_ARROW
 from View.Modal import AbstractModal
 from View.Widgets import ConsoleWidget
-from View.Widgets.GroupWidget import GroupWidget
+from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.Widgets.GroupPatchWidget import GroupPatchWidget
 from View.Widgets.CompactChannelValueWidget import  CompactChannelValueWidget
 

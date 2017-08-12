@@ -16,7 +16,7 @@ def autoString(value):
 
 from Model import Channel
 from View.ViewStyle import COLOR_DIRECT, COLOR_GROUP, COLOR_PLAYBACK, COLOR_RECORD, COLOR_NONE
-from View.Widgets.ChannelWidget import typeColourMapping
+from View.ViewStyle import typeColourMapping
 
 HEADING_FONT = ('Consolas', 10)
 FONT = ('Consolas', 8)

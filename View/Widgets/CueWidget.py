@@ -4,7 +4,7 @@ Widget that displays cue info
 
 import tkinter as tk
 from libs import string_decimal
-from .ChannelWidget import autoString
+from .ChannelGroupWidget import autoString
 
 FG_MAIN = 'white'
 from View.ViewStyle import COLOR_PLAYBACK as FG_PLAY
