@@ -51,18 +51,17 @@ class ChannelGroupWidget(tk.Frame):
         # Fader label (e.g. Pool1, Group1, Chan01 etc)        
         row = 0
         if (showFaderLabel):            
-            if self.dataType == CHANNEL:
-                faderLabelString = 'Chan' + self.data.label.zfill(2)
-            else: # self.dataType == GROUP:
-                faderLabelString = self.data.label            
-            self.faderLabel = tk.Label(self, text=faderLabelString, font=('Consolas', 10), fg=typeColourMapping[self.dataType], bg='black')
+            faderLabelString = self.getFaderLabelString()        
+            self.faderLabel = tk.Label(self, text=faderLabelString, font=('Consolas', 10), 
+                                       fg=typeColourMapping[self.dataType], bg='black')
             self.faderLabel.grid(row=row,columnspan=2)
             row += 1
         else:
             self.faderLabel = None
             
         # Actual group or channel number ("00" to "99")
-        self.numberLabel = tk.Label(self, text=str(self.data.number).zfill(2), font=('Consolas', 20), fg='grey', bg='black')
+        self.numberLabel = tk.Label(self, text=str(self.data.number).zfill(2), 
+                                    font=('Consolas', 20), fg='grey', bg='black')
         self.numberLabel.grid(row=row,columnspan=2)
         row += 1
         
@@ -72,7 +71,7 @@ class ChannelGroupWidget(tk.Frame):
         self.finalValueLabel.config(font=('Consolas', 20))
         self.finalValueLabel.grid(row=row, columnspan=2)
         row += 1
-        
+                
         ######################
         # 2x2 grid of values #
         # DIRECT | PLAYBACK  #
@@ -148,3 +147,10 @@ class ChannelGroupWidget(tk.Frame):
     
     def getNumberLabel(self):        
         return str(self.data.number).zfill(2)
+    
+    def getFaderLabelString(self):
+        if self.dataType == CHANNEL:
+            faderLabelString = 'Chan' + str(self.data.number).zfill(2)
+        else: # self.dataType == GROUP:
+            faderLabelString = self.data.label  
+        return faderLabelString  

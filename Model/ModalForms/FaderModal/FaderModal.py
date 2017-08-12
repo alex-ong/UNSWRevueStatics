@@ -10,12 +10,12 @@ class _FaderMapping(object):
     GROUP = 'Group'
     def __init__(self, stringTarget):        
         self.faderType = None        
-        if CHANNEL in stringTarget:
-            self.faderType = CHANNEL
-            stringTarget = stringTarget.replace(CHANNEL,'')
+        if _FaderMapping.CHANNEL in stringTarget:
+            self.faderType = _FaderMapping.CHANNEL
+            stringTarget = stringTarget.replace(_FaderMapping.CHANNEL,'')
         else:
-            self.faderType = GROUP
-            stringTarget = stringTarget.replace(GROUP,'')
+            self.faderType = _FaderMapping.GROUP
+            stringTarget = stringTarget.replace(_FaderMapping.GROUP,'')
 
         self.targetNumber = int(stringTarget)
          
@@ -28,7 +28,7 @@ class FaderModal(BasePatchModal):
     def basePatchSubclassGetValidOperators(self):
         return validOperators
 
-    def newFaderMapping(stringTarget, model):
+    def newFaderMapping(self, stringTarget, model):
         result = _FaderMapping(stringTarget)
         
         # quick check for max Channel/Group Number
@@ -41,8 +41,9 @@ class FaderModal(BasePatchModal):
         return result
     
     def HandleSelect(self, command):
+        print  ("selecting", command)
         target = command.target[0]                
-        self.currentMappings = newFaderMapping(target, self.model)        
+        self.currentMappings = self.newFaderMapping(target, self.model)        
         
     
     def writeFaderMapping(self, pageNumber, faderNumber, mapping):
@@ -51,7 +52,7 @@ class FaderModal(BasePatchModal):
         #self.data[groupNumber]["channels"] = mapping
         #self.updateModel(self.data)
 
-    def HandleRecord(self, command):
+    def HandleRecord(self, command):        
         target = command.target
         faderNumber = faderStringToNumber(target)
         self.writeFaderMapping(pageNumber, faderNumber, self.currentMappings)                

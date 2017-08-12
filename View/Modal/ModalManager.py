@@ -6,6 +6,8 @@ from . import PatchMenuModal
 from . import DMXModal
 from . import ConfirmationModal
 from . import GroupModal
+from . import FaderModal
+
 modalMapping = { TIME_MODAL: TimeModal.TimeModal,
                  MENU_MODAL: MainMenuModal.MainMenuModal,
                  PATCH_MODAL: PatchMenuModal.PatchMenuModal,

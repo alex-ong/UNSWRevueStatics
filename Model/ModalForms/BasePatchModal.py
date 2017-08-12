@@ -39,7 +39,7 @@ class BasePatchModal(AbstractModal.AbstractModal):
         if isinstance(command, MenuCommand):
             self.onFinish(None, None)
         elif isinstance(command, SelectCommand):
-            self.HandleSelect(comand)
+            self.HandleSelect(command)
         elif isinstance(command, SelectAndSetCommand):
             self.HandleSelectAndSet(command)
         elif isinstance(command, DeleteCommand):

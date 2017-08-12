@@ -15,5 +15,6 @@ typeColourMapping = { Channel.ValueType.DIRECT : COLOR_DIRECT,
                      Channel.ValueType.RECORD : COLOR_RECORD,
                      Channel.ValueType.NONE: COLOR_NONE,
                      CHANNEL : COLOR_DIRECT,
-                     GROUP : COLOR_GROUP}
+                     GROUP : COLOR_GROUP,
+                     None: COLOR_NONE}
 
