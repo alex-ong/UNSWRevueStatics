@@ -57,8 +57,7 @@ class DeskModel(object):
                                                 self.channelValues,
                                                 self.modals)
         
-        self.console = Console.Console(self.programmer, validOperators)
-        self.optionButtons = OptionButtons.OptionButtons()
+        self.console = Console.Console(self.programmer, validOperators)        
         
         
     
@@ -105,7 +104,7 @@ class DeskModel(object):
     def handleButtonInput(self, buttonName, buttonPressed):        
         # first, we remap virtual S1-S4 keys to current binding.        
         if buttonName in OptionButtons.RAW_BUTTONS:
-            buttonName = self.optionButtons.getCommand(buttonName)
+            buttonName = OptionButtons.getInstance().getCommand(buttonName)
             if buttonName is None: #catch if we bound to nothing
                 return
         
@@ -156,7 +155,7 @@ class DeskModel(object):
         if pageNumber is None:
             pageNumber = self.currentfaderBinding
                     
-        bindings = self.faderBindings[self.currentfaderBinding]
+        bindings = self.faderBindings[pageNumber]
         result = OrderedDict()       
         
         for key, value in bindings.items():  # assume ordered dict.            

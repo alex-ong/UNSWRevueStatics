@@ -4,6 +4,7 @@ from Model.CommandProgrammer.Command import (MenuCommand, SelectAndSetCommand,
                                             SelectCommand)
 
 from Model import Console
+from Model import FaderValues
 
 class BasePatchModal(AbstractModal.AbstractModal):
     def __init__(self, model=None):
@@ -32,8 +33,13 @@ class BasePatchModal(AbstractModal.AbstractModal):
          
     # handle raw buttons
     def handleCommand(self, command):
-        self.console.parseString(command)
-            
+        if command in FaderValues.FADER_COMMANDS:
+            self.handleFaderCommand(command)
+        else:
+            self.console.parseString(command)
+    def handleFaderCommand(self, command):
+        print ("BasePatchModal::handleFaderCommand | not implemented!")
+        
     # handle commands caused by a list of raw buttons.
     def handleConsoleCommand(self, command):
         if isinstance(command, MenuCommand):

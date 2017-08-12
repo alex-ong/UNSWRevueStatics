@@ -1,6 +1,8 @@
 from Model.CommandProgrammer.FaderPatchConsole import validOperators
 from Model.ModalForms.BasePatchModal import BasePatchModal
 from Model.ModalForms.DMXModal.DMXModal import CHANNEL_MAX
+from Model import OptionButtons
+from Model.FaderValues import NEXT_FADERS, PREV_FADERS
 
 def faderStringToNumber(string):
     return int(string.replace('Fader', ''))
@@ -24,12 +26,35 @@ class _FaderMapping(object):
             return ''
         else:
             return self.faderType + " " + str(self.targetNumber).zfill(2)
+    
+    def toTextFile(self):
+        if self.faderType == None:
+            return None
+        elif self.faderType == _FaderMapping.CHANNEL:
+            return int(self.targetNumber)
+        else: #self.faderType == _FaderMapping.GROUP:
+            return 'group' + self.targetNumber
         
 class FaderModal(BasePatchModal):
     def __init__(self, model):
         super().__init__(model)
         self.currentMappings = None
         self.currentPageNumber = 0        
+        
+    def handleFaderCommand(self, command):
+        print ("handling fader command", command)
+        if command == NEXT_FADERS:
+            self.currentPageNumber += 1 #todo wrap
+            if self.currentPageNumber >= len(self.model.faderBindings):
+                self.currentPageNumber = 0
+        elif command == PREV_FADERS:
+            self.currentPageNumber -= 1 #todo wrap
+            if self.currentPageNumber < 0:
+                self.currentPageNumber = len(self.model.faderBindings) - 1
+                
+        
+    def optionButtonBindings(self):
+        return OptionButtons.FADER_BINDING_STATE
     
     def getFaders(self):
         return self.model.getFaderBindings(self.currentPageNumber)
@@ -49,27 +74,28 @@ class FaderModal(BasePatchModal):
             return None    
         return result
     
-    def HandleSelect(self, command):
-        print  ("selecting", command)
+    def HandleSelect(self, command):        
         target = command.target[0]                
         self.currentMappings = self.newFaderMapping(target, self.model)        
         
     
     def writeFaderMapping(self, pageNumber, faderNumber, mapping):
-        pass
-        #todo!!
-        #self.data[groupNumber]["channels"] = mapping
-        #self.updateModel(self.data)
+        self.data[pageNumber][faderNumber] = mapping
+        self.updateModel(self.data)
 
-    def HandleRecord(self, command):        
+    def HandleRecord(self, command):                
         target = command.target
         faderNumber = faderStringToNumber(target)
-        self.writeFaderMapping(pageNumber, faderNumber, self.currentMappings)                
+        #todo: check faderNumber < 27
+        if self.currentMappings is not None:
+            self.writeFaderMapping(self.currentPageNumber, faderNumber, 
+                                   self.currentMappings.toTextFile())                
     
     def HandleDelete(self, command):
         target = command.target
-        faderNumber = faderStringToNumber(target)        
-        self.writeGroupMapping(pageNumber, faderNumber, None)            
+        faderNumber = faderStringToNumber(target)
+        #todo: check faderNumber < 27       
+        self.writeFaderMapping(self.currentPageNumber, faderNumber, None)            
         
     def HandleClear(self):
         self.currentMappings = None

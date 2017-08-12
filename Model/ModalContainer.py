@@ -6,6 +6,7 @@ from .ModalForms.ConfirmationModal import ConfirmationModal
 from .ModalForms.GroupModal import GroupModal
 from .ModalForms.FaderModal import FaderModal
 from .ModalForms.ModalFormConsts import *
+from Model import OptionButtons
 
 '''
 This class has an instance of every possible modal.
@@ -36,7 +37,10 @@ class ModalList(object):
     
     def popStack(self):
         self.stack.pop()
-    
+        #hack since mainscene isn't a modal.. yet...
+        if len(self.stack) == 0:
+            OptionButtons.getInstance().setState(OptionButtons.MAIN_STATE)
+            
     def peekStack(self):
         if len(self.stack) > 0:
             return self.stack[-1][1]
@@ -50,6 +54,7 @@ class ModalList(object):
         #Hack - our modals only care about onButtonDown
         if (buttonPressed):        
             self.peekStack().handleCommand(input)
+            
     def handleSliderInput(self, input, value):
         #hack - we don't accept slider input in modals
         return

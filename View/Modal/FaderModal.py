@@ -95,17 +95,14 @@ class FaderPatchFrame(tk.Frame):
             groupWidget = FaderPatchWidget(i, faderPatch, self) 
             groupWidget.grid(row=row+2, column=col + 1, sticky=tk.NSEW)
             self.widgets.append(groupWidget)
-    
-#         self.currentValues = CompactChannelValueWidget(self.data.currentMappings, self)
-#         self.currentValues.grid(columnspan=NUM_COLS,sticky=tk.NSEW)
+
     
     def refreshDisplay(self):
         faders = self.data.getFaders()
         for i in range(1, NUM_FADERS+1):                
             widget = self.widgets[i-1]
-            widget.refreshDisplay(faders[i])
-        #self.currentValues.refreshDisplay()
-                
+            if i in faders:
+                widget.refreshDisplay(faders[i])
 
     
 class SelectedBindingLabel(tk.Frame):
