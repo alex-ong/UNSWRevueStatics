@@ -33,7 +33,7 @@ class _FaderMapping(object):
         elif self.faderType == _FaderMapping.CHANNEL:
             return int(self.targetNumber)
         else: #self.faderType == _FaderMapping.GROUP:
-            return 'group' + self.targetNumber
+            return 'group' + str(self.targetNumber)
         
 class FaderModal(BasePatchModal):
     def __init__(self, model):
