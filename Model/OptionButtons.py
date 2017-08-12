@@ -1,10 +1,11 @@
 '''
 File that lets you know the bindings for the S1->S4 buttons
 '''
+
 RAW_BUTTONS = ['S1', 'S2', 'S3', 'S4']
 
 
-DELETE = 'Delete'
+import Model.CommandProgrammer.parser.DELETE as DELETE
 NEXT_FADERS = 'NextFaders'
 PREV_FADERS = 'PrevFaders'
 
@@ -15,7 +16,7 @@ enumToNiceText = {DELETE: 'Delete',
 
 
 
-MAIN_STATE =   [PREV_FADERS, NEXT_FADERS, DELETE, None]
+MAIN_STATE =   [PREV_FADERS, NEXT_FADERS, None, None]
 
 class OptionButtons(object):
     def __init__(self):

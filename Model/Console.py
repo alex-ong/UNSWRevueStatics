@@ -10,6 +10,7 @@ from Model.CommandProgrammer.parser import safeParse
 from Model.CommandProgrammer.Command import AbstractCommand, MenuCommand
 from libs.string_decimal import string_decimal
 
+
 BACKSPACE = '<-'
 CLEAR = 'Clear'
 ENTER = 'Enter'

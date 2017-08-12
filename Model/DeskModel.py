@@ -109,12 +109,16 @@ class DeskModel(object):
                     self.groupValues[groupNumber].setDirectFlashValue(value)
                            
             elif buttonPressed:  # we only care about keyDown
+                #first, switch S1->S4 to proper names
+                if buttonName in OptionButtons.RAW_BUTTONS:
+                    buttonName = self.optionButtons.getCommand(buttonName)
+                
+                #now, if it's a playback command handle it
                 if buttonName in PLAYBACK_COMMANDS:
                     self.handlePlaybackCommand(buttonName)
-                elif buttonName in OptionButtons.RAW_BUTTONS:
-                    buttonName = self.optionButtons.getCommand(buttonName)
-                    self.handleConsoleInput(buttonName) 
-                else:
+                elif buttonName in FADER_COMMANDS:
+                    pass #todo add fader commands                
+                else: #otherwise we add the command to console
                     self.handleConsoleInput(buttonName)                    
             
     def getFaderBindings(self):
