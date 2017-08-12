@@ -1,6 +1,7 @@
 from Model.ModalForms import AbstractModal
 from Model.CommandProgrammer.Command import (MenuCommand, SelectAndSetCommand,
-                                             DeleteCommand, RecordCommand)
+                                             DeleteCommand, RecordCommand,
+                                            SelectCommand)
 
 from Model import Console
 
@@ -37,6 +38,8 @@ class BasePatchModal(AbstractModal.AbstractModal):
     def handleConsoleCommand(self, command):
         if isinstance(command, MenuCommand):
             self.onFinish(None, None)
+        elif isinstance(command, SelectCommand):
+            self.HandleSelect(comand)
         elif isinstance(command, SelectAndSetCommand):
             self.HandleSelectAndSet(command)
         elif isinstance(command, DeleteCommand):
@@ -46,6 +49,9 @@ class BasePatchModal(AbstractModal.AbstractModal):
         else:
             print ("Unsupported command", command)
             
+    def HandleSelect(self, comand):
+        print ("HandleSelect: Override me!")
+        
     def HandleSelectAndSet(self, command):
         print ("HandleSelectAndSet: Override me!")
                 

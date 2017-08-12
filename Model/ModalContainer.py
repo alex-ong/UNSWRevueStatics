@@ -4,6 +4,7 @@ from Model.ModalForms.PatchMenuModal import PatchMenuModal
 from .ModalForms.DMXModal import DMXModal
 from .ModalForms.ConfirmationModal import ConfirmationModal
 from .ModalForms.GroupModal import GroupModal
+from .ModalForms.FaderModal import FaderModal
 from .ModalForms.ModalFormConsts import *
 
 '''
@@ -24,6 +25,7 @@ class ModalList(object):
         self.data[PATCH_MODAL] = PatchMenuModal.PatchMenuModal(self, model)
         self.data[DMX_MODAL] = DMXModal.DMXModal()
         self.data[GROUP_MODAL] = GroupModal.GroupModal(model)
+        self.data[FADER_MODAL] = FaderModal.FaderModal(model)
         self.data[CONFIRMATION_MODAL] = ConfirmationModal.ConfirmationModal()
             
     def getModal(self, modalType):

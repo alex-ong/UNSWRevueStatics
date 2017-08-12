@@ -11,6 +11,8 @@ def GenerateSelectHandler(menuType, model, modalContainer):
         return ClearCueSelectHandler(model, modalContainer)
     elif menuType == GROUP_MODAL:
         return GroupModalSelectHandler(model, modalContainer)
+    elif menuType == FADER_MODAL:
+        return FaderModalSelectHandler(model, modalContainer)
     elif menuType is None:
         return None
     else:
@@ -28,6 +30,8 @@ def GenerateFinishHandler(menuType, model, modalContainer):
         return ClearCueFinishHandler(model, modalContainer)
     elif menuType == GROUP_MODAL:
         return GroupModalFinishHandler(model, modalContainer)
+    elif menuType == FADER_MODAL:
+        return FaderModalFinishHandler(model, modalContainer)
     elif menuType is None:
         return None
     else:
@@ -173,4 +177,26 @@ class GroupModalSelectHandler(AbstractMainMenuSelectHandler):
     def subClassGetFormData(self):        
         return (self.model.groupBindings, self.writeReadBindings)  
     
+############################
+# Fader Modal
+############################
+class FaderModalFinishHandler(AbstractMainMenuFinishHandler):    
+    def getMenuType(self):
+        return FADER_MODAL
+    
+    def closeForm(self, response, data):
+        self.closeFormSubclass(response, data)
+        self.modalContainer.popStack()    
+            
+ 
+class FaderModalSelectHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return FADER_MODAL
+    
+    def writeReadBindings(self, bindings):
+        self.model.config.writeFaderBindings(bindings)
+        self.model.refreshFaderBindings()
+        
+    def subClassGetFormData(self):        
+        return (self.model.faderBindings, self.writeReadBindings)
 

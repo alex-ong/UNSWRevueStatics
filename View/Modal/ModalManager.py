@@ -11,6 +11,7 @@ modalMapping = { TIME_MODAL: TimeModal.TimeModal,
                  PATCH_MODAL: PatchMenuModal.PatchMenuModal,
                  DMX_MODAL: DMXModal.DMXModal,
                  GROUP_MODAL: GroupModal.GroupModal,
+                 FADER_MODAL: FaderModal.FaderModal,
                  CONFIRMATION_MODAL: ConfirmationModal.ConfirmationModal}  # todo!
 
 
