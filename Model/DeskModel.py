@@ -152,7 +152,10 @@ class DeskModel(object):
             self.currentfaderBinding = len(self.faderBindings) - 1
         self.refreshFaderBindings()
         
-    def getFaderBindings(self):        
+    def getFaderBindings(self, pageNumber=None):
+        if pageNumber is None:
+            pageNumber = self.currentfaderBinding
+                    
         bindings = self.faderBindings[self.currentfaderBinding]
         result = OrderedDict()       
         

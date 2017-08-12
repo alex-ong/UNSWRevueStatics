@@ -8,6 +8,7 @@ from View.Widgets import ConsoleWidget
 from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.Widgets.GroupPatchWidget import GroupPatchWidget
 from View.Widgets.CompactChannelValueWidget import  CompactChannelValueWidget
+from View.Widgets.FaderPatchWidget import FaderPatchWidget
 
 FG = 'white'
 FG_NONE = 'red'
@@ -21,19 +22,19 @@ class FaderModal(AbstractModal.AbstractModal):
     def __init__(self, data, *args):
         super().__init__(data, *args)
     
-    def subClassSetup(self):
-        pass
-#         self.groupFrame = GroupFrame(self.data, self)
-#         self.configure(bg=COLOR_NONE)
-#         self.consoleWidget = ConsoleWidget.ConsoleWidget(self.data.console, self)
-#         self.columnconfigure(0, weight=1)
-#         self.rowconfigure(0, weight=10)
-#         
-#         self.scaleToScreen()                        
-#         self.groupFrame.grid(sticky=tk.NSEW)     
-#         self.consoleWidget.grid(sticky=tk.NSEW)
-#         # emptyness at bottom since windows taskbar gets in the way.  
-#         self.rowconfigure(2, weight=1,minsize=50) 
+    def subClassSetup(self):        
+        self.configure(bg=COLOR_NONE)
+        self.patchFrame = FaderPatchFrame(self.data, self)
+        
+        self.consoleWidget = ConsoleWidget.ConsoleWidget(self.data.console, self)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=10)
+  
+        self.scaleToScreen()                        
+        self.patchFrame.grid(sticky=tk.NSEW)     
+        self.consoleWidget.grid(sticky=tk.NSEW)
+        # emptyness at bottom since windows taskbar gets in the way.  
+        self.rowconfigure(2, weight=1,minsize=50) 
         
     def scaleToScreen(self):
         screen_width = self.winfo_screenwidth()
@@ -44,6 +45,60 @@ class FaderModal(AbstractModal.AbstractModal):
         pass
     
     def subclassRefresh(self):                
-        pass
+        self.consoleWidget.refreshDisplay()
+        self.patchFrame.refreshDisplay()
+    
+NUM_COLS = 18
+NUM_ROWS = 2
+NUM_FADERS = 27 #TODO read this from config file.
+class FaderPatchFrame(tk.Frame):
+    def __init__(self, data, *args):
+        super().__init__(*args)
+        self.data = data
+        self.widgets = []
+        self.subclassInit()
+        
+    def subclassInit(self):
+        self.config(bg=COLOR_NONE)
+        self.rowconfigure(0, weight=1)  # top pad
+        self.columnconfigure(0, weight=10)  # left pad
+        for i in range(1, NUM_COLS):  # setup data columns                    
+            self.columnconfigure(i, weight=1, minsize=80)
+        self.columnconfigure(NUM_COLS + 1, weight=10)  # left pad
+        
+        for i in range(1, NUM_ROWS):
+            self.rowconfigure(i, weight=1, minsize=100)
+        self.rowconfigure(NUM_ROWS + 2, weight=1,minsize=200)  # bottom padding
+        self.rowconfigure(NUM_ROWS + 3, weight=1)  # bottom padding
+        
+        #currentPageNumber = self.data.currentPageNumber
+        self.title = tk.Label(self, bg=COLOR_NONE, fg=FG,
+                              text="Fader Patch Menu", font=TITLE_FONT)
+        self.title.grid(row=1, column=1, columnspan=NUM_COLS)
+        
+        data = self.data.getFaders()
+        print (data)
+        for i in range(1, NUM_FADERS+1):            
+            row = (i-1) // NUM_COLS
+            col = (i-1) % NUM_COLS            
+            
+            faderPatch = None #points to a channel or group object
+            if i in data:
+                faderPatch = data[i]
+                             
+            groupWidget = FaderPatchWidget(i, faderPatch, self) 
+            groupWidget.grid(row=row+2, column=col + 1, sticky=tk.NSEW)
+            self.widgets.append(groupWidget)
+    
+#         self.currentValues = CompactChannelValueWidget(self.data.currentMappings, self)
+#         self.currentValues.grid(columnspan=NUM_COLS,sticky=tk.NSEW)
+    
+    def refreshDisplay(self):
+        faders = self.data.getFaders()
+        for i in range(1, NUM_FADERS+1):                
+            widget = self.widgets[i-1]
+            widget.refreshDisplay(faders[i])
+        #self.currentValues.refreshDisplay()
+                
     
                     

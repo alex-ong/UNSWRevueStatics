@@ -93,8 +93,3 @@ class GroupFrame(tk.Frame):
             widget.refreshDisplay(data[i]['channels'],data[i]['name'])
         self.currentValues.refreshDisplay()
                 
-if __name__ == '__main__':
-    root = tk.Tk()
-    modal = DMXModal(None)
-    modal.show(None)
-    root.mainloop()

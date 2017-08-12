@@ -23,8 +23,11 @@ class FaderModal(BasePatchModal):
     def __init__(self, model):
         super().__init__(model)
         self.currentMappings = None
-        self.currentPageNumber = 0
-        
+        self.currentPageNumber = 0        
+    
+    def getFaders(self):
+        return self.model.getFaderBindings(self.currentPageNumber)
+    
     def basePatchSubclassGetValidOperators(self):
         return validOperators
 
