@@ -19,17 +19,14 @@ from Model.ModalForms.ModalFormConsts import MENU_MODAL
 
 #validOperators for main console
 from Model.CommandProgrammer.MainConsole import validOperators 
+from Model.FaderValues import FADER_COMMANDS, NEXT_FADERS, PREV_FADERS
 
 class DeskModel(object):
-    def refreshGroupBindings(self):
-        self.groupBindings = self.config.readGroupBindings(self.settings['faders']*2) 
-        self.groupValues.refreshGroupBindings(self.groupBindings, self.channelValues)
-        
     def __init__(self):
         self.config = ConfigReader.ConfigReader('config/config.json')
         self.settings = self.config.readGeneralSettings()
-        numFaders = self.settings['faders']
-        defaultChannels = self.settings['defaultChannels']
+        numFaders = self.getNumFaders()
+        defaultChannels = self.getDefaultChannels()
         
         self.patching = self.config.readDMXBindings(defaultChannels)
         self.faderBindings = self.config.readFaderBindings(numFaders, defaultChannels)
@@ -71,57 +68,91 @@ class DeskModel(object):
     def Reset(self):
         # get configReader to reset everything, then load everything
         pass
-         
-    def handleSliderInput(self, sliderName, value):
-        # get relevant slider
-        bindings = self.faderBindings[self.currentfaderBinding]
-        # get slider number        
-        sliderNumber = int(sliderName.replace('slider', ''))
-        
-        # change value of group or channel
-        toChange = bindings[sliderNumber]
-                
-        if isinstance(toChange, int):  # slider bound to channel            
-            self.channelValues[toChange].setDirectValue(value)                
-        else:  # slider bound to group
-            groupNumber = int(toChange.replace('group', ''))
-            self.groupValues[groupNumber].setDirectValue(value)
+    
+    ###############################################################
+    # Model input handler - passes it to current modal if necessary
+    ###############################################################         
+    def handleSliderInput(self, sliderName, value):        
+        if not (self.modals.isEmpty()):
+            self.modals.handleSliderInput(sliderName, value)
+        else:
+            # get relevant slider
+            bindings = self.faderBindings[self.currentfaderBinding]
+            # get slider number        
+            sliderNumber = int(sliderName.replace('slider', ''))
             
-    def handleButtonInput(self, buttonName, buttonPressed):
+            # change value of group or channel, but only if binding isn't empty
+            if sliderNumber in bindings:
+                toChange = bindings[sliderNumber]                    
+                if isinstance(toChange, int):  # slider bound to channel            
+                    self.channelValues[toChange].setDirectValue(value)                
+                else:  # slider bound to group
+                    groupNumber = int(toChange.replace('group', ''))
+                    self.groupValues[groupNumber].setDirectValue(value)
+            
+    def handleFlash(self, faderNumber, buttonPressed):
+        bindings = self.faderBindings[self.currentfaderBinding]
+        if faderNumber in bindings:
+            toChange = bindings[faderNumber]        
+            value = 100 if buttonPressed else 0        
+                
+            if isinstance(toChange, int):  # slider bound to channel            
+                self.channelValues[toChange].setDirectFlashValue(value)                
+            else:  # slider bound to group
+                groupNumber = int(toChange.replace('group', ''))
+                self.groupValues[groupNumber].setDirectFlashValue(value)
+
+    def handleButtonInput(self, buttonName, buttonPressed):        
+        # first, we remap virtual S1-S4 keys to current binding.        
+        if buttonName in OptionButtons.RAW_BUTTONS:
+            buttonName = self.optionButtons.getCommand(buttonName)
+            if buttonName is None: #catch if we bound to nothing
+                return
+        
         if not self.modals.isEmpty():
-            if buttonPressed:
-                self.modals.handleInput(buttonName)
+            self.modals.handleInput(buttonName, buttonPressed)
         else:
             if 'b_slider' in buttonName:  # todo check programmer state first.
                 faderNumber = int(buttonName.replace('b_slider', ''))
-                bindings = self.faderBindings[self.currentfaderBinding]
-                toChange = bindings[faderNumber]
-                
-                if buttonPressed: 
-                    value = 100
-                else:
-                    value = 0
-                    
-                if isinstance(toChange, int):  # slider bound to channel            
-                    self.channelValues[toChange].setDirectFlashValue(value)                
-                else:  # slider bound to group
-                    groupNumber = int(toChange.replace('group', ''))
-                    self.groupValues[groupNumber].setDirectFlashValue(value)
-                           
+                self.handleFlash(faderNumber, buttonPressed)
             elif buttonPressed:  # we only care about keyDown
-                #first, switch S1->S4 to proper names
-                if buttonName in OptionButtons.RAW_BUTTONS:
-                    buttonName = self.optionButtons.getCommand(buttonName)
-                
                 #now, if it's a playback command handle it
                 if buttonName in PLAYBACK_COMMANDS:
                     self.handlePlaybackCommand(buttonName)
                 elif buttonName in FADER_COMMANDS:
-                    pass #todo add fader commands                
+                    self.handleFaderCommand(buttonName)                
                 else: #otherwise we add the command to console
-                    self.handleConsoleInput(buttonName)                    
-            
-    def getFaderBindings(self):
+                    self.handleConsoleInput(buttonName)
+    def handleFaderCommand(self, buttonName):
+        if buttonName == NEXT_FADERS:
+            self.nextFaderBindings()
+        elif buttonName == PREV_FADERS:
+            self.prevFaderBindings()
+        else:
+            print ("Unrecognized Fader Command", buttonName)         
+    def handleConsoleInput(self, stringInput):
+        result = self.console.parseString(stringInput)
+        return result
+        
+    def handlePlaybackCommand(self, buttonName):
+        self.cueList.handleCueCommand(buttonName)
+                
+    ################################
+    # Change fader bindings
+    ################################
+    def nextFaderBindings(self):
+        self.currentfaderBinding += 1
+        if self.currentfaderBinding >= len(self.faderBindings):
+            self.currentfaderBinding = 0
+        self.refreshFaderBindings()
+    
+    def prevFaderBindings(self):
+        self.currentfaderBinding -= 1
+        if self.currentfaderBinding < 0:
+            self.currentfaderBinding = len(self.faderBindings) - 1
+        self.refreshFaderBindings()
+        
+    def getFaderBindings(self):        
         bindings = self.faderBindings[self.currentfaderBinding]
         result = OrderedDict()       
         
@@ -136,23 +167,44 @@ class DeskModel(object):
                 
         return result
     
-    def handleConsoleInput(self, stringInput):
-        result = self.console.parseString(stringInput)
-        return result
-        
-    def handlePlaybackCommand(self, buttonName):
-        self.cueList.handleCueCommand(buttonName)
+    ##################################
+    #refresh bindings from file
+    ##################################
+    def refreshGroupBindings(self):
+        self.groupBindings = self.config.readGroupBindings(self.getNumFaders()*2) 
+        self.groupValues.refreshGroupBindings(self.groupBindings, self.channelValues)
     
+    def refreshFaderBindings(self):
+        self.faderBindings = self.config.readFaderBindings(self.getNumFaders(),self.getDefaultChannels())
+        self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
+    
+    #################################    
+    #Get desk properties from file
+    #################################
+    def getNumFaders(self):
+        return self.settings['faders']
+    
+    def getDefaultChannels(self):
+        return self.settings['defaultChannels']
+    
+    #################################
+    # Update loop (called every 1/60s)
+    #################################
     def update(self, timeDelta):
         self.cueList.update(timeDelta)
         
+    #################################################
+    # Add/remove current focus to another modal form
+    ################################################
     def popModalStack(self, modal):
         self.modalStack.pop()
         
     def addModalToStack(self, modal):
         self.modalStack.append(modal)
         
-    #assumes up and down times as strings
+    ###############################################
+    # Main Menu command callbacks
+    ###############################################
     def updateFadeTimes(self, up, down):                
         upDown = [up, down]
         self.settings['upDown'] = upDown

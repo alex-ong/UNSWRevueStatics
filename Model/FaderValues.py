@@ -10,7 +10,9 @@ import Model.Fader as Fader
 from _collections import OrderedDict
 
 
-
+NEXT_FADERS = 'NextFaders'
+PREV_FADERS = 'PrevFaders'
+FADER_COMMANDS = [NEXT_FADERS, PREV_FADERS]
 # an array of Faders
 
 class FaderValues(object):

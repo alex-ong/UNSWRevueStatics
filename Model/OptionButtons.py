@@ -5,7 +5,7 @@ File that lets you know the bindings for the S1->S4 buttons
 RAW_BUTTONS = ['S1', 'S2', 'S3', 'S4']
 
 
-import Model.CommandProgrammer.parser.DELETE as DELETE
+from Model.CommandProgrammer.parser import DELETE
 NEXT_FADERS = 'NextFaders'
 PREV_FADERS = 'PrevFaders'
 

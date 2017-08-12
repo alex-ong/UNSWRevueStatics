@@ -44,6 +44,10 @@ class ModalList(object):
     def isEmpty(self):
         return len(self.stack) == 0
     
-    def handleInput(self, input):
-        self.peekStack().handleCommand(input)
-        
+    def handleInput(self, input, buttonPressed):
+        #Hack - our modals only care about onButtonDown
+        if (buttonPressed):        
+            self.peekStack().handleCommand(input)
+    def handleSliderInput(self, input, value):
+        #hack - we don't accept slider input in modals
+        return
