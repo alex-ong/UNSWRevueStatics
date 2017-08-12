@@ -10,16 +10,14 @@ class LogicController(object):
         self.model = model
         self.view = view
         
-        self.view.setupChannels(model.channelValues)
-        # self.view.setupGroups(model.groupValues)
-        self.view.setupFaders(model.faderValues)
+        self.view.setupChannels(model.channelValues)        
+        self.view.setupFaders(model.getFaderValues,model.getNumFaders()) 
         self.view.setupConsole(model.console)
         self.view.setupCueList(model.cueList)
         self.view.setupModalForms(model.modals)
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
         
         self.inputEventMaster = IOConverter()
-        
         
     # called when we receive network input
     def receiveInput(self, msg):             

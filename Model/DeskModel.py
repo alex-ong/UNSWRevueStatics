@@ -178,6 +178,9 @@ class DeskModel(object):
         self.faderBindings = self.config.readFaderBindings(self.getNumFaders(),self.getDefaultChannels())
         self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
     
+    def getFaderValues(self):
+        return self.faderValues
+    
     #################################    
     #Get desk properties from file
     #################################

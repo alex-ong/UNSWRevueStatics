@@ -43,8 +43,8 @@ class DeskView(tk.Frame):
         self.groupFrame = gf
         
     # todo: change faderLayout to "x x x  x" layout 
-    def setupFaders(self, faders, faderLayout=[18, 9]):        
-        ff = FaderFrame(faders, faderLayout, self)
+    def setupFaders(self, getFaderFunc, numFaders, faderLayout=[18, 9]):        
+        ff = FaderFrame(getFaderFunc, numFaders, faderLayout, self)
         ff.grid(row=1, column=1, sticky=tk.NSEW)
         self.faderFrame = ff
     
