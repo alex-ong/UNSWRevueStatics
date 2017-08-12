@@ -24,17 +24,21 @@ class FaderModal(AbstractModal.AbstractModal):
     
     def subClassSetup(self):        
         self.configure(bg=COLOR_NONE)
-        self.patchFrame = FaderPatchFrame(self.data, self)
         
+        self.patchFrame = FaderPatchFrame(self.data, self)        
+        self.selectedFrame = SelectedBindingLabel(self.data,self)
         self.consoleWidget = ConsoleWidget.ConsoleWidget(self.data.console, self)
-        self.columnconfigure(0, weight=1)
+        
+        self.columnconfigure(0, weight=1)        
         self.rowconfigure(0, weight=10)
+        self.rowconfigure(1, minsize=50)
   
         self.scaleToScreen()                        
-        self.patchFrame.grid(sticky=tk.NSEW)     
-        self.consoleWidget.grid(sticky=tk.NSEW)
+        self.patchFrame.grid(sticky=tk.NSEW) #row = 0   
+        self.selectedFrame.grid(sticky=tk.NSEW) #row = 1
+        self.consoleWidget.grid(sticky=tk.NSEW) #row = 2
         # emptyness at bottom since windows taskbar gets in the way.  
-        self.rowconfigure(2, weight=1,minsize=50) 
+        self.rowconfigure(3, weight=1,minsize=50) 
         
     def scaleToScreen(self):
         screen_width = self.winfo_screenwidth()
@@ -47,6 +51,8 @@ class FaderModal(AbstractModal.AbstractModal):
     def subclassRefresh(self):                
         self.consoleWidget.refreshDisplay()
         self.patchFrame.refreshDisplay()
+        self.selectedFrame.refreshDisplay()
+
     
 NUM_COLS = 18
 NUM_ROWS = 2
@@ -77,7 +83,7 @@ class FaderPatchFrame(tk.Frame):
         self.title.grid(row=1, column=1, columnspan=NUM_COLS)
         
         data = self.data.getFaders()
-        print (data)
+        
         for i in range(1, NUM_FADERS+1):            
             row = (i-1) // NUM_COLS
             col = (i-1) % NUM_COLS            
@@ -100,5 +106,23 @@ class FaderPatchFrame(tk.Frame):
             widget.refreshDisplay(faders[i])
         #self.currentValues.refreshDisplay()
                 
+
     
-                    
+class SelectedBindingLabel(tk.Frame):
+    def __init__(self, data, *args):
+        super().__init__(*args)
+        self.columnconfigure(0, weight=1) #force label to take up entire frame
+        self.data = data
+        self.config(bg=COLOR_NONE)
+        self.labelString = tk.StringVar()        
+        self.label = tk.Label(self, textvariable=self.labelString, font=TITLE_FONT, 
+                              fg=FG, bg=COLOR_NONE,justify=tk.CENTER)
+        self.label.grid(sticky=tk.NSEW)
+        self.prevValue = ''
+        
+    def refreshDisplay(self):        
+        newValue = str(self.data.currentMappings)
+        if newValue != self.prevValue:            
+            self.prevValue = newValue
+            self.labelString.set("Selected: " + self.prevValue)
+            

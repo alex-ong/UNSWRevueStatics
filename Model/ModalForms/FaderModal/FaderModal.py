@@ -18,7 +18,13 @@ class _FaderMapping(object):
             stringTarget = stringTarget.replace(_FaderMapping.GROUP,'')
 
         self.targetNumber = int(stringTarget)
-         
+    
+    def __str__(self):
+        if self.faderType == None:
+            return ''
+        else:
+            return self.faderType + " " + str(self.targetNumber).zfill(2)
+        
 class FaderModal(BasePatchModal):
     def __init__(self, model):
         super().__init__(model)
