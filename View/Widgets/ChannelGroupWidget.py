@@ -71,7 +71,7 @@ class ChannelGroupWidget(tk.Frame):
         # 2x2 grid of values #
         # DIRECT | PLAYBACK  #
         # -------+---------  #
-        # GROUP  +           #
+        #       GROUP        #
         ######################k
         self.directValue = tk.StringVar()
         directLabel = self.createButton(self.directValue, COLOR_DIRECT)
@@ -82,7 +82,8 @@ class ChannelGroupWidget(tk.Frame):
         row += 1
         
         self.groupValue = tk.StringVar()
-        groupLabel = self.createButton(self.groupValue, COLOR_GROUP)                
+        groupLabel = self.createButton(self.groupValue, COLOR_GROUP)
+        groupLabel.grid(row=row,columnspan=2)                
         self.recordValue = tk.StringVar()  # no record label since it overrides everything        
           
         self.lastValues = []        

@@ -36,7 +36,8 @@ class Programmer(object):
             return self._doTime()
         elif isinstance(command, MenuCommand):
             return self._doMenu()
-            
+        else:
+            return "Command not recognized"
         
     def _doMenu(self):
         self.modals.addToStack(MENU_MODAL)
@@ -94,6 +95,7 @@ class Programmer(object):
                         item.setRecordValue(command.value)
                     except Exception as e:
                         print (e)
+                return ("Set selected items to " + str(command.value)) 
                     
     
     def _doSelectAndSet(self, command):

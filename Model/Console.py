@@ -15,13 +15,20 @@ BACKSPACE = '<-'
 CLEAR = 'Clear'
 ENTER = 'Enter'
 MENU = 'Menu'
-                    
+
+class CommandResultPair(object):
+    def __init__(self, tokens, result):
+        self.command = ' '.join(tokens)
+        self.result = result
+    def __str__(self):
+        return self.command + "|" + str(self.result)
+    
 class Console(object):
     def __init__(self, programmer, validOperators):
         self.tokens = []
         self.programmer = programmer
         self.validOperators = validOperators
-        self.lastCommandResult = None
+        self.lastCommandResults = []
         
     # returns autocomplete, if_error, and a list of strings
     def getTokens(self):
@@ -49,8 +56,7 @@ class Console(object):
         
     def parseString(self, string):        
         if string == BACKSPACE:
-            self.handleBackspace()
-            self.lastCommandResult = None
+            self.handleBackspace()            
             return
         
         if string == CLEAR:
@@ -67,7 +73,7 @@ class Console(object):
                 result = self.programmer.handleCommand(result)
             else:
                 print ("unknown result:", result)
-            self.lastCommandResult = result
+            self.lastCommandResults.insert(0, CommandResultPair(self.tokens,result))
             self.tokens = []
             return result
         
@@ -105,11 +111,10 @@ class Console(object):
                 print('Tried to enter ', string,
                       'but valid operators are:',
                       self.validOperators(self.tokens))
-        self.lastCommandResult = None     
+             
             
     # called when user hits clear 
     def reset(self):
-        self.tokens = []
-        self.lastCommandResult = None
+        self.tokens = []        
         self.programmer.clear()
         
