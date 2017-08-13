@@ -48,7 +48,7 @@ class ChannelGroupFrame(tk.Frame):
             if layoutItem == 'x':
                 value = values[itemIndex]
                 itemIndex += 1
-                cw = ChannelGroupWidget(value, False, self)
+                cw = ChannelGroupWidget(value, itemIndex, False, self)
                 cw.grid(row=row + 1, column=col)
                 self.widgets[itemIndex] = cw
             layoutIndex += 1

@@ -30,18 +30,13 @@ def bindingIsGroup(binding):
     return isinstance(binding, Model.Group.Group)
 
 
-class ChannelGroupWidget(tk.Frame):
-        
-    def __init__(self, channelOrGroup, showFaderLabel, *args):
+class ChannelGroupWidget(tk.Frame):            
+    def __init__(self, channelOrGroup, faderNumber, showFaderLabel, *args):
         super().__init__(*args)
-        
+        self.showFaderLabel = showFaderLabel
         self.data = channelOrGroup
-        if bindingIsChannel(self.data):
-            self.dataType = CHANNEL
-        elif bindingIsGroup(self.data):
-            self.dataType = GROUP
-        else:
-            print ("UNKNOWN ChannelOrGroup dataType", self.data)
+        self.dataType = self.calculateDataType()
+        self.faderNumber = faderNumber
 
         self.config(bg='black')
         
@@ -60,7 +55,7 @@ class ChannelGroupWidget(tk.Frame):
             self.faderLabel = None
             
         # Actual group or channel number ("00" to "99")
-        self.numberLabel = tk.Label(self, text=str(self.data.number).zfill(2), 
+        self.numberLabel = tk.Label(self, text=str(self.faderNumber).zfill(2), 
                                     font=('Consolas', 20), fg='grey', bg='black')
         self.numberLabel.grid(row=row,columnspan=2)
         row += 1
@@ -93,6 +88,14 @@ class ChannelGroupWidget(tk.Frame):
         self.lastValues = []        
         self.refreshDisplay()
         
+    def calculateDataType(self):
+        if bindingIsChannel(self.data):
+            return CHANNEL
+        elif bindingIsGroup(self.data):
+            return GROUP
+        else:            
+            return None      
+          
     def createButton(self, stringVar, colour, size=8):
         return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', size, 'bold'))    
     
@@ -115,6 +118,8 @@ class ChannelGroupWidget(tk.Frame):
         return len(maxComps)
     
     def refreshDisplay(self):
+        if self.data is None:
+            return
         direct = self.data.getDirectValue()
         playback = self.data.playbackValue
         group = self.getGroupValue()
@@ -151,6 +156,20 @@ class ChannelGroupWidget(tk.Frame):
     def getFaderLabelString(self):
         if self.dataType == CHANNEL:
             faderLabelString = 'Chan' + str(self.data.number).zfill(2)
-        else: # self.dataType == GROUP:
-            faderLabelString = self.data.label  
+        elif self.dataType == GROUP:
+            faderLabelString = self.data.label
+        else:
+            faderLabelString = ''  
         return faderLabelString  
+    
+    def changeFader(self, channelOrGroup):
+        #change which channel or group we point to.
+        self.data = channelOrGroup
+        self.dataType = self.calculateDataType()
+        
+        #refresh faderLabel if it is shown
+        if (self.showFaderLabel):            
+            faderLabelString = self.getFaderLabelString()
+            self.faderLabel.config(text=faderLabelString, fg=typeColourMapping[self.dataType])     
+        
+        self.clearValues()   

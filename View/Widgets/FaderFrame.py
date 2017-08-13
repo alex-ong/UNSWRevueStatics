@@ -42,7 +42,7 @@ class FaderFrame(tk.Frame):
                 if faderIndex < len(faderValues):
                     channel = faderValues[faderIndex] 
                 faderIndex += 1
-                cw = FaderWidget.FaderWidget(channel, self)
+                cw = FaderWidget.FaderWidget(channel, faderIndex, self)
                 cw.grid(row=row + 1, column=col)
                 self.widgets[faderIndex] = cw
             col += 1
