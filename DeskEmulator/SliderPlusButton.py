@@ -1,4 +1,5 @@
 import tkinter as tk
+import CherryButton
 
 class SliderPlusButton(tk.Frame):
     def __init__(self, sliderNum, label, *args):
@@ -8,25 +9,18 @@ class SliderPlusButton(tk.Frame):
         label.pack()
         scale = tk.Scale(self, from_=100, to=0, showvalue=0, command=self.refreshValue)
         scale.pack()        
-        b = tk.Button(self, text="BAM")
-        b.bind("<Button-1>", self.buttonDown)
-        b.bind("<ButtonRelease-1>", self.buttonUp) 
-        b.pack()
+        self.b = CherryButton.CherryButton("BAM", None, self)		        
+        self.b.pack()
         self.sliderValue = 0
-        self.isButtonDown = False
+        
         
     def getValue(self):        
         return int(self.sliderValue)
         
     def getState(self):
         return {'slider'+str(self.sliderNum): self.getValue(),
-                'b_slider'+str(self.sliderNum): self.isButtonDown}  
+                'b_slider'+str(self.sliderNum): self.b.isButtonDown}  
     
     def refreshValue(self, val):
         self.sliderValue = val
         
-    def buttonDown(self, *args):
-        self.isButtonDown = True
-        
-    def buttonUp(self, *args):
-        self.isButtonDown = False
