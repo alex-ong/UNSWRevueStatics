@@ -18,3 +18,4 @@ typeColourMapping = { Channel.ValueType.DIRECT : COLOR_DIRECT,
                      GROUP : COLOR_GROUP,
                      None: COLOR_NONE}
 
+SCREEN_RESOLUTION = '1920x1080'

@@ -13,8 +13,9 @@ class CueListWidget(tk.Frame):
         super().__init__(*args)
         self.widgets = []
                 
+        self.columnconfigure(0, weight=1)
         for i in range(NUM_CUES):
-            self.rowconfigure(i, weight=1)
+            self.rowconfigure(i, weight=1)            
             widget = CueWidget(self)
             self.widgets.append(widget)
             widget.grid(sticky=tk.NSEW)
@@ -24,12 +25,12 @@ class CueListWidget(tk.Frame):
         cues, current = self.cueList.getCues(NUM_CUES, FROM_END)
         
         i = 0        
-        while i < len(cues): #can't use forLoop since end value for i is too low
+        while i < len(cues):  # can't use forLoop since end value for i is too low
             cueName, cue = cues[i]
             self.widgets[i].refreshDisplay(cueName, cue, i == current)
             i += 1
         
-        #if we didn't get enough cues we have to hide a few widgets            
+        # if we didn't get enough cues we have to hide a few widgets            
         while i < NUM_CUES:            
             self.widgets[i].hide()
             i += 1

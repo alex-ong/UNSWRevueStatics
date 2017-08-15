@@ -21,7 +21,9 @@ class ConsoleWidget(tk.Frame):
     def __init__(self, console, *args):
         super().__init__(*args)
         self.columnconfigure(0, weight=1)
-        
+        for i in range (NUM_PREV_COMMANDS + 1):
+            self.rowconfigure(i, weight=1)
+            
         self.console = console
         self.currentCommandVar = tk.StringVar()
         self.currentCommand = self.makeEntry(self.currentCommandVar, NORMAL_COMMAND_BG)
@@ -74,7 +76,7 @@ class ConsoleWidget(tk.Frame):
     def refreshDisplay(self):        
         if self.lastTokens != self.console.tokens:            
             self.setValue(self.console.tokens.copy())
-        #construct console history strings
+        # construct console history strings
         consoleHistory = []
         for i in range(NUM_PREV_COMMANDS):
             if len(self.console.lastCommandResults) > i:

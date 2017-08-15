@@ -32,27 +32,30 @@ class ChannelGroupFrame(tk.Frame):
         layoutIndex = 0
         
         for i in range (len(layout)):
-            self.grid_columnconfigure(i, weight=0, minsize=16)
+            self.grid_columnconfigure(i, weight=1, minsize=16)
+        
                                                
         values = list(values.values.values())
         
         # title bar
-        title = tk.Label(self, text='Channels',bg='grey', font=('consolas',16,'bold'))
-        title.grid(row=0,columnspan=len(layout),sticky=tk.NSEW)
-        
+        title = tk.Label(self, text='Channels', bg='grey', font=('consolas', 16, 'bold'))
+        title.grid(row=0, columnspan=len(layout), sticky=tk.NSEW)
+        maxRow = 0
         while itemIndex < len(values):        
             col = layoutIndex % len(layout)
             row = layoutIndex // len(layout)
+            maxRow = row
             layoutItem = layout[col]
             
             if layoutItem == 'x':
                 value = values[itemIndex]
                 itemIndex += 1
                 cw = ChannelGroupWidget(value, itemIndex, False, self)
-                cw.grid(row=row + 1, column=col)
+                cw.grid(row=row + 1, column=col, sticky=tk.NSEW)
                 self.widgets[itemIndex] = cw
             layoutIndex += 1
-                
+        for i in range(maxRow):
+            self.rowconfigure(i, weight=1)
     def refreshDisplay(self):
         for widget in self.widgets.values():
             widget.refreshDisplay()

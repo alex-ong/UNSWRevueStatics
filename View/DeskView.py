@@ -10,20 +10,30 @@ from View.Widgets.ConsoleWidget import ConsoleWidget
 from View.Widgets.CueListWidget import CueListWidget
 from View.Modal.ModalManager import ModalManager
 from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
-from View.ViewStyle import CHANNEL, GROUP
+from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
 
 class DeskView(tk.Frame):
-    def __init__(self):
+    def __init__(self, screenRes=None):        
         root = tk.Tk()        
-        root.config(bg='red')
+        root.config(bg='blue')
         super().__init__(root)
-        root.overrideredirect(True) # change to windowless border                
+        if screenRes is None:
+            SCREEN_RESOLUTION = (str(self.winfo_screenwidth()) + 'x' + 
+                                str(self.winfo_screenheight()))
+        root.geometry(SCREEN_RESOLUTION)        
+        root.overrideredirect(True)  # change to windowless border        
+        root.wm_title("UNSW Revue Statics")
+        root.columnconfigure(0, weight=1)
+        root.rowconfigure(0,weight=1)        
+                
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
-        root.wm_title("UNSW Revue Statics")
-                
-        self.columnconfigure(0, weight=1)
-        
+        NUM_ROWS = 3
+        NUM_COLS = 2
+        for i in range(NUM_ROWS):
+            self.rowconfigure(i, weight=1)
+        for i in range(NUM_COLS):
+            self.columnconfigure(i, weight=1)
         self.channelFrame = None
         self.groupFrame = None
         self.faderFrame = None
@@ -51,12 +61,12 @@ class DeskView(tk.Frame):
     
     def setupConsole(self, console):
         cc = ConsoleWidget(console, self)
-        cc.grid(row=2, column=1, columnspan=2, sticky=tk.NSEW)
+        cc.grid(row=2, column=1, sticky=tk.NSEW)
         self.consoleWidget = cc
         
     def setupCueList(self, cueList):
         cl = CueListWidget(cueList, self)
-        cl.grid(row=0, column=0,rowspan=3, sticky=tk.NSEW)
+        cl.grid(row=0, column=0, rowspan=3, sticky=tk.NSEW)
         self.cueListWidget = cl
         
     def setupModalForms(self, modalModel):
