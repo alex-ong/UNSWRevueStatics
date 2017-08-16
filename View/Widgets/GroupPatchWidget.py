@@ -18,8 +18,9 @@ from Model import Channel
 from View.ViewStyle import COLOR_DIRECT, COLOR_GROUP, COLOR_PLAYBACK, COLOR_RECORD, COLOR_NONE
 from View.ViewStyle import typeColourMapping
 
-HEADING_FONT = ('Consolas', 10)
-FONT = ('Consolas', 8)
+import View.ViewStyle as VS
+HEADING_FONT = (VS.FONT, VS.font_size(10))
+FONT = (VS.FONT, VS.font_size(8))
 
 class GroupPatchWidget(tk.Frame):
     def __init__(self, groupNumber, *args):
@@ -27,9 +28,9 @@ class GroupPatchWidget(tk.Frame):
         
         self.config(bg='black')
         
-        self.columnconfigure(0, weight=0, minsize=100)
-        self.columnconfigure(1, weight=0, minsize=100)                    
-        self.rowconfigure(1, weight=0, minsize=100)
+        self.columnconfigure(0, weight=0, minsize=VS.pixel_size(100))
+        self.columnconfigure(1, weight=0, minsize=VS.pixel_size(100))                    
+        self.rowconfigure(1, weight=0, minsize=VS.pixel_size(100))
         
         self.groupNumberLabel = tk.Label(self, text=str(groupNumber).zfill(2),
                                          fg='black', bg='white', font=HEADING_FONT)

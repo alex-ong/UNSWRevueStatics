@@ -9,8 +9,11 @@ Shows what the fader is patched to.
 from View.ViewStyle import COLOR_DIRECT, COLOR_GROUP, COLOR_PLAYBACK, COLOR_RECORD, COLOR_NONE, CHANNEL, GROUP
 from View.ViewStyle import typeColourMapping
 from View.Widgets.ChannelGroupWidget import bindingIsChannel, bindingIsGroup
-HEADING_FONT = ('Consolas', 20)
-FONT = ('Consolas', 8)
+
+import View.ViewStyle as VS
+HEADING_FONT = (VS.FONT, VS.font_size(20))
+FONT = (VS.FONT, VS.font_size(8))
+
 import tkinter as tk
 
 class FaderPatchWidget(tk.Frame):
@@ -23,8 +26,8 @@ class FaderPatchWidget(tk.Frame):
         
         bindingType = self.getBindingType()
         
-        self.columnconfigure(0, weight=0, minsize=100)                        
-        self.rowconfigure(1, weight=0, minsize=100)
+        self.columnconfigure(0, weight=0, minsize=VS.pixel_size(100))                        
+        self.rowconfigure(1, weight=0, minsize=VS.pixel_size(100))
                 
         self.headingLabel = tk.Label(self, text=str(self.number).zfill(2), 
                                      font=HEADING_FONT, fg='grey', bg='black')

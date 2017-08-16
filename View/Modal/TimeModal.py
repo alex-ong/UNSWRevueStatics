@@ -6,13 +6,14 @@ from View.ViewStyle import COLOR_DIRECT as TITLE
 from View.Widgets.CueWidget import UP_ARROW, DOWN_ARROW
 from . import AbstractModal
 from Model.ModalForms.TimeModal.TimeModal import TimeState
+import View.ViewStyle as VS
 
 FG = 'white'
 
 DESC_TEXT1 = 'Input Up time'
 DESC_TEXT2 = 'Input Down time'
-FONT = ('Consolas', 28)
-TITLE_FONT = ('Consolas', 48)
+FONT = (VS.FONT, VS.font_size(28))
+TITLE_FONT = (VS.FONT, VS.font_size(48))
 COLOR_CONSOLE = 'red'
 def autoString(value):
     if value is None:
@@ -27,8 +28,8 @@ class TimeModal(AbstractModal.AbstractModal):
     def subClassSetup(self):        
         self.config(bg=COLOR_NONE)
         
-        self.border1 = tk.Frame(self, bg='grey', borderwidth=16)
-        self.border = tk.Frame(self.border1, bg=COLOR_NONE, borderwidth=32)
+        self.border1 = tk.Frame(self, bg='grey', borderwidth=VS.pixel_size(16))
+        self.border = tk.Frame(self.border1, bg=COLOR_NONE, borderwidth=VS.pixel_size(32))
         self.border.columnconfigure(1, minsize=140)
         
         self.title = tk.Label(self.border, bg=COLOR_NONE, fg=TITLE, text='Cue 99.99', font=TITLE_FONT)

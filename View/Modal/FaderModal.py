@@ -4,13 +4,13 @@ from View.ViewStyle import COLOR_NONE
 from View.Modal import AbstractModal
 from View.Widgets import ConsoleWidget
 from View.Widgets.FaderPatchWidget import FaderPatchWidget
-
+import View.ViewStyle as VS 
 FG = 'white'
 FG_NONE = 'red'
 HEADING_BG = '#444444'
 HEADING_BG2 = '#bbbbbb'
-FONT = ('Consolas', 18)
-TITLE_FONT = ('Consolas', 48)
+FONT = (VS.FONT, VS.font_size(18))
+TITLE_FONT = (VS.FONT, VS.font_size(48))
 
 
 class FaderModal(AbstractModal.AbstractModal):
@@ -25,20 +25,18 @@ class FaderModal(AbstractModal.AbstractModal):
         self.consoleWidget = ConsoleWidget.ConsoleWidget(self.data.console, self)
         
         self.columnconfigure(0, weight=1)        
-        self.rowconfigure(0, weight=10)
-        self.rowconfigure(1, minsize=50)
+        self.rowconfigure(0, weight=VS.pixel_size(10))
+        self.rowconfigure(1, minsize=VS.pixel_size(50))
   
         self.scaleToScreen()                        
         self.patchFrame.grid(sticky=tk.NSEW) #row = 0   
         self.selectedFrame.grid(sticky=tk.NSEW) #row = 1
         self.consoleWidget.grid(sticky=tk.NSEW) #row = 2
         # emptyness at bottom since windows taskbar gets in the way.  
-        self.rowconfigure(3, weight=1,minsize=50) 
+        self.rowconfigure(3, weight=1,minsize=VS.pixel_size(50)) 
         
-    def scaleToScreen(self):
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        self.geometry("%dx%d" % (screen_width, screen_height))
+    def scaleToScreen(self):        
+        self.geometry(VS.SCREEN_RESOLUTION)
     
     def reset(self):
         pass
@@ -64,12 +62,12 @@ class FaderPatchFrame(tk.Frame):
         self.rowconfigure(0, weight=1)  # top pad
         self.columnconfigure(0, weight=10)  # left pad
         for i in range(1, NUM_COLS):  # setup data columns                    
-            self.columnconfigure(i, weight=1, minsize=80)
+            self.columnconfigure(i, weight=1, minsize=VS.pixel_size(80))
         self.columnconfigure(NUM_COLS + 1, weight=10)  # left pad
         
         for i in range(1, NUM_ROWS):
-            self.rowconfigure(i, weight=1, minsize=100)
-        self.rowconfigure(NUM_ROWS + 2, weight=1,minsize=200)  # bottom padding
+            self.rowconfigure(i, weight=1, minsize=VS.pixel_size(100))
+        self.rowconfigure(NUM_ROWS + 2, weight=1,minsize=VS.pixel_size(200))  # bottom padding
         self.rowconfigure(NUM_ROWS + 3, weight=1)  # bottom padding
         
         #currentPageNumber = self.data.currentPageNumber

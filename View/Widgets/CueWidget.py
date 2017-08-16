@@ -14,10 +14,12 @@ BG_TITLE = 'grey'
 FG_TITLE = 'black'
 RELEASE = 'purple'
 
-FONT = ('Consolas', '10')
-FONT_HEADING = ('Consolas', '14', 'bold')
-FONT_ACTIVE_CUE = ('Consolas', '25', 'bold')
-FONT_DBO_CUE = ('Consolas', '16', 'bold')
+import View.ViewStyle as VS
+FONT = (VS.FONT, VS.font_size(10))
+FONT_HEADING = (VS.FONT, VS.font_size(14),'bold')
+FONT_ACTIVE_CUE = (VS.FONT, VS.font_size(25),'bold')
+FONT_DBO_CUE = (VS.FONT, VS.font_size(16),'bold')
+
 class ChannelGroupValueCompact(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
@@ -30,9 +32,9 @@ class ChannelGroupValueCompact(tk.Frame):
         cueLabel = tk.Label(self, textvariable=self.cueValue, bg=BG, fg=FG_MAIN, font=FONT)
         playLabel = tk.Label(self, textvariable=self.playValue, bg=BG, fg=FG_PLAY, font=FONT)
         
-        self.grid_columnconfigure(0, minsize=60, weight=0)
-        self.grid_columnconfigure(1, minsize=40, weight=0)
-        self.grid_columnconfigure(2, minsize=40, weight=0)
+        self.grid_columnconfigure(0, minsize=VS.pixel_size(60), weight=0)
+        self.grid_columnconfigure(1, minsize=VS.pixel_size(40), weight=0)
+        self.grid_columnconfigure(2, minsize=VS.pixel_size(40), weight=0)
         
         titleLabel.grid(row=0, column=0, sticky=tk.W)        
         cueLabel.grid(row=0, column=1, sticky=tk.W)
@@ -118,8 +120,8 @@ class CueNumberFrame(tk.Frame):
         super().__init__(*args)
         self.cueMain = tk.StringVar()
         self.cueSub = tk.StringVar()
-        self.columnconfigure(0, minsize=40)
-        self.columnconfigure(1, minsize=50)
+        self.columnconfigure(0, minsize=VS.pixel_size(40))
+        self.columnconfigure(1, minsize=VS.pixel_size(50))
         self.config(bg=BG_TITLE)
         cueMainLabel = tk.Label(self,
                                 textvariable=self.cueMain,
@@ -168,12 +170,12 @@ class CueTimingFrame(tk.Frame):
         self.upLabel = tk.StringVar()
         self.downLabel = tk.StringVar()
         self.runLabel = tk.StringVar()
-        self.columnconfigure(0, minsize=30, weight=1)  # blank space
-        self.columnconfigure(1, minsize=40, weight=0)  # up text
-        self.columnconfigure(2, minsize=5, weight=0)  # up arrow
-        self.columnconfigure(3, minsize=40, weight=0)  # down text
-        self.columnconfigure(4, minsize=5, weight=0)  # down arrow
-        self.columnconfigure(5, minsize=80, weight=0)  # runLabel
+        self.columnconfigure(0, minsize=VS.pixel_size(30), weight=1)  # blank space
+        self.columnconfigure(1, minsize=VS.pixel_size(40), weight=0)  # up text
+        self.columnconfigure(2, minsize=VS.pixel_size(5), weight=0)  # up arrow
+        self.columnconfigure(3, minsize=VS.pixel_size(40), weight=0)  # down text
+        self.columnconfigure(4, minsize=VS.pixel_size(5), weight=0)  # down arrow
+        self.columnconfigure(5, minsize=VS.pixel_size(80), weight=0)  # runLabel
         self.rowconfigure(0, weight=1)
         
         label1 = tk.Label(self, textvariable=self.upLabel, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
@@ -226,8 +228,8 @@ class CueWidget(tk.Frame):
         super().__init__(*args)
         self.config(bg='black')
         self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=0, minsize=50)
-        self.columnconfigure(1, weight=1, minsize=230)
+        self.columnconfigure(0, weight=0, minsize=VS.pixel_size(50))
+        self.columnconfigure(1, weight=1, minsize=VS.pixel_size(230))
         
         self.cnf = CueNumberFrame(self)        
         sd = string_decimal.fromStr('99.99')

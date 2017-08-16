@@ -13,6 +13,7 @@ def GroupLayout():
 
 from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.ViewStyle import CHANNEL, GROUP
+import View.ViewStyle as VS
 
 class ChannelGroupFrame(tk.Frame):
     def __init__(self, values, layoutType, *args):
@@ -38,7 +39,8 @@ class ChannelGroupFrame(tk.Frame):
         values = list(values.values.values())
         
         # title bar
-        title = tk.Label(self, text='Channels', bg='grey', font=('consolas', 16, 'bold'))
+        title = tk.Label(self, text='Channels', bg='grey', 
+                         font=(VS.FONT, VS.font_size(16), 'bold'))
         title.grid(row=0, columnspan=len(layout), sticky=tk.NSEW)
         maxRow = 0
         while itemIndex < len(values):        

@@ -4,11 +4,12 @@ from View.ViewStyle import COLOR_NONE
 from View.ViewStyle import COLOR_DIRECT as SELECTED
 from View.Widgets.CueWidget import UP_ARROW, DOWN_ARROW
 from View.Modal import AbstractModal
+import View.ViewStyle as VS
 
 FG = 'white'
 
-FONT = ('Consolas', 28)
-TITLE_FONT = ('Consolas', 48)
+FONT = (VS.FONT, VS.font_size(28))
+TITLE_FONT = (VS.FONT, VS.pixel_size(48))
 
 class MainMenuModal(AbstractModal.AbstractModal):
     def __init__(self, data, *args):
@@ -47,10 +48,8 @@ class MainMenuModal(AbstractModal.AbstractModal):
         self.rowconfigure(row, weight=1)  # bottom padding
         self.scaleToScreen()
         
-    def scaleToScreen(self):
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        self.geometry("%dx%d" % (screen_width, screen_height))
+    def scaleToScreen(self):        
+        self.geometry(VS.SCREEN_RESOLUTION)
     
     def setOptionSelected(self, index, selected):    
         if (self.options[index][1] != selected):            

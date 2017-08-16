@@ -1,6 +1,8 @@
 import tkinter as tk
 import View.Widgets.FaderWidget as FaderWidget
 
+import View.ViewStyle as VS
+HEADING_FONT = (VS.FONT, VS.font_size(16), 'bold')
 
 class FaderFrame(tk.Frame):
     def __init__(self, getFaderFunc, numFaders, faderLayout, *args):
@@ -22,10 +24,10 @@ class FaderFrame(tk.Frame):
         row = 0
         
         for i in range (len(layout[0])):
-            self.grid_columnconfigure(i, weight=1, minsize=16)                                     
+            self.grid_columnconfigure(i, weight=1, minsize=VS.pixel_size(16))                                     
         
         # title bar
-        title = tk.Label(self, text='Faders', bg='grey', font=('consolas', 16, 'bold'))
+        title = tk.Label(self, text='Faders', bg='grey', font=HEADING_FONT)
         title.grid(row=row, columnspan=len(layout[0]), sticky=tk.NSEW)        
         
         faderValues = list(getFaderFunc().values.values())    

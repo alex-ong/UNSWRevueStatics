@@ -5,13 +5,14 @@ from View.ViewStyle import COLOR_DIRECT as SELECTED
 from View.Widgets.CueWidget import UP_ARROW, DOWN_ARROW
 from View.Modal import AbstractModal
 from View.Widgets import ConsoleWidget
+import View.ViewStyle as VS
 
 FG = 'white'
 FG_NONE = 'red'
 HEADING_BG = '#444444'
 HEADING_BG2 = '#bbbbbb'
-FONT = ('Consolas', 18)
-TITLE_FONT = ('Consolas', 48)
+FONT = (VS.FONT, VS.font_size(18))
+TITLE_FONT = (VS.FONT, VS.font_size(48))
 MAX_CHANNELS = 96
 NUM_ROWS = 12
 NUM_COLS = int(MAX_CHANNELS / NUM_ROWS)
@@ -36,10 +37,8 @@ class DMXModal(AbstractModal.AbstractModal):
         # emptyness at botom since windows taskbar gets in the way.  
         self.rowconfigure(2, weight=1) 
         
-    def scaleToScreen(self):
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        self.geometry("%dx%d" % (screen_width, screen_height))
+    def scaleToScreen(self):        
+        self.geometry(VS.SCREEN_RESOLUTION)
     
     def reset(self):
         pass
@@ -60,9 +59,9 @@ class DMXModalFrame(tk.Frame):
         self.columnconfigure(0, weight=10)  # left pad
         for i in range(1, NUM_COLS * 2):  # setup data columns            
             if i % 2 == 0:
-                self.columnconfigure(i, weight=0, minsize=80)
+                self.columnconfigure(i, weight=0, minsize=VS.pixel_size(80))
             else:
-                self.columnconfigure(i, weight=1, minsize=80)
+                self.columnconfigure(i, weight=1, minsize=VS.pixel_size(80))
                 
         self.columnconfigure(NUM_COLS * 2 + 1, weight=10)  # right pad
         

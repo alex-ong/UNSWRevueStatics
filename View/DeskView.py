@@ -13,13 +13,10 @@ from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
 
 class DeskView(tk.Frame):
-    def __init__(self, screenRes=None):        
+    def __init__(self):        
         root = tk.Tk()        
         root.config(bg='blue')
-        super().__init__(root)
-        if screenRes is None:
-            SCREEN_RESOLUTION = (str(self.winfo_screenwidth()) + 'x' + 
-                                str(self.winfo_screenheight()))
+        super().__init__(root)        
         root.geometry(SCREEN_RESOLUTION)        
         root.overrideredirect(True)  # change to windowless border        
         root.wm_title("UNSW Revue Statics")

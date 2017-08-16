@@ -1,5 +1,5 @@
 from Model import Channel
-
+import math
 COLOR_DIRECT = 'yellow'
 COLOR_PLAYBACK = 'cyan'
 COLOR_GROUP = '#00ff00'
@@ -18,4 +18,24 @@ typeColourMapping = { Channel.ValueType.DIRECT : COLOR_DIRECT,
                      GROUP : COLOR_GROUP,
                      None: COLOR_NONE}
 
+#needs to be 16:9
 SCREEN_RESOLUTION = '1920x1080'
+BASE_RESOLUTION=1920
+
+# CHANGING THEME:
+# To change font, all you have to do is modify font_size and FONT so that 
+# gui lines up nicely pixel_size doesn't need to ever be changed
+# If your font doesn't scale linearly with screen resolution, you might have to 
+# modify font_size to deal with it
+
+def screen_x():
+    return int(SCREEN_RESOLUTION.split('x')[0])
+
+def font_size(defaultSize):
+    return round(screen_x() / BASE_RESOLUTION * defaultSize)
+
+def pixel_size(defaultSize):
+    return round(screen_x() / BASE_RESOLUTION * defaultSize)
+
+FONT = 'Consolas' 
+

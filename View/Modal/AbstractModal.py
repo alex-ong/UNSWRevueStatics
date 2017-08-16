@@ -23,8 +23,8 @@ class AbstractModal(tk.Toplevel):
     def subclassRefresh(self):
         pass
     
-    #called only once, when the form is shown.
-    #override and call this first to add functionality
+    # called only once, when the form is shown.
+    # override and call this first to add functionality
     def showRefresh(self):
         self.reset()
         self.refresh()
@@ -52,3 +52,4 @@ class AbstractModal(tk.Toplevel):
                                      int(self.winfo_screenwidth() / 2 - 0.5 * w),
                                      int(self.winfo_screenheight() / 2 - 0.5 * h))        
         self.geometry(geoString)
+        

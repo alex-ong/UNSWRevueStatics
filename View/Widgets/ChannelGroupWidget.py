@@ -29,7 +29,9 @@ def bindingIsChannel(binding):
 def bindingIsGroup(binding):
     return isinstance(binding, Model.Group.Group)
 
-
+import View.ViewStyle as VS
+FADER_LABEL_FONT = (VS.FONT, VS.font_size(10))
+NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(20))
 class ChannelGroupWidget(tk.Frame):            
     def __init__(self, channelOrGroup, faderNumber, showFaderLabel, *args):
         super().__init__(*args)
@@ -47,7 +49,7 @@ class ChannelGroupWidget(tk.Frame):
         row = 0
         if (showFaderLabel):            
             faderLabelString = self.getFaderLabelString()        
-            self.faderLabel = tk.Label(self, text=faderLabelString, font=('Consolas', 10), 
+            self.faderLabel = tk.Label(self, text=faderLabelString, font=FADER_LABEL_FONT, 
                                        fg=typeColourMapping[self.dataType], bg='black')
             self.faderLabel.grid(row=row,columnspan=2)
             row += 1
@@ -56,14 +58,14 @@ class ChannelGroupWidget(tk.Frame):
             
         # Actual group or channel number ("00" to "99")
         self.numberLabel = tk.Label(self, text=str(self.faderNumber).zfill(2), 
-                                    font=('Consolas', 20), fg='grey', bg='black')
+                                    font=NUMBER_LABEL_FONT, fg='grey', bg='black')
         self.numberLabel.grid(row=row,columnspan=2)
         row += 1
         
         # Final value label        
         self.finalValue = tk.StringVar()
         self.finalValueLabel = self.createButton(self.finalValue, 'white')
-        self.finalValueLabel.config(font=('Consolas', 20))
+        self.finalValueLabel.config(font=NUMBER_LABEL_FONT)
         self.finalValueLabel.grid(row=row, columnspan=2)
         row += 1
                 
@@ -98,7 +100,8 @@ class ChannelGroupWidget(tk.Frame):
             return None      
           
     def createButton(self, stringVar, colour, size=8):
-        return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', font=('Consolas', size, 'bold'))    
+        return tk.Label(self, textvariable=stringVar, fg=colour, bg='black', 
+                        font=(VS.FONT, VS.font_size(size), 'bold'))    
     
     def getGroupValue(self):
         if self.dataType == CHANNEL:

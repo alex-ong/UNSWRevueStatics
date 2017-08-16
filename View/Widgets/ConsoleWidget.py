@@ -14,7 +14,9 @@ INVALID_COMMAND_FG = 'red'  # not sure if we're going to use this yet
 EXECUTED_COMMAND_BG = 'grey'
 NORMAL_COMMAND_BG = 'white'
 
-FONT = ('Consolas', 16, 'bold')              
+import View.ViewStyle as VS
+
+FONT = (VS.FONT, VS.font_size(16), 'bold')              
       
 NUM_PREV_COMMANDS = 3
 class ConsoleWidget(tk.Frame):
@@ -82,7 +84,6 @@ class ConsoleWidget(tk.Frame):
             if len(self.console.lastCommandResults) > i:
                 consoleHistory.append(str(self.console.lastCommandResults[i]))
         
-        if self.lastCommandResultStrings != consoleHistory:
-            print (consoleHistory)
+        if self.lastCommandResultStrings != consoleHistory:            
             self.updateHistory(consoleHistory.copy())
             

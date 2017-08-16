@@ -21,7 +21,8 @@ def autoString(value, reason=None):
 from Model import Channel
 
 NUM_COLS = 12
-
+import View.ViewStyle as VS
+LABEL_FONT = (VS.FONT, VS.font_size(12)) 
 class CompactChannelValueWidget(tk.Frame):
     def __init__(self, channelValues, *args):
         super().__init__(*args)
@@ -32,7 +33,7 @@ class CompactChannelValueWidget(tk.Frame):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)            
                 
-        self.label = tk.Label(self, text='', font=('Consolas', 12), fg='white', bg='black')                
+        self.label = tk.Label(self, text='', font=LABEL_FONT, fg='white', bg='black')                
         self.label.grid(sticky=tk.NSEW)
         self.refreshDisplay()
 

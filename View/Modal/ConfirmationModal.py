@@ -7,8 +7,10 @@ from View.Widgets.CueWidget import UP_ARROW, DOWN_ARROW
 from . import AbstractModal
 from Model.ModalForms.TimeModal.TimeModal import TimeState
 
+import View.ViewStyle as VS
+
 FG = 'white'
-FONT = ('Consolas', 28)
+FONT = (VS.FONT, VS.font_size(28))
 
     
 class ConfirmationModal(AbstractModal.AbstractModal):
@@ -21,9 +23,9 @@ class ConfirmationModal(AbstractModal.AbstractModal):
         self.border1 = tk.Frame(self, bg='grey', borderwidth=16)
         self.border1.columnconfigure(0, weight=1)
         self.border1.rowconfigure(0, weight=1)
-        self.border = tk.Frame(self.border1, bg=COLOR_NONE, borderwidth=32)
-        self.border.columnconfigure(0, minsize=400, weight=0)
-        self.border.rowconfigure(0, minsize=100, weight=0)
+        self.border = tk.Frame(self.border1, bg=COLOR_NONE, borderwidth=VS.pixel_size(32))
+        self.border.columnconfigure(0, minsize=VS.pixel_size(400), weight=0)
+        self.border.rowconfigure(0, minsize=VS.pixel_size(100), weight=0)
         
         self.title = tk.Label(self.border, bg=COLOR_NONE, fg=FG,
                               text=self.splitWords('This is a super long message that is too long'),
