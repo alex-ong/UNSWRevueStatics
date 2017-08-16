@@ -37,9 +37,10 @@ async def run_tk(root, controller, interval=GUI_REFRESH):
         if "application has been destroyed" not in e.args[0]:
             raise     
         
-if __name__ == '__main__':
+if __name__ == '__main__':    
     model = Model.DeskModel.DeskModel()
-    view = DeskView.DeskView()
+    keyboardInput = (lambda e: print(e.char))  # todo: forward to some controller
+    view = DeskView.DeskView(lambda e: print ("User pressed ", e.keysym))
     controller = Controller.LogicController.LogicController(model, view)
     
     # Start running the tkinter update() through an asyncio coroutine

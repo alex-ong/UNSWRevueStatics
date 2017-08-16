@@ -18,26 +18,29 @@ modalMapping = { TIME_MODAL: TimeModal.TimeModal,
 
 
 class ModalManager():
-    def __init__(self, modalContainer):
+    def __init__(self, modalContainer, keyboardHandler, hackMainWindow):
         self.modalForms = {}
         self.modalContainer = modalContainer
         self.myStack = []
-        
+        self.hackMainWindow = hackMainWindow  # TODO: make mainwindow a full fledged modal
         for key, value in modalContainer.data.items():
             viewClass = modalMapping[key]
-            self.modalForms[key] = viewClass(value)
+            self.modalForms[key] = viewClass(value, keyboardHandler)
             
             
+    #TODO: Upgrade main view to be a modal, so we don't have hacks everywhere.
     # ensure our stack corresponds to model layer stack.
-    def refreshDisplay(self):  # TOOD make this frame-agnostic instead of assuming only one change/frame
+    def refreshDisplay(self):
         i = 0
         unstack = False
         while i < len(self.modalContainer.stack):
             formType, form = self.modalContainer.stack[i]
             if i >= len(self.myStack):  # add to stack
+                self.hackMainWindow.root.overrideredirect(False) #hack - hide main form
+                self.hackMainWindow.root.iconify() #hack - hide main form
                 self.myStack.append(self.modalForms[formType])
                 self.myStack[i].show(form)  
-                print ("Showing", formType)
+                                            
             self.myStack[i].refresh()                      
             i += 1
         
@@ -48,9 +51,11 @@ class ModalManager():
             
         self.myStack = self.myStack[:len(self.modalContainer.stack)]
         
-        if unstack and len(self.myStack) > 0: #force bring end of stack to view
+        if unstack and len(self.myStack) > 0:  # force bring end of stack to view
             formType, form = self.modalContainer.stack[-1]
             self.myStack[-1].show(form)
-            
-        
+        # the following is huge hack!
+        elif unstack and len(self.myStack) == 0:
+            self.hackMainWindow.root.deiconify()
+            self.hackMainWindow.root.overrideredirect(True)
         

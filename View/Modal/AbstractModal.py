@@ -1,8 +1,10 @@
 import tkinter as tk
 
 class AbstractModal(tk.Toplevel):
-    def __init__(self, data, *args):
+    def __init__(self, data, keyboardHandler, *args):
+        self.keyboardHandler = keyboardHandler
         super().__init__(*args)
+        self.bind("<KeyPress>", self.keyboardHandler)
         self.data = data
         self.closeCallback = None
         self.isVisible = False

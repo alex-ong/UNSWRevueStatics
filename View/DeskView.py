@@ -3,6 +3,7 @@
 @date 2017-05-07
 '''
 import tkinter as tk
+import os
 
 from View.Widgets.FaderFrame import FaderFrame
 from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
@@ -13,7 +14,10 @@ from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
 
 class DeskView(tk.Frame):
-    def __init__(self):        
+        
+    def __init__(self, keyboardHandler=None):
+        self.keyboardHandler = keyboardHandler
+                
         root = tk.Tk()        
         root.config(bg='blue')
         super().__init__(root)        
@@ -21,8 +25,12 @@ class DeskView(tk.Frame):
         root.overrideredirect(True)  # change to windowless border        
         root.wm_title("UNSW Revue Statics")
         root.columnconfigure(0, weight=1)
-        root.rowconfigure(0,weight=1)        
-                
+        root.rowconfigure(0, weight=1)
+        
+        # the following captures input as long as the application is open        
+        root.bind('<KeyPress>', self.keyboardHandler)
+        self.root = root
+                        
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         NUM_ROWS = 3
@@ -67,7 +75,7 @@ class DeskView(tk.Frame):
         self.cueListWidget = cl
         
     def setupModalForms(self, modalModel):
-        mm = ModalManager(modalModel)
+        mm = ModalManager(modalModel, self.keyboardHandler, self)
         self.modalManager = mm
         
     def handleInput(self, dictInput):
