@@ -9,7 +9,6 @@ import json
 import collections
 
 mido.set_backend('mido.backends.pygame')
-
 client = TCPClient.CreateClient("localhost", 9999)
 
 try:
@@ -27,7 +26,7 @@ try:
                 if message.type == "control_change":
                     print(message.control)
                     print(message.value)
-                    client.sendMessage(json.dumps({message.control: message.value}))
+                    client.sendMessage(json.dumps({message.control: round(message.value*100/127)}))
 
 
 except KeyboardInterrupt:
