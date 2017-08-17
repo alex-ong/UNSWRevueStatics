@@ -58,4 +58,4 @@ class ModalManager():
         elif unstack and len(self.myStack) == 0:
             self.hackMainWindow.root.deiconify()
             self.hackMainWindow.root.overrideredirect(True)
-        
+            self.hackMainWindow.root.focus_force()

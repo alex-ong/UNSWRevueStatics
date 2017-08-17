@@ -35,6 +35,7 @@ class AbstractModal(tk.Toplevel):
         self.data = data
         self.deiconify()
         self.overrideredirect(True)
+        self.focus_force()
         self.isVisible = True
         self.showRefresh()
     
