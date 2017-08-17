@@ -15,8 +15,8 @@ def CreateServer(target, port, onRecvMessage):
     return server
     
 class ThreadedServer(StoppableThread):
-    #todo: currently if mainthread dies, calling threadedServer.stop() won't stop the internal server.
-    #this means we have a hanging thread. We should fix this.
+    # todo: currently if mainthread dies, calling threadedServer.stop() won't stop the internal server.
+    # this means we have a hanging thread. We should fix this.
     def __init__(self, target, port, onRecvMessage, *args):
         super().__init__()    
         self.target = target
@@ -34,9 +34,9 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
     def setup(self):
         # turn off nagles
         self.request.setsockopt(socket.IPPROTO_TCP,
-                                   socket.TCP_NODELAY, True)
+                                socket.TCP_NODELAY, True)
     def handle(self):    
-        #potential improvement - dont use python strings as buffer                    
+        # potential improvement - dont use python strings as buffer                    
         dataBuffer = ''
         while self.server.serverThreadAlive():
             try:                       
@@ -69,7 +69,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
                     
                     message = dataBuffer[1:endIndex]
                     self.server.onRecvMessage(message)
-                    dataBuffer = dataBuffer[endIndex+1:]
+                    dataBuffer = dataBuffer[endIndex + 1:]
             except ConnectionResetError:
                 print ("Client disconnected!")
                 break

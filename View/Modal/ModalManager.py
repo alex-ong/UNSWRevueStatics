@@ -18,17 +18,17 @@ modalMapping = { TIME_MODAL: TimeModal.TimeModal,
 
 
 class ModalManager():
-    def __init__(self, modalContainer, keyboardHandler, hackMainWindow):
+    def __init__(self, modalContainer, keyDownHandler, keyUpHandler, hackMainWindow):
         self.modalForms = {}
         self.modalContainer = modalContainer
         self.myStack = []
         self.hackMainWindow = hackMainWindow  # TODO: make mainwindow a full fledged modal
         for key, value in modalContainer.data.items():
             viewClass = modalMapping[key]
-            self.modalForms[key] = viewClass(value, keyboardHandler)
+            self.modalForms[key] = viewClass(value, keyDownHandler, keyUpHandler)
             
             
-    #TODO: Upgrade main view to be a modal, so we don't have hacks everywhere.
+    # TODO: Upgrade main view to be a modal, so we don't have hacks everywhere.
     # ensure our stack corresponds to model layer stack.
     def refreshDisplay(self):
         i = 0
@@ -36,8 +36,8 @@ class ModalManager():
         while i < len(self.modalContainer.stack):
             formType, form = self.modalContainer.stack[i]
             if i >= len(self.myStack):  # add to stack
-                self.hackMainWindow.root.overrideredirect(False) #hack - hide main form
-                self.hackMainWindow.root.iconify() #hack - hide main form
+                self.hackMainWindow.root.overrideredirect(False)  # hack - hide main form
+                self.hackMainWindow.root.iconify()  # hack - hide main form
                 self.myStack.append(self.modalForms[formType])
                 self.myStack[i].show(form)  
                                             

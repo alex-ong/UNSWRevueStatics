@@ -32,19 +32,18 @@ class ThreadedClient(StoppableThread.StoppableThread):
     def run(self):        
         # Create a socket (SOCK_STREAM means a TCP socket)
         while not self.stopped():
-            try:
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                    # Connect to server and send data    
-                    sock.connect((self.target, self.port))
-                    while not self.stopped():
-                        try:
-                            item = self.messageQueue.get_nowait()
-                        except queue.Empty:
-                            time.sleep(0.01)
-                            continue
-                        sock.sendall(bytes(START_TOKEN + item + END_TOKEN, "utf-8"))    
-            except: #reconnect on any error
-                pass
+            
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                # Connect to server and send data    
+                sock.connect((self.target, self.port))
+                while not self.stopped():
+                    try:
+                        item = self.messageQueue.get_nowait()
+                    except queue.Empty:
+                        time.sleep(0.01)
+                        continue
+                    sock.sendall(bytes(START_TOKEN + item + END_TOKEN, "utf-8"))    
+        
 if __name__ == '__main__':
     client = CreateClient('localhost', 9999)
     import random

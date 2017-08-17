@@ -15,8 +15,9 @@ from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
 
 class DeskView(tk.Frame):
         
-    def __init__(self, keyboardHandler=None):
-        self.keyboardHandler = keyboardHandler
+    def __init__(self, keyDownHandler, keyUpHandler):
+        self.keyDownHandler = keyDownHandler
+        self.keyUpHandler = keyUpHandler
                 
         root = tk.Tk()        
         root.config(bg='blue')
@@ -28,7 +29,8 @@ class DeskView(tk.Frame):
         root.rowconfigure(0, weight=1)
         
         # the following captures input as long as the application is open        
-        root.bind('<KeyPress>', self.keyboardHandler)
+        root.bind('<KeyPress>', self.keyDownHandler)
+        root.bind('<KeyRelease>', self.keyUpHandler)
         self.root = root
                         
         self.grid(sticky=tk.NSEW)
@@ -75,7 +77,7 @@ class DeskView(tk.Frame):
         self.cueListWidget = cl
         
     def setupModalForms(self, modalModel):
-        mm = ModalManager(modalModel, self.keyboardHandler, self)
+        mm = ModalManager(modalModel, self.keyDownHandler, self.keyUpHandler, self)
         self.modalManager = mm
         
     def handleInput(self, dictInput):

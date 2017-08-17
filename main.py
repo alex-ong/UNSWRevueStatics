@@ -1,7 +1,7 @@
 import Controller.LogicController
 import Model.DeskModel
 import View.DeskView as DeskView
-
+from Controller.KeyboardDaemon import KeyboardDaemon
 
 import asyncio
 import tkinter
@@ -39,8 +39,9 @@ async def run_tk(root, controller, interval=GUI_REFRESH):
         
 if __name__ == '__main__':    
     model = Model.DeskModel.DeskModel()
-    keyboardInput = (lambda e: print(e.char))  # todo: forward to some controller
-    view = DeskView.DeskView(lambda e: print ("User pressed ", e.keysym))
+    
+    keyboardInput = KeyboardDaemon()
+    view = DeskView.DeskView(keyboardInput.handleKeyDown, keyboardInput.handleKeyUp)
     controller = Controller.LogicController.LogicController(model, view)
     
     # Start running the tkinter update() through an asyncio coroutine
