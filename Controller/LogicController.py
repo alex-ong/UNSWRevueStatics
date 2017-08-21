@@ -4,7 +4,8 @@ import Networking.TCPServer as TCPServer
 import json
 import collections
 from Controller.IOConverter import IOConverter
-
+import Model.OptionButtons as OptionButtons
+ 
 class LogicController(object):
     def __init__(self, model, view, host='localhost', port=9999):
         self.model = model
@@ -15,6 +16,7 @@ class LogicController(object):
         self.view.setupConsole(model.console)
         self.view.setupCueList(model.cueList)
         self.view.setupModalForms(model.modals)
+        self.view.setupFunctionButtons(OptionButtons.getInstance().getCurrentState)
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
         
         self.inputEventMaster = IOConverter()

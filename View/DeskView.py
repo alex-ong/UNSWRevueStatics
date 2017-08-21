@@ -12,7 +12,7 @@ from View.Widgets.CueListWidget import CueListWidget
 from View.Modal.ModalManager import ModalManager
 from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
-
+from View.Widgets.FunctionButtonWidget import FunctionButtonFrame
 class DeskView(tk.Frame):
         
     def __init__(self, keyDownHandler, keyUpHandler):
@@ -36,11 +36,13 @@ class DeskView(tk.Frame):
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         NUM_ROWS = 3
-        NUM_COLS = 2
+        NUM_COLS = 3
         for i in range(NUM_ROWS):
             self.rowconfigure(i, weight=1)
         for i in range(NUM_COLS):
             self.columnconfigure(i, weight=1)
+        self.columnconfigure(2, weight=0)
+        
         self.channelFrame = None
         self.groupFrame = None
         self.faderFrame = None
@@ -51,7 +53,7 @@ class DeskView(tk.Frame):
     # called by model during setup
     def setupChannels(self, channels):
         cf = ChannelGroupFrame(channels, CHANNEL, self)
-        cf.grid(row=0, column=1, sticky=tk.NSEW)
+        cf.grid(row=0, column=1, sticky=tk.NSEW, columnspan=2)
         self.channelFrame = cf    
     
     # not used
@@ -63,7 +65,7 @@ class DeskView(tk.Frame):
     # todo: change faderLayout to "x x x  x" layout 
     def setupFaders(self, getFaderFunc, numFaders, faderLayout=[18, 9]):        
         ff = FaderFrame(getFaderFunc, numFaders, faderLayout, self)
-        ff.grid(row=1, column=1, sticky=tk.NSEW)
+        ff.grid(row=1, column=1, sticky=tk.NSEW, columnspan=2)
         self.faderFrame = ff
     
     def setupConsole(self, console):
@@ -71,6 +73,11 @@ class DeskView(tk.Frame):
         cc.grid(row=2, column=1, sticky=tk.NSEW)
         self.consoleWidget = cc
         
+    def setupFunctionButtons(self, func):
+        fb = FunctionButtonFrame(func, self)
+        fb.grid(row=2, column=2, sticky=tk.NSEW)
+        self.functionButtonFrame = fb
+    
     def setupCueList(self, cueList):
         cl = CueListWidget(cueList, self)
         cl.grid(row=0, column=0, rowspan=3, sticky=tk.NSEW)
@@ -89,3 +96,4 @@ class DeskView(tk.Frame):
         self.consoleWidget.refreshDisplay()
         self.cueListWidget.refreshDisplay()
         self.modalManager.refreshDisplay()
+        self.functionButtonFrame.refreshDisplay()

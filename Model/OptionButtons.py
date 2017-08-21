@@ -42,6 +42,9 @@ class OptionButtons(object):
         index = int(rawButton.replace('S','')) - 1        
         return self.currentState[index]
     
+    def getCurrentState(self):
+        return self.currentState
+    
     def getNiceText(self):
         result = []
         for item in self.currentState:
