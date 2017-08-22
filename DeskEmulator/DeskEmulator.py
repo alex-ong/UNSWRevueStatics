@@ -43,8 +43,7 @@ class Controller(object):
         
     def update(self):
         state = self.deskView.getState()
-        if (state != self.lastState):
-            print (state)
+        if (state != self.lastState):            
             self.lastState = state
             self.client.sendMessage(json.dumps(state))
 

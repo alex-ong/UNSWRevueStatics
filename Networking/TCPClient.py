@@ -18,7 +18,9 @@ def CreateClient(target, port):
     client.start()
     
     return client
-    
+
+TIME_OUT = 0.3 #timeout in seconsd
+      
 class ThreadedClient(StoppableThread.StoppableThread):
     def __init__(self, target, port, *args):
         self.target = target
@@ -33,6 +35,10 @@ class ThreadedClient(StoppableThread.StoppableThread):
         # Create a socket (SOCK_STREAM means a TCP socket)
         while not self.stopped():            
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            
+                sock.setsockopt(socket.IPPROTO_TCP,
+                                socket.TCP_NODELAY, True)
+                sock.settimeout(TIME_OUT)
                 try:
                     # Connect to server and send data                    
                     sock.connect((self.target, self.port))
@@ -42,9 +48,15 @@ class ThreadedClient(StoppableThread.StoppableThread):
                         except queue.Empty:
                             time.sleep(0.01)
                             continue
+                        print ("found sometihing to send")
                         sock.sendall(bytes(START_TOKEN + item + END_TOKEN, "utf-8"))    
                 except ConnectionRefusedError:
-                    continue
+                    continue # server isn't alive yet
+                except ConnectionResetError:
+                    continue # server restarted
+                except socket.timeout:                    
+                    continue # timed out on a response. restart.
+                
 if __name__ == '__main__':
     client = CreateClient('localhost', 9999)
     import random
