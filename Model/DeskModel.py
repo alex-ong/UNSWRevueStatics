@@ -12,6 +12,7 @@ from . import Console
 from . import CueList
 from . import OptionButtons
 from . import ModalContainer
+from . import DMXOutput
 from _collections import OrderedDict
 
 from .CueList import PLAYBACK_COMMANDS
@@ -20,6 +21,7 @@ from Model.ModalForms.ModalFormConsts import MENU_MODAL
 #validOperators for main console
 from Model.CommandProgrammer.MainConsole import validOperators 
 from Model.FaderValues import FADER_COMMANDS, NEXT_FADERS, PREV_FADERS
+
 
 class DeskModel(object):
     def __init__(self):
@@ -59,7 +61,7 @@ class DeskModel(object):
         
         self.console = Console.Console(self.programmer, validOperators)        
         
-        
+        self.finalDMXOutput = DMXOutput.DMXOutput(self) 
     
     def saveSettings(self):
         self.config.writeGeneralSettings(self.settings)
@@ -218,3 +220,10 @@ class DeskModel(object):
     
     def deleteAllCues(self):
         self.cueList.deleteAllCues()
+    
+    ##############################################
+    # Get Final Universe Output
+    ##############################################
+    def getDMXOutput(self):
+        return self.finalDMXOutput.getOutput()
+    

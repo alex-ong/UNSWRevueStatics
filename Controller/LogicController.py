@@ -30,7 +30,8 @@ class LogicController(object):
         self.handleInput() #controller update        
         self.model.update(timeDelta)   #model update        
         self.view.refreshDisplay()  #view update                
-            
+        self.handleOutput()
+        
     def handleInput(self):
         inputEvents = self.inputEventMaster.getEvents()
         if inputEvents != {}:
@@ -41,7 +42,10 @@ class LogicController(object):
                     buttonEvents = inputEvents[key]
                     for buttonEvent in buttonEvents:
                         self.handleButtonInput(key, buttonEvent.down)
-        
+    
+    def handleOutput(self):
+        outputArray = self.model.getDMXOutput() 
+        #TODO: Export via TCP
         
             
     def handleSliderInput(self, sliderName, value):

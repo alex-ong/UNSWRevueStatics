@@ -46,6 +46,9 @@ class KeyboardDaemon(object):
     def __init__(self):
         self.client = TCPClient.CreateClient('localhost', 9999)
     
+    def stop(self):
+        self.client.stop()
+        
     def convertKey(self, keysym):
         if keysym in CONVERSION:
             return CONVERSION[keysym]
