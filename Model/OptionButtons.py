@@ -34,8 +34,7 @@ class OptionButtons(object):
         if _instance is not None:
             raise ValueError("Please use getInstance. Do not directly construct this class")
     
-    def setState(self, state):
-        print ("Setting optionButtonBindings to", state)
+    def setState(self, state):        
         self.currentState = state
             
     def getCommand(self, rawButton):

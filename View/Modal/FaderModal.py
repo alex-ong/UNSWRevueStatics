@@ -4,6 +4,11 @@ from View.ViewStyle import COLOR_NONE
 from View.Modal import AbstractModal
 from View.Widgets import ConsoleWidget
 from View.Widgets.FaderPatchWidget import FaderPatchWidget
+from View.Widgets.FunctionButtonWidget import FunctionButtonFrame
+
+#bad hack - using a global directly instead of asking model for it
+from Model.OptionButtons import getInstance as OptionFunc
+
 import View.ViewStyle as VS 
 FG = 'white'
 FG_NONE = 'red'
@@ -23,15 +28,18 @@ class FaderModal(AbstractModal.AbstractModal):
         self.patchFrame = FaderPatchFrame(self.data, self)        
         self.selectedFrame = SelectedBindingLabel(self.data,self)
         self.consoleWidget = ConsoleWidget.ConsoleWidget(self.data.console, self)
+        self.functionButtonFrame = FunctionButtonFrame(OptionFunc().getCurrentState, self)
         
         self.columnconfigure(0, weight=1)        
         self.rowconfigure(0, weight=VS.pixel_size(10))
         self.rowconfigure(1, minsize=VS.pixel_size(50))
   
         self.scaleToScreen()                        
-        self.patchFrame.grid(sticky=tk.NSEW) #row = 0   
-        self.selectedFrame.grid(sticky=tk.NSEW) #row = 1
-        self.consoleWidget.grid(sticky=tk.NSEW) #row = 2
+        self.patchFrame.grid(sticky=tk.NSEW,row=0, columnspan=2) #row = 0   
+        self.selectedFrame.grid(sticky=tk.NSEW,row=1, columnspan=2) #row = 1
+        self.consoleWidget.grid(sticky=tk.NSEW,row=2) #row = 2, column = 1
+        self.functionButtonFrame.grid(sticky=tk.NSEW,row=2,column=2) #row = 2, column = 2
+        
         # emptyness at bottom since windows taskbar gets in the way.  
         self.rowconfigure(3, weight=1,minsize=VS.pixel_size(50)) 
         
@@ -45,7 +53,7 @@ class FaderModal(AbstractModal.AbstractModal):
         self.consoleWidget.refreshDisplay()
         self.patchFrame.refreshDisplay()
         self.selectedFrame.refreshDisplay()
-
+        self.functionButtonFrame.refreshDisplay()
     
 NUM_COLS = 18
 NUM_ROWS = 2
