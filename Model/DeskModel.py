@@ -13,6 +13,7 @@ from . import CueList
 from . import OptionButtons
 from . import ModalContainer
 from . import DMXOutput
+from . import GrandMaster
 from _collections import OrderedDict
 
 from .CueList import PLAYBACK_COMMANDS
@@ -61,6 +62,7 @@ class DeskModel(object):
         
         self.console = Console.Console(self.programmer, validOperators)        
         
+        self.grandMaster = GrandMaster.GrandMaster()
         self.finalDMXOutput = DMXOutput.DMXOutput(self) 
     
     def saveSettings(self):
@@ -73,15 +75,17 @@ class DeskModel(object):
     ###############################################################
     # Model input handler - passes it to current modal if necessary
     ###############################################################         
-    def handleSliderInput(self, sliderName, value):        
+    def handleSliderInput(self, sliderName, value):            
         if not (self.modals.isEmpty()):
             self.modals.handleSliderInput(sliderName, value)
         else:
             # get relevant slider
             bindings = self.faderBindings[self.currentfaderBinding]
-            # get slider number        
+            # get slider number         
             sliderNumber = int(sliderName.replace('slider', ''))
-            
+            if (sliderNumber == GrandMaster.SLIDER_NUMBER):
+                self.grandMaster.setPerc(value)
+                
             # change value of group or channel, but only if binding isn't empty
             if sliderNumber in bindings:
                 toChange = bindings[sliderNumber]                    

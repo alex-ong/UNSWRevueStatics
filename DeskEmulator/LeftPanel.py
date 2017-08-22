@@ -34,8 +34,8 @@ class LeftPanel(tk.Frame):
                 
         self.buttons = [dbo, back, rel, nxt]
         
-        grandMaster = SliderPlusButton.SliderPlusButton(30, "GM", self)
-        grandMaster.grid(row=0, column=2, rowspan=6)
+        self.grandMaster = SliderPlusButton.SliderPlusButton(-1, "GM", self)
+        self.grandMaster.grid(row=0, column=2, rowspan=6)
         for i in range(0, 9):            
             sliderPair = SliderPlusButton.SliderPlusButton(19 + i, 19 + i, self)
             sliderPair.grid(row=0, column=4 + i, rowspan=6)
@@ -48,4 +48,5 @@ class LeftPanel(tk.Frame):
             result.update(button.getState())
         for slider in self.sliders:
             result.update(slider.getState())
+        result.update(self.grandMaster.getState())
         return result
