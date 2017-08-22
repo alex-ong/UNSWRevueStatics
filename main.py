@@ -48,10 +48,13 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run_tk(view, controller, 0.001))
     
-    controller.sliderInput.stop()
+    controller.sliderInput.stop()    
     controller.sliderInput.kill_server()
+    
     keyboardInput.stop()
-    print ("All Done - printing hanging threads")
+    
+    time.sleep(0.5) #give the threads a moment to close, but don't specifically wait
+    print ("All Done - printing hanging threads...")    
     for t in threading.enumerate():
         if (t != threading.current_thread()):
             print (t)

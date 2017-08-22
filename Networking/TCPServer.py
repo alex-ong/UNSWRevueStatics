@@ -27,10 +27,14 @@ class ThreadedServer(StoppableThread):
         self.server = socketserver.ThreadingTCPServer((self.target, self.port), MyTCPHandler)
         self.server.onRecvMessage = self.onRecvMessage        
         self.server.serverThreadAlive = self.isAlive
-        self.server.serve_forever()
+        try:
+            self.server.serve_forever()
+        except OSError: #OSError occurs on server_close()
+            pass
     
-    def kill_server(self):
+    def kill_server(self):    
         self.server.server_close()
+        
         
 class MyTCPHandler(socketserver.BaseRequestHandler):    
         
