@@ -4,16 +4,18 @@ A bunch of cueWidgets...
 import tkinter as tk
 NUM_CUES = 6
 FROM_END = 2
-
+BG = '#000000'
 from View.Widgets.CueWidget import CueWidget 
-
+import View.ViewStyle as VS
 class CueListWidget(tk.Frame):
     def __init__(self, cueList, *args):
-        self.cueList = cueList
+        self.cueList = cueList        
         super().__init__(*args)
+        self.config(bg=BG)
         self.widgets = []
                 
         self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=0, minsize=1)
         for i in range(NUM_CUES):
             self.rowconfigure(i, weight=1)            
             widget = CueWidget(self)

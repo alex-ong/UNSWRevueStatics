@@ -11,12 +11,14 @@ class LogicController(object):
         self.model = model
         self.view = view
         
+        self.view.setupTopBar(model.grandMaster.getValue)
         self.view.setupChannels(model.channelValues)        
         self.view.setupFaders(model.getFaderValues,model.getNumFaders()) 
         self.view.setupConsole(model.console)
         self.view.setupCueList(model.cueList)
         self.view.setupModalForms(model.modals)
         self.view.setupFunctionButtons(OptionButtons.getInstance().getCurrentState)
+        
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
         
         self.inputEventMaster = IOConverter()

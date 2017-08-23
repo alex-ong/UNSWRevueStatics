@@ -16,9 +16,9 @@ RELEASE = 'purple'
 
 import View.ViewStyle as VS
 FONT = (VS.FONT, VS.font_size(10))
-FONT_HEADING = (VS.FONT, VS.font_size(14),'bold')
-FONT_ACTIVE_CUE = (VS.FONT, VS.font_size(25),'bold')
-FONT_DBO_CUE = (VS.FONT, VS.font_size(16),'bold')
+FONT_HEADING = (VS.FONT, VS.font_size(14), 'bold')
+FONT_ACTIVE_CUE = (VS.FONT, VS.font_size(25), 'bold')
+FONT_DBO_CUE = (VS.FONT, VS.font_size(16), 'bold')
 
 class ChannelGroupValueCompact(tk.Frame):
     def __init__(self, *args):
@@ -112,17 +112,19 @@ class DBOChannelFrame(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
         self.config(bg=BG)
-        self.label = tk.Label(self, text='DBO (All values 0)', font=FONT_DBO_CUE, bg=BG,fg=FG_MAIN)
+        self.label = tk.Label(self, text='DBO (All values 0)', font=FONT_DBO_CUE, bg=BG, fg=FG_MAIN)
         self.label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         
 class CueNumberFrame(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
+        self.configure(bg='red')
         self.cueMain = tk.StringVar()
         self.cueSub = tk.StringVar()
-        self.columnconfigure(0, minsize=VS.pixel_size(40))
-        self.columnconfigure(1, minsize=VS.pixel_size(50))
+        self.columnconfigure(0, minsize=VS.pixel_size(40), weight=1)
+        self.columnconfigure(1, minsize=VS.pixel_size(50), weight=1)
         self.config(bg=BG_TITLE)
+        
         cueMainLabel = tk.Label(self,
                                 textvariable=self.cueMain,
                                 bg=BG_TITLE,
@@ -227,7 +229,8 @@ class CueWidget(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
         self.config(bg='black')
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure(0, weight=0)
+        self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=0, minsize=VS.pixel_size(50))
         self.columnconfigure(1, weight=1, minsize=VS.pixel_size(230))
         
