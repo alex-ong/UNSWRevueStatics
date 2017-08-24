@@ -48,7 +48,6 @@ class ThreadedClient(StoppableThread.StoppableThread):
                         except queue.Empty:
                             time.sleep(0.01)
                             continue
-                        print ("found sometihing to send")
                         sock.sendall(bytes(START_TOKEN + item + END_TOKEN, "utf-8"))    
                 except ConnectionRefusedError:
                     continue # server isn't alive yet

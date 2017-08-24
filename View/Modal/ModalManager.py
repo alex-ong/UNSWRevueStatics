@@ -35,9 +35,7 @@ class ModalManager():
         unstack = False
         while i < len(self.modalContainer.stack):
             formType, form = self.modalContainer.stack[i]
-            if i >= len(self.myStack):  # add to stack
-                self.hackMainWindow.root.overrideredirect(False)  # hack - hide main form
-                self.hackMainWindow.root.iconify()  # hack - hide main form
+            if i >= len(self.myStack):  # add to stack                
                 self.myStack.append(self.modalForms[formType])
                 self.myStack[i].show(form)  
                                             
