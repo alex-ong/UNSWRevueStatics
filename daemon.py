@@ -2,19 +2,21 @@
 
 import sys
 sys.path.append('./Networking')  # hack
-import mido
 import TCPClient
 import json
 import collections
+import time
+import rtmidi
+from rtmidi.midiutil import open_midiinput
+from rtmidi.midiconstants import (CONTROLLER_CHANGE, NOTE_ON, NOTE_OFF)
 
-mido.set_backend('mido.backends.pygame')
 client = TCPClient.CreateClient("localhost", 9999)
 currentState = {}
 lastState = {}
 
-midiMappings = {
+MIDI_MAP = {
     "buttons": {
-        0: {
+        1: {
             0: 'b_slider1',
             1: 'b_slider2',
             2: 'b_slider3',
@@ -34,8 +36,8 @@ midiMappings = {
             16: 'b_slider17',
             17: 'b_slider18'
         },
-        1: {
-            0: 'b_slider30',
+        2: {
+            0: 'b_slider-1',
             1: 'b_slider19',
             2: 'b_slider20',
             3: 'b_slider21',
@@ -52,7 +54,7 @@ midiMappings = {
         },
     },
     "sliders": {
-        0: {
+        1: {
             0: 'slider1',
             1: 'slider2',
             2: 'slider3',
@@ -72,8 +74,8 @@ midiMappings = {
             16: 'slider17',
             17: 'slider18'
         },
-        1: {
-            0: 'slider30',
+        2: {
+            0: 'slider-1',
             1: 'slider19',
             2: 'slider20',
             3: 'slider21',
@@ -87,22 +89,40 @@ midiMappings = {
     }
 }
 
+class MidiInputHandler(object):
+    def __call__(self, event, data=None):
+        message, deltatime = event
+        channel = (message[0] & 0xF) + 1
+        status = message[0] & 0xF0
+        if status == NOTE_OFF or status == NOTE_ON:
+            currentState.update({MIDI_MAP["buttons"][channel][message[1]]: status == NOTE_ON})
+        if status == CONTROLLER_CHANGE:
+            currentState.update({MIDI_MAP["sliders"][channel][message[1]]: round(message[2]*100/127)})
+
 try:
-    with mido.open_input() as port:
-        print('Using {}'.format(port))        
-        while True:
-            #Buffer updates
-            for message in port.iter_pending():
-                # print('Received {}'.format(message))
-                if message.type == "note_off" or message.type == "note_on":
-                    currentState.update({midiMappings["buttons"][message.channel][message.note]: message.type == "note_on"})
-                if message.type == "control_change":
-                    currentState.update({midiMappings["sliders"][message.channel][message.control]: round(message.value*100/127)})
+    midiin, port_name = open_midiinput(0)
+    midiin1, port_name1 = open_midiinput(1)
+except (EOFError, KeyboardInterrupt):
+    sys.exit()
 
-            #Send updates 
-            if currentState != lastState:
-                lastState = currentState.copy()
-                client.sendMessage(json.dumps(currentState))
+print("Attaching MIDI input callback handler.")
+midiin.set_callback(MidiInputHandler())
+midiin1.set_callback(MidiInputHandler())
 
+print("Entering main loop. Press Control-C to exit.")
+try:
+    # Just wait for keyboard interrupt,
+    # everything else is handled via the input callback.
+    while True:
+        if currentState != lastState:
+            lastState = currentState.copy()
+            client.sendMessage(json.dumps(currentState))
+        time.sleep(0.01)
 except KeyboardInterrupt:
-    pass
+    print('Interrupt')
+finally:
+    print("Exit.")
+    midiin.close_port()
+    midiin1.close_port()
+    del midiin
+    del midiin1
