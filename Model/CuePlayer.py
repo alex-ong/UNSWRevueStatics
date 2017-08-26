@@ -30,8 +30,8 @@ class PlayableCue(object):
         
     def _play(self):
         self.mode = PlayableCue.MODE_PLAY
-        self.target = self.cue.upTime.toFloat()
-        
+        self.target = self.cue.upTime.toFloat()    
+            
     def stop(self):
         if self.mode != PlayableCue.MODE_STOP:
             self.mode = PlayableCue.MODE_STOP
@@ -97,8 +97,17 @@ class CuePlayer(object):
             cue.instantStop()
             
     def playCue(self, cue):
-        self.clear()
-        self.currentCues.append(PlayableCue(cue, self._removeCue))
+        #if cue exists, play it
+        exists = False        
+        for playableCue in self.currentCues:
+            if playableCue.cue == cue:                
+                exists = True
+                break
+        
+        if not exists:        
+            #stop all existing cues
+            self.clear()
+            self.currentCues.append(PlayableCue(cue, self._removeCue))
         
     def update(self, deltaTime):
         for cue in self.currentCues:

@@ -127,6 +127,7 @@ class CueList(object):
                 allKeys = self.data.keys()
                 index = allKeys.index(self.currentCue)            
                 self.currentCue = allKeys[max(index - 1, 0)]
+                self.player.playCue(self.data[self.currentCue])
         elif commandName == RELEASE:
             self.player.release()
         else:
