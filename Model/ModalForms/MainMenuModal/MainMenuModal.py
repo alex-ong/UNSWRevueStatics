@@ -8,7 +8,7 @@ mainMenuOptions = [
                    ("Patch Menu", PATCH_MODAL),
                    ("Clear all Cues", DELETE_CUES_MODAL),
                    ("Default Fade times", TIME_MODAL),
-                   ("Backup show", None)
+                   ("Backup show", CONFIRM_BACKUP_MODAL)
                    ]
                    
 # only works up to 9 though.                   

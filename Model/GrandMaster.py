@@ -17,4 +17,9 @@ class GrandMaster(object):
         else:
             return self.perc
     
+    def getRawPerc(self):
+        return self.perc
+    
+    def getDBO(self):
+        return self.DBO 
         

@@ -13,6 +13,8 @@ def GenerateSelectHandler(menuType, model, modalContainer):
         return GroupModalSelectHandler(model, modalContainer)
     elif menuType == FADER_MODAL:
         return FaderModalSelectHandler(model, modalContainer)
+    elif menuType == CONFIRM_BACKUP_MODAL:
+        return ConfirmBackupSelectHandler(model, modalContainer)
     elif menuType is None:
         return None
     else:
@@ -32,6 +34,8 @@ def GenerateFinishHandler(menuType, model, modalContainer):
         return GroupModalFinishHandler(model, modalContainer)
     elif menuType == FADER_MODAL:
         return FaderModalFinishHandler(model, modalContainer)
+    elif menuType == CONFIRM_BACKUP_MODAL:
+        return ConfirmBackupFinishHandler(model, modalContainer)
     elif menuType is None:
         return None
     else:
@@ -200,3 +204,21 @@ class FaderModalSelectHandler(AbstractMainMenuSelectHandler):
     def subClassGetFormData(self):        
         return (self.model.faderBindings, self.writeReadBindings)
 
+############################
+# ConfirmationModal
+############################
+class ConfirmBackupFinishHandler(AbstractMainMenuFinishHandler):    
+    def getMenuType(self):
+        return CONFIRMATION_MODAL
+    
+    def closeForm(self, response, data):
+        self.closeFormSubclass(response, data)
+        self.modalContainer.popStack()    
+            
+ 
+class ConfirmBackupSelectHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return CONFIRMATION_MODAL
+        
+    def subClassGetFormData(self):        
+        return ('Confirm backup of all Data?')

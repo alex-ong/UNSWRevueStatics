@@ -114,6 +114,10 @@ class DeskModel(object):
             if buttonName is None: #catch if we bound to nothing
                 return
         
+        if buttonName == 'DBO' and buttonPressed:
+            self.grandMaster.toggleDBO()            
+            return
+        
         if not self.modals.isEmpty():
             self.modals.handleInput(buttonName, buttonPressed)
         else:

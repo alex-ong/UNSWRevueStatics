@@ -18,7 +18,7 @@ class TopBar(tk.Frame):
         
         self.rowconfigure(0, weight=1)
         
-        self.dboWidget = DBOWidget.DBOWidget(getPerc, self)
+        self.dboWidget = DBOWidget.DBOWidget(getPerc[0], getPerc[1], self)
         self.timeWidget = SystemTimeWidget.SystemTimeWidget(self)
         
         self.dboWidget.grid(row=0, column=0, sticky=tk.W)
