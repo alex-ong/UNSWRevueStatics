@@ -4,6 +4,8 @@ import Networking.TCPServer as TCPServer
 import json
 import collections
 from Controller.IOConverter import IOConverter
+from Controller.DMXOutputter import DMXOutputter
+
 import Model.OptionButtons as OptionButtons
  
 class LogicController(object):
@@ -20,7 +22,7 @@ class LogicController(object):
         self.view.setupFunctionButtons(OptionButtons.getInstance().getCurrentState)
         
         self.sliderInput = TCPServer.CreateServer(host, port, self.receiveInput)
-        
+        self.dmxSender = DMXOutputter(self.model.getDMXOutput)
         self.inputEventMaster = IOConverter()
         
     # called when we receive network input
@@ -46,9 +48,7 @@ class LogicController(object):
                         self.handleButtonInput(key, buttonEvent.down)
     
     def handleOutput(self):
-        outputArray = self.model.getDMXOutput() 
-        #TODO: Export via TCP
-        
+        self.dmxSender.update()        
             
     def handleSliderInput(self, sliderName, value):
         self.model.handleSliderInput(sliderName, value)
