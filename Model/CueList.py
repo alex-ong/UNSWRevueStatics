@@ -117,14 +117,16 @@ class CueList(object):
                     
     def handleCueCommand(self, commandName):        
         if commandName == NEXT:
-            self.player.playCue(self.data[self.currentCue])
-            allKeys = self.data.keys()
-            index = allKeys.index(self.currentCue)            
-            self.currentCue = allKeys[min(index + 1, len(allKeys) - 1)]
-        elif commandName == BACK:            
-            allKeys = self.data.keys()
-            index = allKeys.index(self.currentCue)            
-            self.currentCue = allKeys[max(index - 1, 0)]
+            if self.currentCue is not None:
+                self.player.playCue(self.data[self.currentCue])
+                allKeys = self.data.keys()
+                index = allKeys.index(self.currentCue)            
+                self.currentCue = allKeys[min(index + 1, len(allKeys) - 1)]
+        elif commandName == BACK:
+            if self.currentCue is not None:            
+                allKeys = self.data.keys()
+                index = allKeys.index(self.currentCue)            
+                self.currentCue = allKeys[max(index - 1, 0)]
         elif commandName == RELEASE:
             self.player.release()
         else:
