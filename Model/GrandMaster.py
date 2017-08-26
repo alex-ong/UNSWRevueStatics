@@ -3,10 +3,14 @@ class GrandMaster(object):
     def __init__(self):
         self.perc = 1.0
         self.DBO = False
+        self.flash = False
     
     def setPerc(self, perc):
         self.perc = perc
     
+    def setFlash(self, flash):
+        self.flash = flash
+        
     def toggleDBO(self):
         self.DBO = not self.DBO
         
@@ -14,10 +18,13 @@ class GrandMaster(object):
         if self.DBO:
             return 0.0
         else:
-            return self.perc
+            return self.getSliderPerc()
     
-    def getRawPerc(self):
-        return self.perc
+    def getSliderPerc(self):
+        if self.flash:
+            return 100
+        else:
+            return self.perc
     
     def getDBO(self):
         return self.DBO 

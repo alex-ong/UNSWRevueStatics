@@ -13,7 +13,7 @@ class LogicController(object):
         self.model = model
         self.view = view
         
-        self.view.setupTopBar((model.grandMaster.getRawPerc,model.grandMaster.getDBO))
+        self.view.setupTopBar((model.grandMaster.getSliderPerc,model.grandMaster.getDBO))
         self.view.setupChannels(model.channelValues)        
         self.view.setupFaders(model.getFaderValues,model.getNumFaders()) 
         self.view.setupConsole(model.console)

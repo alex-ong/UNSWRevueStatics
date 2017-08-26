@@ -19,7 +19,7 @@ from _collections import OrderedDict
 from .CueList import PLAYBACK_COMMANDS
 from Model.ModalForms.ModalFormConsts import MENU_MODAL
 
-#validOperators for main console
+# validOperators for main console
 from Model.CommandProgrammer.MainConsole import validOperators 
 from Model.FaderValues import FADER_COMMANDS, NEXT_FADERS, PREV_FADERS
 
@@ -33,7 +33,7 @@ class DeskModel(object):
         
         self.patching = self.config.readDMXBindings(defaultChannels)
         self.faderBindings = self.config.readFaderBindings(numFaders, defaultChannels)
-        self.groupBindings = self.config.readGroupBindings(numFaders*2)
+        self.groupBindings = self.config.readGroupBindings(numFaders * 2)
         self.channelValues = ChannelValues.ChannelValues(self.patching)    
         self.groupValues = GroupValues.GroupValues(self.groupBindings, self.channelValues)
         
@@ -99,9 +99,11 @@ class DeskModel(object):
                     groupNumber = int(toChange.replace('group', ''))
                     self.groupValues[groupNumber].setDirectValue(value)
             
-    def handleFlash(self, faderNumber, buttonPressed):
+    def handleFlash(self, faderNumber, buttonPressed):        
         bindings = self.faderBindings[self.currentfaderBinding]
-        if faderNumber in bindings:
+        if faderNumber == GrandMaster.SLIDER_NUMBER:
+            self.grandMaster.setFlash(buttonPressed)
+        elif faderNumber in bindings:
             toChange = bindings[faderNumber]        
             value = 100 if buttonPressed else 0        
                 
@@ -115,7 +117,7 @@ class DeskModel(object):
         # first, we remap virtual S1-S4 keys to current binding.        
         if buttonName in OptionButtons.RAW_BUTTONS:
             buttonName = OptionButtons.getInstance().getCommand(buttonName)
-            if buttonName is None: #catch if we bound to nothing
+            if buttonName is None:  # catch if we bound to nothing
                 return
         
         if buttonName == 'DBO' and buttonPressed:
@@ -133,12 +135,12 @@ class DeskModel(object):
                     return
                 self.handleFlash(faderNumber, buttonPressed)
             elif buttonPressed:  # we only care about keyDown
-                #now, if it's a playback command handle it
+                # now, if it's a playback command handle it
                 if buttonName in PLAYBACK_COMMANDS:
                     self.handlePlaybackCommand(buttonName)
                 elif buttonName in FADER_COMMANDS:
                     self.handleFaderCommand(buttonName)                
-                else: #otherwise we add the command to console
+                else:  # otherwise we add the command to console
                     self.handleConsoleInput(buttonName)
     def handleFaderCommand(self, buttonName):
         if buttonName == NEXT_FADERS:
@@ -188,21 +190,21 @@ class DeskModel(object):
         return result
     
     ##################################
-    #refresh bindings from file
+    # refresh bindings from file
     ##################################
     def refreshGroupBindings(self):
-        self.groupBindings = self.config.readGroupBindings(self.getNumFaders()*2) 
+        self.groupBindings = self.config.readGroupBindings(self.getNumFaders() * 2) 
         self.groupValues.refreshGroupBindings(self.groupBindings, self.channelValues)
     
     def refreshFaderBindings(self):
-        self.faderBindings = self.config.readFaderBindings(self.getNumFaders(),self.getDefaultChannels())
+        self.faderBindings = self.config.readFaderBindings(self.getNumFaders(), self.getDefaultChannels())
         self.faderValues = FaderValues.FaderValues(self.getFaderBindings())
     
     def getFaderValues(self):
         return self.faderValues
     
     #################################    
-    #Get desk properties from file
+    # Get desk properties from file
     #################################
     def getNumFaders(self):
         return self.settings['faders']
