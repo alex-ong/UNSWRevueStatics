@@ -10,6 +10,7 @@ FG_MAIN = 'white'
 from View.ViewStyle import COLOR_PLAYBACK as FG_PLAY
 from View.ViewStyle import COLOR_NONE as BG
 from View.ViewStyle import COLOR_DIRECT as ACTIVE_CUE
+ACTIVE_BG = '#27A53E'
 BG_TITLE = 'grey'
 FG_TITLE = 'black'
 RELEASE = 'purple'
@@ -28,21 +29,22 @@ class ChannelGroupValueCompact(tk.Frame):
         self.cueValue = tk.StringVar()
         self.playValue = tk.StringVar()
         
-        titleLabel = tk.Label(self, textvariable=self.title, bg=BG, fg=FG_MAIN, font=FONT)
-        cueLabel = tk.Label(self, textvariable=self.cueValue, bg=BG, fg=FG_MAIN, font=FONT)
-        playLabel = tk.Label(self, textvariable=self.playValue, bg=BG, fg=FG_PLAY, font=FONT)
+        self.titleLabel = tk.Label(self, textvariable=self.title, bg=BG, fg=FG_MAIN, font=FONT)
+        self.cueLabel = tk.Label(self, textvariable=self.cueValue, bg=BG, fg=FG_MAIN, font=FONT)
+        self.playLabel = tk.Label(self, textvariable=self.playValue, bg=BG, fg=FG_PLAY, font=FONT)
         
         self.grid_columnconfigure(0, minsize=VS.pixel_size(60), weight=0)
         self.grid_columnconfigure(1, minsize=VS.pixel_size(40), weight=0)
         self.grid_columnconfigure(2, minsize=VS.pixel_size(40), weight=0)
         
-        titleLabel.grid(row=0, column=0, sticky=tk.W)        
-        cueLabel.grid(row=0, column=1, sticky=tk.W)
-        playLabel.grid(row=0, column=2, sticky=tk.NSEW)
+        self.titleLabel.grid(row=0, column=0, sticky=tk.W)        
+        self.cueLabel.grid(row=0, column=1, sticky=tk.W)
+        self.playLabel.grid(row=0, column=2, sticky=tk.NSEW)
         
         self.prevTitle = None
         self.prevCueValue = None
         self.prevPlayValue = None
+        self.prevGreen = False
         
     def setValue(self, title, cueValue, playValue):
         if self.prevTitle != title:
@@ -68,14 +70,24 @@ class ChannelGroupValueCompact(tk.Frame):
         if self.prevPlayValue != '':
             self.playValue.set('')
             self.prevPlayValue = ''
+    
+    def setBG(self, isGreen):
+        newGreen = isGreen
+        if newGreen != self.prevGreen:
+            self.prevGreen = newGreen
+            self.config(bg=ACTIVE_BG if self.prevGreen else BG)        
+            self.titleLabel.config(bg=ACTIVE_BG if self.prevGreen else BG)
+            self.cueLabel.config(bg=ACTIVE_BG if self.prevGreen else BG)
+            self.playLabel.config(bg=ACTIVE_BG if self.prevGreen else BG)
 
 class CompactValueFrame(tk.Frame):    
     def __init__(self, *args):
         super().__init__(*args)
-        self.config(bg=BG)
+        self.config(bg='red')
         self.columnconfigure(0, weight=1, uniform='UniformGroup1')
         self.columnconfigure(1, weight=1, uniform='UniformGroup1')
-        
+        for y in range(5):
+            self.rowconfigure(y, weight=1)
         self.values = []
         
         # generate 5x2 frame
@@ -86,7 +98,8 @@ class CompactValueFrame(tk.Frame):
                 cgvc.grid(row=y, column=x, sticky=tk.NSEW)
                 self.values.append(cgvc)
                 
-    def refresh(self, bindings, playableCue):        
+        self.prevGreen = False;
+    def refresh(self, bindings, playableCue, perc):        
         i = 0
         finalBindings = {}
         for key, value in bindings.items():
@@ -107,6 +120,12 @@ class CompactValueFrame(tk.Frame):
         while i < len(self.values):
             self.values[i].clear()
             i += 1
+        
+        newGreen = perc is not None
+        if newGreen != self.prevGreen:
+            self.prevGreen = newGreen        
+            for cgvc in self.values:                
+                cgvc.setBG(newGreen)        
             
 class DBOChannelFrame(tk.Frame):
     def __init__(self, *args):
@@ -114,6 +133,14 @@ class DBOChannelFrame(tk.Frame):
         self.config(bg=BG)
         self.label = tk.Label(self, text='DBO (All values 0)', font=FONT_DBO_CUE, bg=BG, fg=FG_MAIN)
         self.label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.prevGreen = False
+        
+    def refresh(self, perc):
+        newGreen = perc is not None
+        if newGreen != self.prevGreen:
+            self.prevGreen = newGreen        
+            for cgvc in self.values:
+                cgvc.config(bg=ACTIVE_BG if self.prevGreen else BG)
         
 class CueNumberFrame(tk.Frame):
     def __init__(self, *args):
@@ -214,16 +241,23 @@ class CueActiveFrame(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
         self.config(bg=BG)
-        self.lastColour = BG
+        self.lastColour = BG #colour of arrow
         self.label = tk.Label(self, text='>', bg=BG, fg=BG,
                               font=FONT_ACTIVE_CUE, justify=tk.CENTER)
         self.label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.prevGreen = False
         
-    def refresh(self, isActive):        
+    def refresh(self, isActive, displayPerc):        
         newColour = ACTIVE_CUE if isActive else BG
         if newColour != self.lastColour:
             self.label.config(fg=newColour)
             self.lastColour = newColour
+        
+        newGreen = displayPerc is not None
+        if newGreen != self.prevGreen:
+            self.prevGreen = newGreen        
+            self.config(bg=ACTIVE_BG if self.prevGreen else BG)
+            self.label.config(bg=ACTIVE_BG if self.prevGreen else BG)        
         
 class CueWidget(tk.Frame):
     def __init__(self, *args):
@@ -242,18 +276,18 @@ class CueWidget(tk.Frame):
         self.ctf.refresh(5, 5, 1.0)
         
         self.caf = CueActiveFrame(self)
-        self.caf.refresh(False)
+        self.caf.refresh(False, None)
         
         self.cvf = CompactValueFrame(self)
-        self.cvf.refresh({}, None)
+        self.cvf.refresh({}, None, None)
         
         self.dbo = DBOChannelFrame(self)
         
-        self.cnf.grid(row=0, column=0, sticky=tk.NSEW)
-        self.ctf.grid(row=0, column=1, sticky=tk.NSEW)
-        self.caf.grid(row=1, column=0, sticky=tk.NSEW)
-        self.cvf.grid(row=1, column=1, sticky=tk.NSEW)
-        self.dbo.grid(row=1, column=1, sticky=tk.NSEW)
+        self.cnf.grid(row=0, column=0, sticky=tk.NSEW) #top left
+        self.ctf.grid(row=0, column=1, sticky=tk.NSEW) #top right
+        self.caf.grid(row=1, column=0, sticky=tk.NSEW) #bottom left 
+        self.cvf.grid(row=1, column=1, sticky=tk.NSEW) #bottom right        
+        self.dbo.grid(row=1, column=1, sticky=tk.NSEW) #bottom right
         self.isVisible = True
         
     def refreshDisplay(self, cueName, cue, selected):
@@ -264,13 +298,15 @@ class CueWidget(tk.Frame):
             self.caf.grid()
             self.cvf.grid()  
                         
+        displayPerc = cue.playableCue.displayPerc() if cue.playableCue else None
         self.cnf.refresh(cueName)            
         self.ctf.refresh(cue.upTime, cue.downTime,
-                         cue.playableCue.displayPerc() if cue.playableCue else None)
-        self.caf.refresh(selected)
-        self.cvf.refresh(cue.mappings, cue.playableCue)
+                         displayPerc)
+        self.caf.refresh(selected, displayPerc)
+        self.cvf.refresh(cue.mappings, cue.playableCue, displayPerc)
         if cue.mappings == {}:
             self.dbo.grid()
+            self.dbo.refresh(displayPerc)
         else:
             self.dbo.grid_remove()
     
