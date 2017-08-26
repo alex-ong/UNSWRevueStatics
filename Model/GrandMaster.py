@@ -5,7 +5,6 @@ class GrandMaster(object):
         self.DBO = False
     
     def setPerc(self, perc):
-        print(perc)
         self.perc = perc
     
     def toggleDBO(self):

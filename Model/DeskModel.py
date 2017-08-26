@@ -82,7 +82,11 @@ class DeskModel(object):
             # get relevant slider
             bindings = self.faderBindings[self.currentfaderBinding]
             # get slider number         
-            sliderNumber = int(sliderName.replace('slider', ''))
+            try:
+                sliderNumber = int(sliderName.replace('slider', ''))
+            except ValueError:
+                print ("Unknown slider:", sliderName)
+                return
             if (sliderNumber == GrandMaster.SLIDER_NUMBER):
                 self.grandMaster.setPerc(value)
                 
@@ -122,7 +126,11 @@ class DeskModel(object):
             self.modals.handleInput(buttonName, buttonPressed)
         else:
             if 'b_slider' in buttonName:  # todo check programmer state first.
-                faderNumber = int(buttonName.replace('b_slider', ''))
+                try:
+                    faderNumber = int(buttonName.replace('b_slider', ''))
+                except ValueError:
+                    print ("Unknown button:", buttonName)
+                    return
                 self.handleFlash(faderNumber, buttonPressed)
             elif buttonPressed:  # we only care about keyDown
                 #now, if it's a playback command handle it
