@@ -88,11 +88,14 @@ class Programmer(object):
                     try:
                         if GROUP in string:
                             groupNum = int(string.replace(GROUP, ''))
-                            item = self.groupValues[groupNum] 
+                            if groupNum in self.groupValues:
+                                item = self.groupValues[groupNum] 
                         elif CHANNEL in string:
                             chanNum = int(string.replace(CHANNEL, ''))
-                            item = self.channelValues[chanNum]
-                        item.setRecordValue(command.value)
+                            if chanNum in self.channelValues:
+                                item = self.channelValues[chanNum]
+                        if item is not None:
+                            item.setRecordValue(command.value)
                     except Exception as e:
                         print (e)
                 return ("Set selected items to " + str(command.value)) 

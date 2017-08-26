@@ -7,11 +7,13 @@
 list of all groups and channels + values.
 '''
 from libs.string_decimal import fromStr
+from _collections import OrderedDict
+import json
 
 def fromDict(data):
     fadeTimes = data['fadeTimes']    
     fadeTimes = (fromStr(fadeTimes[0]), fromStr(fadeTimes[1])) 
-    return Cue(data['mappings'], fadeTimes)        
+    return Cue(OrderedDict(data['mappings']), fadeTimes)        
 
 class Cue(object):
     def __init__(self, mappings, fadeTimes):
@@ -21,7 +23,7 @@ class Cue(object):
         self.playableCue = None
                 
     def toDict(self):
-        return {'mappings': self.mappings, 'fadeTimes': [str(self.upTime), str(self.downTime)]}
+        return {'mappings': list(self.mappings.items()), 'fadeTimes': [str(self.upTime), str(self.downTime)]}
     
     def getValues(self):
         return self.mappings

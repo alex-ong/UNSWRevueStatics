@@ -11,7 +11,7 @@ END_TOKEN = '\x01'
 def CreateServer(target, port, onRecvMessage):    
     server = ThreadedServer(target, port, onRecvMessage)    
     server.start()
-    print('TCP server started')
+    print('TCP server started on port ' + str(port))
     return server
     
 class ThreadedServer(StoppableThread):
