@@ -24,7 +24,8 @@ class DeskView(tk.Frame):
         root.config(bg='blue')
         super().__init__(root)        
         root.geometry(SCREEN_RESOLUTION)        
-        root.overrideredirect(True)  # change to windowless border        
+        root.overrideredirect(True)  # change to windowless border   
+        root.focus_force()     
         root.wm_title("UNSW Revue Statics")
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)

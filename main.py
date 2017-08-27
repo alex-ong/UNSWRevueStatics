@@ -50,10 +50,10 @@ if __name__ == '__main__':
     
     controller.sliderInput.stop()    
     controller.sliderInput.kill_server()
-    
+    controller.dmxSender.stop()
     keyboardInput.stop()
     
-    time.sleep(0.5) #give the threads a moment to close, but don't specifically wait
+    time.sleep(1.0) #give the threads a moment to close, but don't specifically wait
     print ("All Done - printing hanging threads...")    
     for t in threading.enumerate():
         if (t != threading.current_thread()):

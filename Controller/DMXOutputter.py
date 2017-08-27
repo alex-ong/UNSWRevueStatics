@@ -11,4 +11,7 @@ class DMXOutputter(object):
         nextMessage = self.toSend()
         if nextMessage != self.lastMessage:
             self.sender.sendMessage(str(nextMessage))
-            self.lastMessage = nextMessage            
+            self.lastMessage = nextMessage
+            
+    def stop(self):
+        self.sender.stop()            

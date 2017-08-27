@@ -24,11 +24,11 @@ class ThreadedServer(StoppableThread):
         self.onRecvMessage = onRecvMessage
         
     def run(self):        
-        self.server = socketserver.ThreadingTCPServer((self.target, self.port), MyTCPHandler)
+        self.server = socketserver.ThreadingTCPServer((self.target, self.port), MyTCPHandler)        
         self.server.onRecvMessage = self.onRecvMessage        
         self.server.serverThreadAlive = self.isAlive
         try:
-            self.server.serve_forever()
+            self.server.serve_forever(0.5)
         except OSError: #OSError occurs on server_close()
             pass
     
@@ -42,7 +42,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         # turn off nagles
         self.request.setsockopt(socket.IPPROTO_TCP,
                                 socket.TCP_NODELAY, True)
-    def handle(self):    
+    def handle(self):            
         # potential improvement - dont use python strings as buffer                    
         dataBuffer = ''
         while self.server.serverThreadAlive():

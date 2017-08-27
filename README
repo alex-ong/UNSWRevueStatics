@@ -3,31 +3,35 @@ Compatability
 ============================
 * Should work on any OS that supports Python 3.5.2 and tkinter
 * Requires installation of a font
+* Requires python-rtmidi and pyserial, which are OS agnostic libraries.
 * UI tested under windows. Should be fairly agnostic but different OSes will slightly change UI elements.
 
 ============================
 Installation and running
 ============================
-
 * Install and use Python 3.5.2 (32bit). Other versions should work.
 * Install Consola font family. It is included in libs/fonts folder.
 * Requires 1920x1080 resolution, but work is being done to make it resolution agnostic.
-* Simply run main.py using python.
+* Requires pip-install python-rtmidi (Tested with version 1.1.0)
+* Requires pip-install pyserial (Tested with version x.xx)
+
+================================
+Running
+================================
+Consists of 3 main programs
+* main.py - the gui
+* midi-daemon.py - talks to the keyboard
+* dmx-daemon.py - talks to the dmx widget
+
+Simply run "run-all.bat" on windows or "./run-all" on Unix-based systems
+
+Other:
+* If you don't have a desk, you can use DeskEmulator/DeskEmulator.py to emulate desk sliders
 
 
 ===============================
 Features /short term todo list
 ===============================
-
-* Fader Configuration Menu - setting faders to groups/channels
-* next/prev fader control (only applicable in main and fader configuration view)
-
-* screen resolution agnosticity - command line changeable
-* Screen/font skinnability
-* Macro button S1->S4 display widget.
-
-* keyboard control
-* DMX output controller (output dependent on currently active window)
 
 * Brief manual explaining commands and language
 
@@ -35,5 +39,4 @@ Features /short term todo list
 Long term todo list
 ================================
 * Autocomplete (framework already exists)
-* Show command history in console
 

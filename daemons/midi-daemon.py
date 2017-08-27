@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
-sys.path.append('./Networking')  # hack
+sys.path.append('./Networking')  # hack to run from main folder
+sys.path.append('../Networking') # hack to run from this folder
 import TCPClient
 import json
 import collections
@@ -99,30 +100,38 @@ class MidiInputHandler(object):
         if status == CONTROLLER_CHANGE:
             currentState.update({MIDI_MAP["sliders"][channel][message[1]]: round(message[2]*100/127)})
 
-try:
-    midiin, port_name = open_midiinput(0)
-    midiin1, port_name1 = open_midiinput(1)
-except (EOFError, KeyboardInterrupt):
-    sys.exit()
+if __name__ == '__main__':		
+	try:
+		midiin, port_name = open_midiinput(0)
+		midiin1, port_name1 = open_midiinput(1)
+	except (EOFError, KeyboardInterrupt):
+		print("Failed to connect to midi inputs! Press enter to exit...")
+		_ = input()
+		sys.exit()
+	except OSError as e:
+		print ('Received OSError:' + str(e))
+		print ("Press enter to exit...")
+		_ = input()
+		sys.exit()
 
-print("Attaching MIDI input callback handler.")
-midiin.set_callback(MidiInputHandler())
-midiin1.set_callback(MidiInputHandler())
+	print("Attaching MIDI input callback handler.")
+	midiin.set_callback(MidiInputHandler())
+	midiin1.set_callback(MidiInputHandler())
 
-print("Entering main loop. Press Control-C to exit.")
-try:
-    # Just wait for keyboard interrupt,
-    # everything else is handled via the input callback.
-    while True:
-        if currentState != lastState:
-            lastState = currentState.copy()
-            client.sendMessage(json.dumps(currentState))
-        time.sleep(0.01)
-except KeyboardInterrupt:
-    print('Interrupt')
-finally:
-    print("Exit.")
-    midiin.close_port()
-    midiin1.close_port()
-    del midiin
-    del midiin1
+	print("Entering main loop. Press Control-C to exit.")
+	try:
+		# Just wait for keyboard interrupt,
+		# everything else is handled via the input callback.
+		while True:
+			if currentState != lastState:
+				lastState = currentState.copy()
+				client.sendMessage(json.dumps(currentState))
+			time.sleep(0.01)
+	except KeyboardInterrupt:
+		print('Received KeyboardInterrupt')
+	finally:
+		print("Exiting.")
+		midiin.close_port()
+		midiin1.close_port()
+		del midiin
+		del midiin1
