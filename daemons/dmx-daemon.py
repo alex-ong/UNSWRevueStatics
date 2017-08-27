@@ -19,7 +19,7 @@ class DMXNetworkDaemon(object):
         self.comPort = comPort
         try:
             self.sender = DmxSender(comPort)
-        except Error as e:
+        except Exception as e:
             print (e)
             self.sender = None
         self.listener = TCPServer.CreateServer('localhost', 9001, self.receiveInput)
@@ -42,6 +42,11 @@ if __name__ == '__main__':
         
     daemon = DMXNetworkDaemon(sys.argv[1])
     
-    print ("Use controL+c to exit!")
-    while True:
-        time.sleep(0.01)
+    print ("Use control+c to exit!")
+    try:
+        while True:
+            time.sleep(0.01)    
+    except KeyboardInterrupt:   
+        daemon.listener.kill_server()
+        daemon.listener.stop()
+        time.sleep(0.5)
