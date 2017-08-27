@@ -14,6 +14,10 @@ from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
 from View.Widgets.FunctionButtonWidget import FunctionButtonFrame
 from View.Widgets.TopBar import TopBar
+
+from sys import platform
+
+
 class DeskView(tk.Frame):
         
     def __init__(self, keyDownHandler, keyUpHandler):
@@ -24,8 +28,12 @@ class DeskView(tk.Frame):
         root.config(bg='blue')
         super().__init__(root)        
         root.geometry(SCREEN_RESOLUTION)        
-        root.overrideredirect(True)  # change to windowless border   
-        root.focus_force()     
+		#windowless border in windows
+		if platform == 'win32':
+			root.overrideredirect(True)  # change to windowless border
+		else:
+			root.overrideredirect(False) # TODO: Find optimal setting
+        root.focus_force()             
         root.wm_title("UNSW Revue Statics")
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
@@ -55,7 +63,8 @@ class DeskView(tk.Frame):
         self.cueListWidget = None
         self.modalManager = None
         self.topBar = None
-        
+
+
     # called by model during setup
     def setupChannels(self, channels):
         cf = ChannelGroupFrame(channels, CHANNEL, self)
