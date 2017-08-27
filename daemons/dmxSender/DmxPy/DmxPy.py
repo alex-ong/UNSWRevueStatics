@@ -4,16 +4,16 @@ import serial, sys, time
 DMXOPEN = chr(126)
 DMXCLOSE = chr(231)
 DMXINTENSITY=chr(6)+chr(1)+chr(2)				
-DMXINIT1= chr(03)+chr(02)+chr(0)+chr(0)+chr(0)
-DMXINIT2= chr(10)+chr(02)+chr(0)+chr(0)+chr(0)
+DMXINIT1= chr(3)+chr(2)+chr(0)+chr(0)+chr(0)
+DMXINIT2= chr(10)+chr(2)+chr(0)+chr(0)+chr(0)
 
-class DmxPy:
+class DmxPy(object):
 	def __init__(self, serialPort):
 		try:
 			self.serial=serial.Serial(serialPort, baudrate=57600)
 		except:
-			print "Error: could not open Serial Port"
-			sys.exit(0)
+			raise Exception ("Error: could not open Serial Port " + str(serialPort))
+			
 		self.serial.write( DMXOPEN+DMXINIT1+DMXCLOSE)
 		self.serial.write( DMXOPEN+DMXINIT2+DMXCLOSE)
 		

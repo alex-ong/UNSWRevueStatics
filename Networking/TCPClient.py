@@ -48,7 +48,9 @@ class ThreadedClient(StoppableThread.StoppableThread):
                         except queue.Empty:
                             time.sleep(0.01)
                             continue
-                        sock.sendall(bytes(START_TOKEN + item + END_TOKEN, "utf-8"))    
+                        sock.sendall(bytes(START_TOKEN + item + END_TOKEN, "utf-8"))
+                except ConnectionAbortedError:
+                    continue     
                 except ConnectionRefusedError:
                     continue # server isn't alive yet
                 except ConnectionResetError:

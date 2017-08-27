@@ -14,7 +14,7 @@ class DMXOutput(object):
         
         for channelNum, channel in channelValues.items():
             percValue = channel.getDisplayValueAndReason()[0]
-            percValue = float(percValue) * self.grandMaster.getValue()
+            percValue = percValue * self.grandMaster.getValue()/100.0
             byteValue = round(percValue / PERC * BYTE)
             byteIndex = channelToDMX[channelNum] - 1
             byteArray[byteIndex] = byteValue

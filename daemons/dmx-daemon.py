@@ -1,0 +1,47 @@
+# to change dmxSender implementation, replace the first line in dmxSender/dmxSender
+from dmxSender.dmxSender import DmxSender
+
+import sys
+import time
+import json
+
+try:
+    sys.path.append('../Networking')  # hack to run locally
+    import TCPServer  # run locally
+except ImportError:
+    sys.path.append('Networking')
+    import TCPServer  # run from UNSWRevueStatics folder
+
+
+# class that transfers packets from UNSWRevueStatics to the DMXKing
+class DMXNetworkDaemon(object):
+    def __init__(self, comPort):
+        self.comPort = comPort
+        try:
+            self.sender = DmxSender(comPort)
+        except Error as e:
+            print (e)
+            self.sender = None
+        self.listener = TCPServer.CreateServer('localhost', 9001, self.receiveInput)
+    
+    # called when we receive network input
+    def receiveInput(self, msg):             
+        msg = json.loads(msg)   
+        if self.sender is not None:
+            for i in range(512):
+                self.sender.setChannel(i, msg[i])
+        self.sender.render()                
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print ("Usage: python dmx-daemon.py COM_PORT")
+        print ("COM_PORT can be a number or linux com port string")
+        print ("press enter to exit")
+        _ = input()
+        sys.exit()
+        
+    daemon = DMXNetworkDaemon(sys.argv[1])
+    
+    print ("Use controL+c to exit!")
+    while True:
+        time.sleep(0.01)

@@ -3,9 +3,10 @@ import threading
 import socket
 try:
     from Networking.StoppableThread import StoppableThread
-except:
-    import StoppableThread.StoppableThread as StoppableThread
-
+except:    
+    from StoppableThread import StoppableThread
+    
+        
 START_TOKEN = '\x00'    
 END_TOKEN = '\x01'
 def CreateServer(target, port, onRecvMessage):    
