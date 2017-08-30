@@ -5,3 +5,4 @@ config/faderBindings.json
 config/settings.json
 config/groupBindings.json
 config/cueList.json
+configBackup/*
