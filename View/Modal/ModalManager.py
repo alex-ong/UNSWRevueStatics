@@ -27,6 +27,9 @@ class ModalManager():
             viewClass = modalMapping[key]
             self.modalForms[key] = viewClass(value, keyDownHandler, keyUpHandler)
             
+    def destroy(self):
+        for modal in self.modalForms.values():
+            modal.destroy()
             
     # TODO: Upgrade main view to be a modal, so we don't have hacks everywhere.
     # ensure our stack corresponds to model layer stack.

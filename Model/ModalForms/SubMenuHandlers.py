@@ -15,6 +15,8 @@ def GenerateSelectHandler(menuType, model, modalContainer):
         return FaderModalSelectHandler(model, modalContainer)
     elif menuType == CONFIRM_BACKUP_MODAL:
         return ConfirmBackupSelectHandler(model, modalContainer)
+    elif menuType == CONFIRM_DESK_RESET:
+        return ConfirmDeskResetSelectHandler(model, modalContainer)
     elif menuType is None:
         return None
     else:
@@ -36,6 +38,8 @@ def GenerateFinishHandler(menuType, model, modalContainer):
         return FaderModalFinishHandler(model, modalContainer)
     elif menuType == CONFIRM_BACKUP_MODAL:
         return ConfirmBackupFinishHandler(model, modalContainer)
+    elif menuType == CONFIRM_DESK_RESET:
+        return ConfirmDeskResetFinishHandler(model, modalContainer)
     elif menuType is None:
         return None
     else:
@@ -205,7 +209,7 @@ class FaderModalSelectHandler(AbstractMainMenuSelectHandler):
         return (self.model.faderBindings, self.writeReadBindings)
 
 ############################
-# ConfirmationModal
+# Confirm backup
 ############################
 class ConfirmBackupFinishHandler(AbstractMainMenuFinishHandler):    
     def getMenuType(self):
@@ -213,8 +217,10 @@ class ConfirmBackupFinishHandler(AbstractMainMenuFinishHandler):
     
     def closeForm(self, response, data):
         self.closeFormSubclass(response, data)
-        self.modalContainer.popStack()    
-            
+        self.modalContainer.popStack()        
+        if response and data:
+            print ("Backing up desk!")
+            #todo: backup desk
  
 class ConfirmBackupSelectHandler(AbstractMainMenuSelectHandler):
     def getMenuType(self):
@@ -222,3 +228,23 @@ class ConfirmBackupSelectHandler(AbstractMainMenuSelectHandler):
         
     def subClassGetFormData(self):        
         return ('Confirm backup of all Data?')
+
+############################
+# Confirm desk reset
+############################
+class ConfirmDeskResetFinishHandler(AbstractMainMenuFinishHandler):    
+    def getMenuType(self):
+        return CONFIRMATION_MODAL
+    
+    def closeForm(self, response, data):
+        self.closeFormSubclass(response, data)
+        self.modalContainer.popStack()    
+        if response and data:
+            self.model.totalReset()
+ 
+class ConfirmDeskResetSelectHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return CONFIRMATION_MODAL
+        
+    def subClassGetFormData(self):        
+        return ('Confirm full desk reset?')

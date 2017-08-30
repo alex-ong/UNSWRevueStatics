@@ -19,7 +19,7 @@ from sys import platform
 
 
 class DeskView(tk.Frame):
-        
+            
     def __init__(self, keyDownHandler, keyUpHandler):
         self.keyDownHandler = keyDownHandler
         self.keyUpHandler = keyUpHandler
@@ -54,8 +54,7 @@ class DeskView(tk.Frame):
         self.columnconfigure(1,weight=1)
         self.columnconfigure(2,weight=1)
         self.columnconfigure(3,weight=0)
-        
-        
+                
         self.channelFrame = None
         self.groupFrame = None
         self.faderFrame = None
@@ -111,10 +110,40 @@ class DeskView(tk.Frame):
         self.channelFrame.handleInput(dictInput)
         
     def refreshDisplay(self):
-        self.channelFrame.refreshDisplay()
-        self.faderFrame.refreshDisplay()
-        self.consoleWidget.refreshDisplay()
-        self.cueListWidget.refreshDisplay()
-        self.modalManager.refreshDisplay()
-        self.functionButtonFrame.refreshDisplay()
-        self.topBar.refreshDisplay()
+        if self.channelFrame:
+            self.channelFrame.refreshDisplay()
+        if self.faderFrame:
+            self.faderFrame.refreshDisplay()
+        if self.consoleWidget:
+            self.consoleWidget.refreshDisplay()
+        if self.cueListWidget:
+            self.cueListWidget.refreshDisplay()
+        if self.modalManager:
+            self.modalManager.refreshDisplay()
+        if self.functionButtonFrame:
+            self.functionButtonFrame.refreshDisplay()
+        if self.topBar:
+            self.topBar.refreshDisplay()
+
+    def reset(self):
+        if self.channelFrame is not None:
+            self.channelFrame.destroy()
+            self.channelFrame = None
+        if self.groupFrame is not None:
+            self.groupFrame.destroy()
+            self.groupFrame = None
+        if self.faderFrame is not None:
+            self.faderFrame.destroy()
+            self.faderFrame = None
+        if self.consoleWidget is not None:
+            self.consoleWidget.destroy()
+            self.consoleWidget = None
+        if self.cueListWidget is not None:
+            self.cueListWidget.destroy()
+            self.cueListWidget = None
+        if self.modalManager is not None:
+            self.modalManager.destroy()
+            self.modalManager = None
+        if self.topBar is not None:
+            self.topBar.destroy()
+            self.topBar = None

@@ -26,6 +26,23 @@ from Model.FaderValues import FADER_COMMANDS, NEXT_FADERS, PREV_FADERS
 
 class DeskModel(object):
     def __init__(self):
+        self.notifyControllerReset = None
+        self.Reset()
+    
+    def bindNotifyControllerReset(self, func):
+        self.notifyControllerReset = func
+        
+    def saveSettings(self):
+        self.config.writeGeneralSettings(self.settings)
+        
+    def totalReset(self):
+        #delete config files
+        #self.config.reset()
+        self.Reset()
+        if self.notifyControllerReset:
+            self.notifyControllerReset()
+        
+    def Reset(self):
         self.config = ConfigReader.ConfigReader('config/config.json')
         self.settings = self.config.readGeneralSettings()
         numFaders = self.getNumFaders()
@@ -64,13 +81,6 @@ class DeskModel(object):
         
         self.grandMaster = GrandMaster.GrandMaster()
         self.finalDMXOutput = DMXOutput.DMXOutput(self) 
-    
-    def saveSettings(self):
-        self.config.writeGeneralSettings(self.settings)
-        
-    def Reset(self):
-        # get configReader to reset everything, then load everything
-        pass
     
     ###############################################################
     # Model input handler - passes it to current modal if necessary
