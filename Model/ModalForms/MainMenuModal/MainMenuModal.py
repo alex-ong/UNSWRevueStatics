@@ -9,7 +9,8 @@ mainMenuOptions = [
                    ("Clear all Cues", DELETE_CUES_MODAL),
                    ("Default Fade times", TIME_MODAL),
                    ("Reset Desk", CONFIRM_DESK_RESET),
-                   ("Backup show", CONFIRM_BACKUP_MODAL)
+                   ("Backup show", CONFIRM_BACKUP_MODAL),
+                   ("Restore backup", CONFIRM_RESTORE_MODAL)
                    ]
                    
 # only works up to 9 though.                   

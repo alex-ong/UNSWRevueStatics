@@ -5,6 +5,8 @@ import Model.Configuration.GeneralSettingParser as GeneralSettingParser
 import Model.Configuration.GroupBindingParser as GroupBindingParser
 import Model.Configuration.CueListParser as CueListParser
 import os
+import shutil
+
 DMX_BINDING = 'dmxBinding'
 SETTING_BINDING = 'settings'
 GROUP_BINDINGS = 'groupBindings'
@@ -25,8 +27,14 @@ class ConfigReader(object):
     def deleteSingleFile(self, path):
         try:
             os.remove(path)
-        except Error as e:
+        except Exception as e:
             print ("Error removing " + path + ":", str(e))
+    
+    def copySingleFile(self, path1, folder):
+        try:
+            shutil.copy2(path1, folder)
+        except Exception as e:
+            print ("Error copying file:" + str(e))
             
     def resetPatch(self):
         self.deleteSingleFile(self.paths[DMX_BINDING])
@@ -34,10 +42,18 @@ class ConfigReader(object):
         self.deleteSingleFile(self.paths[GROUP_BINDINGS])        
     
     def writeBackup(self):
-        pass
+        self.copySingleFile(self.paths[DMX_BINDING], 'configBackup/')
+        self.copySingleFile(self.metaConfigPath, 'configBackup/')
+        self.copySingleFile(self.paths[CUE_LIST], 'configBackup/')
+        self.copySingleFile(self.paths[FADER_BINDINGS], 'configBackup/')
+        self.copySingleFile(self.paths[GROUP_BINDINGS], 'configBackup/')
+        self.copySingleFile(self.paths[SETTING_BINDING], 'configBackup/')        
     
     def restoreBackup(self):
-        pass
+        #naively copies from configBackup/
+        for fileName in os.listdir('configBackup'):
+            self.copySingleFile('configBackup/'+ fileName, 'config/')
+        
     
     def _openConfig(self):
         try:

@@ -31,24 +31,7 @@ class DeskModel(object):
     
     def bindNotifyControllerReset(self, func):
         self.notifyControllerReset = func
-        
-    def saveSettings(self):
-        self.config.writeGeneralSettings(self.settings)
-        
-    # delete binding files
-    def resetBindings(self):
-        self.config.resetPatch()
-        self.Reset()
-        if self.notifyControllerReset:
-            self.notifyControllerReset()
-        
-    # delete config files    
-    def totalReset(self):        
-        self.config.resetAll()
-        self.Reset()
-        if self.notifyControllerReset:
-            self.notifyControllerReset()
-        
+            
     def Reset(self):
         self.config = ConfigReader.ConfigReader('config/config.json')
         self.settings = self.config.readGeneralSettings()
@@ -255,7 +238,34 @@ class DeskModel(object):
     
     def deleteAllCues(self):
         self.cueList.deleteAllCues()
+
+    def saveSettings(self):
+        self.config.writeGeneralSettings(self.settings)
+        
+    # delete binding files
+    def resetBindings(self):
+        self.config.resetPatch()
+        self.Reset()
+        if self.notifyControllerReset:
+            self.notifyControllerReset()
+        
+    # delete config files    
+    def totalReset(self):        
+        self.config.resetAll()
+        self.Reset()
+        if self.notifyControllerReset:
+            self.notifyControllerReset()
+    # backup show
+    def backupShow(self):
+        self.config.writeBackup()
     
+    # restore show
+    def restoreShow(self):
+        self.config.restoreBackup()
+        self.Reset()
+        if self.notifyControllerReset:
+            self.notifyControllerReset()
+                
     ##############################################
     # Get Final Universe Output
     ##############################################
