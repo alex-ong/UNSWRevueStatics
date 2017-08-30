@@ -28,7 +28,7 @@ class DBOWidget(tk.Frame):
 		self.label1 = tk.Label(self, text='Grandmaster', bg=BG, fg=FG, font=FONT)
 		self.label1.grid(sticky=tk.W)
 		self.percVar = tk.StringVar()
-		self.percVar.set('100%')
+		self.percVar.set('-')
 		self.label2 = tk.Label(self, textvariable=self.percVar, bg=BG, fg=FG, font=FONT)
 		self.label2.grid(row=0, column=1, sticky=tk.W)
 		self.getPerc = getPerc

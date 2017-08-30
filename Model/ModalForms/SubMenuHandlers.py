@@ -247,4 +247,4 @@ class ConfirmDeskResetSelectHandler(AbstractMainMenuSelectHandler):
         return CONFIRMATION_MODAL
         
     def subClassGetFormData(self):        
-        return ('Confirm full desk reset?')
+        return ('Delete ALL CUES AND BINDINGS?')

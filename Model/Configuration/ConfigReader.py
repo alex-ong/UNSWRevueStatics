@@ -4,7 +4,7 @@ import Model.Configuration.FaderBindingParser as FaderBindingParser
 import Model.Configuration.GeneralSettingParser as GeneralSettingParser
 import Model.Configuration.GroupBindingParser as GroupBindingParser
 import Model.Configuration.CueListParser as CueListParser
-
+import os
 DMX_BINDING = 'dmxBinding'
 SETTING_BINDING = 'settings'
 GROUP_BINDINGS = 'groupBindings'
@@ -18,7 +18,9 @@ class ConfigReader(object):
         
 
     def resetAll(self):
-        pass
+        for fileName in os.listdir('config'):
+            if fileName.endswith('.json'):                
+                os.remove ('config' + '/' + fileName)        
         
     def writeBackup(self):
         pass

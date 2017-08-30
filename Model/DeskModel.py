@@ -37,7 +37,7 @@ class DeskModel(object):
         
     def totalReset(self):
         #delete config files
-        #self.config.reset()
+        self.config.resetAll()
         self.Reset()
         if self.notifyControllerReset:
             self.notifyControllerReset()
