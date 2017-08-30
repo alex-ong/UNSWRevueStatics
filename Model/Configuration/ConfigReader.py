@@ -19,9 +19,20 @@ class ConfigReader(object):
 
     def resetAll(self):
         for fileName in os.listdir('config'):
-            if fileName.endswith('.json'):                
-                os.remove ('config' + '/' + fileName)        
-        
+            if fileName.endswith('.json'):
+                self.deleteSingleFile('config' + '/' + fileName)                                    
+    
+    def deleteSingleFile(self, path):
+        try:
+            os.remove(path)
+        except Error as e:
+            print ("Error removing " + path + ":", str(e))
+            
+    def resetPatch(self):
+        self.deleteSingleFile(self.paths[DMX_BINDING])
+        self.deleteSingleFile(self.paths[FADER_BINDINGS])
+        self.deleteSingleFile(self.paths[GROUP_BINDINGS])        
+    
     def writeBackup(self):
         pass
     

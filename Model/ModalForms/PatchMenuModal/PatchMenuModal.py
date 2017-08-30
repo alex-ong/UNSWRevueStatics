@@ -1,12 +1,12 @@
 from Model.ModalForms.MainMenuModal import MainMenuModal     
-from Model.ModalForms.ModalFormConsts import DMX_MODAL, GROUP_MODAL, FADER_MODAL
+from Model.ModalForms.ModalFormConsts import DMX_MODAL, GROUP_MODAL, FADER_MODAL, CONFIRM_BINDINGS_RESET
            
 # menu options. Option Description, Modal to open
 patchOptions = [
                    ("DMX Address Binding Menu", DMX_MODAL),
                    ("Group Menu", GROUP_MODAL),
                    ("Fader Menu", FADER_MODAL), 
-                   ("Reset DMX, Groups, Faders to defaults", None)
+                   ("Reset DMX, Groups, Faders to defaults", CONFIRM_BINDINGS_RESET)
                ]
                    
 # only works up to 9 though.                   

@@ -35,8 +35,15 @@ class DeskModel(object):
     def saveSettings(self):
         self.config.writeGeneralSettings(self.settings)
         
-    def totalReset(self):
-        #delete config files
+    # delete binding files
+    def resetBindings(self):
+        self.config.resetPatch()
+        self.Reset()
+        if self.notifyControllerReset:
+            self.notifyControllerReset()
+        
+    # delete config files    
+    def totalReset(self):        
         self.config.resetAll()
         self.Reset()
         if self.notifyControllerReset:
@@ -61,7 +68,7 @@ class DeskModel(object):
         try:
             upDown = self.settings['upDown']
         except KeyError:
-            upDown = ["2", "1"]
+            upDown = ["2", "0"]
             self.settings['upDown'] = upDown
             self.saveSettings()
             

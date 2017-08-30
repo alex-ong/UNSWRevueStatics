@@ -17,6 +17,8 @@ def GenerateSelectHandler(menuType, model, modalContainer):
         return ConfirmBackupSelectHandler(model, modalContainer)
     elif menuType == CONFIRM_DESK_RESET:
         return ConfirmDeskResetSelectHandler(model, modalContainer)
+    elif menuType == CONFIRM_BINDINGS_RESET:
+        return ConfirmResetBindingsSelectHandler(model, modalContainer)
     elif menuType is None:
         return None
     else:
@@ -40,6 +42,8 @@ def GenerateFinishHandler(menuType, model, modalContainer):
         return ConfirmBackupFinishHandler(model, modalContainer)
     elif menuType == CONFIRM_DESK_RESET:
         return ConfirmDeskResetFinishHandler(model, modalContainer)
+    elif menuType == CONFIRM_BINDINGS_RESET:
+        return ConfirmResetBindingsFinishHandler(model, modalContainer)
     elif menuType is None:
         return None
     else:
@@ -248,3 +252,23 @@ class ConfirmDeskResetSelectHandler(AbstractMainMenuSelectHandler):
         
     def subClassGetFormData(self):        
         return ('Delete ALL CUES AND BINDINGS?')
+    
+############################
+# Confirm desk reset
+############################
+class ConfirmResetBindingsFinishHandler(AbstractMainMenuFinishHandler):    
+    def getMenuType(self):
+        return CONFIRMATION_MODAL
+    
+    def closeForm(self, response, data):
+        self.closeFormSubclass(response, data)
+        self.modalContainer.popStack()    
+        if response and data:
+            self.model.resetBindings()
+ 
+class ConfirmResetBindingsSelectHandler(AbstractMainMenuSelectHandler):
+    def getMenuType(self):
+        return CONFIRMATION_MODAL
+        
+    def subClassGetFormData(self):        
+        return ('Reset all bindings to default?')
