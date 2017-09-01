@@ -40,8 +40,10 @@ def validOperators(program):
     elif AT in program:  # we are at [expression] @ number
         if lastSymbol == FULL:
             return []
-        else:
+        elif tryParseInt(lastSymbol):
             return [NUMBER]
+        else:
+            return [FULL, NUMBER]
     else:  # assume no @ in program
         if lastSymbol in [GROUP, CUE, CHANNEL]:
             return [NUMBER]
