@@ -27,9 +27,12 @@ class DMXNetworkDaemon(object):
     # called when we receive network input
     def receiveInput(self, msg):             
         msg = json.loads(msg)   
+        print(msg)
         if self.sender is not None:
             for i in range(512):
-                self.sender.setChannel(i, msg[i])
+                print(i+1, msg[i])
+                self.sender.setChannel(i+1, msg[i])
+            print("Sending")
             self.sender.render()                
 
 if __name__ == '__main__':
