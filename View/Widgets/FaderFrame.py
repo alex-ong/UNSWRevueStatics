@@ -11,8 +11,7 @@ class FaderFrame(tk.Frame):
         self.widgets = {}
         self.getFaderFunc = getFaderFunc
         self.numFaders = numFaders
-        # setup layout. Groups of 6 with gaps between elements,
-        # double gaps between groups.
+        
         layout = []
         
         for row in faderLayout:
@@ -23,12 +22,16 @@ class FaderFrame(tk.Frame):
         col = 0
         row = 0
         
-        for i in range (len(layout[0])):
+        #get widest layout:
+        lengths =[len(layout[x]) for x in range(len(layout))]
+        
+        width = max(lengths)
+        for i in range (width):
             self.grid_columnconfigure(i, weight=1, minsize=VS.pixel_size(16))                                     
         
         # title bar
         title = tk.Label(self, text='Faders', bg='grey', font=HEADING_FONT)
-        title.grid(row=row, columnspan=len(layout[0]), sticky=tk.NSEW)        
+        title.grid(row=row, columnspan=width, sticky=tk.NSEW)        
         
         faderValues = list(getFaderFunc().values.values())    
 
