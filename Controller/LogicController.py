@@ -26,9 +26,9 @@ class LogicController(object):
             
     def setupView(self):
         model = self.model
-        self.view.setupTopBar((model.grandMaster.getSliderPerc,model.grandMaster.getDBO))
+        self.view.setupTopBar((model.grandMaster.getSliderPerc, model.grandMaster.getDBO))
         self.view.setupChannels(model.channelValues)        
-        self.view.setupFaders(model.getFaderValues,model.getNumFaders()) 
+        self.view.setupFaders(model.getFaderValues, model.getNumFaders()) 
         self.view.setupConsole(model.console)
         self.view.setupCueList(model.cueList)
         self.view.setupModalForms(model.modals)
@@ -42,9 +42,9 @@ class LogicController(object):
             self.dmxSender = None
         self.dmxSender = DMXOutputter(self.model.getDMXOutput)
     
-    #model calls this whenenevr model is Reset
+    # model calls this whenenevr model is Reset
     def OnModelReset(self):            
-        self.view.reset() #destroy as much view things as possible.
+        self.view.reset()  # destroy as much view things as possible.
         self.setupView()        
         self.setupOutput()
                 
@@ -54,9 +54,9 @@ class LogicController(object):
         self.inputEventMaster.addState(msg)
         
     def update(self, timeDelta):  # occurs in main thread/same thread as tkinter        
-        self.handleInput() #controller update        
-        self.model.update(timeDelta)   #model update        
-        self.view.refreshDisplay()  #view update                
+        self.handleInput()  # controller update        
+        self.model.update(timeDelta)  # model update        
+        self.view.refreshDisplay()  # view update                
         self.handleOutput()
         
     def handleInput(self):
