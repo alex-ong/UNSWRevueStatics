@@ -94,7 +94,20 @@ class Console(object):
                 self.tokens.append(string)
                 if string == FULL: #auto add an enter.
                     return self.parseString(ENTER)
-                                
+        elif string == FULL: #can insert full before @
+            #insert an at, then check if FULL is possible.
+            #if not, roll back
+            if self.checkValidOperator(AT,validOps):
+                self.tokens.append(AT)
+                newValidOps = self.validOperators(self.tokens)
+                if self.checkValidOperator(string, newValidOps):
+                    return self.parseString(string)
+                else: #roll back!
+                    self.tokens.pop()
+                    print('Tried to enter ', string,
+                      'but valid operators are:',
+                      self.validOperators(self.tokens))
+                    return 
         elif len(validOps) > 0:  
             if tryParseInt(string): #got int but int not in list
                 # need to insert channel or group.
