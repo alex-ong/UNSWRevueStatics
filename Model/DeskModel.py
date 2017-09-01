@@ -14,6 +14,7 @@ from . import OptionButtons
 from . import ModalContainer
 from . import DMXOutput
 from . import GrandMaster
+from . import SliderRemapper
 from _collections import OrderedDict
 
 from .CueList import PLAYBACK_COMMANDS
@@ -75,7 +76,9 @@ class DeskModel(object):
     ###############################################################
     # Model input handler - passes it to current modal if necessary
     ###############################################################         
-    def handleSliderInput(self, sliderName, value):            
+    def handleSliderInput(self, sliderName, value):
+        #first, rebind
+        sliderName = SliderRemapper.instance().getSliderName(sliderName)                
         if not (self.modals.isEmpty()):
             self.modals.handleSliderInput(sliderName, value)
         else:
@@ -114,7 +117,7 @@ class DeskModel(object):
                 self.groupValues[groupNumber].setDirectFlashValue(value)
 
     def handleButtonInput(self, buttonName, buttonPressed):        
-        # first, we remap virtual S1-S4 keys to current binding.        
+        # first, we remap virtual S1-S4 keys to current binding.                
         if buttonName in OptionButtons.RAW_BUTTONS:
             buttonName = OptionButtons.getInstance().getCommand(buttonName)
             if buttonName is None:  # catch if we bound to nothing
@@ -128,6 +131,8 @@ class DeskModel(object):
             self.modals.handleInput(buttonName, buttonPressed)
         else:
             if 'b_slider' in buttonName:  # todo check programmer state first.
+                #first, we want to remap sliders.
+                buttonName = SliderRemapper.instance().getSliderName(buttonName)
                 try:
                     faderNumber = int(buttonName.replace('b_slider', ''))
                 except ValueError:
