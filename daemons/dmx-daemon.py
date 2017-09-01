@@ -30,7 +30,7 @@ class DMXNetworkDaemon(object):
         if self.sender is not None:
             for i in range(512):
                 self.sender.setChannel(i, msg[i])
-        self.sender.render()                
+            self.sender.render()                
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
