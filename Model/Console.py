@@ -92,6 +92,9 @@ class Console(object):
                 self.tokens[-1] = self.tokens[-1] + string
             else:
                 self.tokens.append(string)
+                if string == FULL: #auto add an enter.
+                    return self.parseString(ENTER)
+                                
         elif len(validOps) > 0:  
             if tryParseInt(string): #got int but int not in list
                 # need to insert channel or group.
