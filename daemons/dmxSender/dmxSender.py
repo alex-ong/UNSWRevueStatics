@@ -1,6 +1,6 @@
 # change the line below to switch DMX libraries
-DMX_LIB = "DMX_PY"
-#DMX_LIB = "pySimpleDMX"
+# DMX_LIB = "DMX_PY"
+DMX_LIB = "pySimpleDMX"
 import sys
 
 try:
