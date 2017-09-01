@@ -11,19 +11,23 @@ class SliderRemapper(object):
     
     #hack!
     def remapIndex(self, index):
-        return index
+        if index >= 19:
+            return index - 18
+        elif index >= 1:
+            return index + 9
+        else:
+            return index
             
-    def getSliderName(self, originalSliderName):
-        try: 
-            if 'b_slider' in originalSliderName:
-                index = int(originalSliderName.replace('b_slider',''))
-                newIndex = self.remapIndex(index)
-                return 'b_slider'+str(newIndex)
-            elif 'slider' in originalSliderName:
-                index = int(originalSliderName.replace('slider',''))
-                newIndex = self.remapIndex(index)
-                return 'slider'+str(newIndex) 
-        except:
-            return originalSliderName
+    def getSliderName(self, originalSliderName):         
+        if 'b_slider' in originalSliderName:
+            index = int(originalSliderName.replace('b_slider',''))
+            newIndex = self.remapIndex(index)
+            newSliderName ='b_slider'+str(newIndex)            
+            return newSliderName 
+        elif 'slider' in originalSliderName:
+            index = int(originalSliderName.replace('slider',''))
+            newIndex = self.remapIndex(index)
+            newSliderName ='slider'+str(newIndex)           
+            return newSliderName    
                 
         return originalSliderName

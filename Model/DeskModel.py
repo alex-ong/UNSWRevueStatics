@@ -76,7 +76,9 @@ class DeskModel(object):
     ###############################################################
     # Model input handler - passes it to current modal if necessary
     ###############################################################         
-    def handleSliderInput(self, sliderName, value):                
+    def handleSliderInput(self, sliderName, value):
+        #first, rebind
+        sliderName = SliderRemapper.instance().getSliderName(sliderName)                
         if not (self.modals.isEmpty()):
             self.modals.handleSliderInput(sliderName, value)
         else:
