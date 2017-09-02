@@ -14,7 +14,8 @@ LABELS = {
     'GET_WIDGET_PARAMETERS': 3,  # unused
     'SET_WIDGET_PARAMETERS': 4,  # unused
     'RX_DMX_PACKET': 5,  # unused
-    'TX_DMX_PACKET': 6, 'TX_RDM_PACKET_REQUEST': 7,  # unused
+    'TX_DMX_PACKET': 6, 
+    'TX_RDM_PACKET_REQUEST': 7,  # unused
     'RX_DMX_ON_CHANGE': 8,  # unused
 }
 
@@ -69,8 +70,8 @@ class DMXConnection( object ):
       ''''
       Updates the DMX output from the USB DMX Pro with the values from self.dmx_frame.
       '''
-      packet = [ START_VAL, LABELS[ 'TX_DMX_PACKET' ], len( self.dmx_frame ) & 0xFF,
-                                                        (len( self.dmx_frame ) >> 8) & 0xFF, ]
+      packet = [ START_VAL, LABELS[ 'TX_DMX_PACKET' ], (len( self.dmx_frame ) + 1) & 0xFF,
+                                                        ((len( self.dmx_frame ) + 1) >> 8) & 0xFF, 0x00]
       packet += self.dmx_frame
       packet.append( END_VAL )
 
