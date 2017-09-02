@@ -40,7 +40,8 @@ class GroupValues(object):
         
         #unmute everything
         for (key, value) in prevRecordValues.items():
-            self.values[key].setRecordValue(value)
+            if key in self.values:
+                self.values[key].setRecordValue(value)
                         
     def __iter__(self):
         return iter(self.values)
