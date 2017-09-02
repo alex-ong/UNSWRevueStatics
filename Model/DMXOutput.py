@@ -20,5 +20,4 @@ class DMXOutput(object):
             byteArray[byteIndex] = byteValue
             
         return byteArray
-            
-        
+                

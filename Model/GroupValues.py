@@ -24,6 +24,12 @@ class GroupValues(object):
             self.values[groupNumber] = Group.Group(groupNumber, label, mapping)        
         
     def refreshGroupBindings(self, groupsConfiguration, channelValues):
+        prevRecordValues = {}
+        #mute everything
+        for (key, group) in self.values.items():
+            prevRecordValues[key] = group.recordValue
+            group.setRecordValue(0)
+            
         for groupNumber, value in groupsConfiguration.items():
             mapping = value['channels']
             label = value['name']
@@ -31,6 +37,10 @@ class GroupValues(object):
             mapping = [[channelValues[pair[0]], pair[1]] for pair in mapping]            
             self.values[groupNumber].label = label
             self.values[groupNumber].channelMappings = mapping
+        
+        #unmute everything
+        for (key, value) in prevRecordValues.items():
+            self.values[key].setRecordValue(value)
                         
     def __iter__(self):
         return iter(self.values)

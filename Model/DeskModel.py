@@ -66,7 +66,8 @@ class DeskModel(object):
                                                 self.faderValues,
                                                 self.groupValues,
                                                 self.channelValues,
-                                                self.modals)
+                                                self.modals,
+                                                self)
         
         self.console = Console.Console(self.programmer, validOperators)        
         
@@ -270,7 +271,31 @@ class DeskModel(object):
         self.Reset()
         if self.notifyControllerReset:
             self.notifyControllerReset()
-                
+    
+    # records current state into a group. Saves to file.
+    def recordGroup(self, groupName):
+        try:
+            groupNumber = int(groupName.replace('Group',''))            
+        except:
+            return "Nonexistent group!"
+        if groupNumber not in self.groupBindings:
+            return "Nonexistent group!"
+        
+        bindings = []
+        channelValues = self.channelValues.values        
+        for channelNum, channel in channelValues.items():
+            percValue = channel.getDisplayValueAndReason()[0]
+            if percValue > 0:
+                bindings.append([channelNum, percValue])
+        
+        self.groupBindings[groupNumber]["channels"] = bindings
+        self.groupValues.refreshGroupBindings(self.groupBindings, self.channelValues)
+        self.config.writeGroupBindings(self.groupBindings)
+        
+        
+        
+        return "Recorded current state into group"
+    
     ##############################################
     # Get Final Universe Output
     ##############################################

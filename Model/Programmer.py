@@ -11,13 +11,14 @@ from Model.ModalContainer import TIME_MODAL, MENU_MODAL
 from libs.string_decimal import string_decimal
 
 class Programmer(object):
-    def __init__(self, cueList, faderValues, groupValues, channelValues, modals):
+    def __init__(self, cueList, faderValues, groupValues, channelValues, modals, deskModel):
         self.currentlySelected = SortedSet()
         self.cueList = cueList
         self.faderValues = faderValues
         self.groupValues = groupValues
         self.channelValues = channelValues
         self.modals = modals
+        self.deskModel = deskModel
         
     def handleCommand(self, command):
         if isinstance(command, SelectCommand):
@@ -124,8 +125,8 @@ class Programmer(object):
     def _doRecord(self, command):
         if CUE in command.target:
             return self.cueList.recordCue(command.target)
-        else:  # todo record groups, faders
-            print ("unhandled Command", command)
+        elif GROUP in command.target:
+            return self.deskModel.recordGroup(command.target)         
             
     def clear(self):
         self.groupValues.clearRecord()
