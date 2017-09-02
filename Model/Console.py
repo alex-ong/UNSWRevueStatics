@@ -111,25 +111,29 @@ class Console(object):
                       'but valid operators are:',
                       self.validOperators(self.tokens))
                     return 
-        elif len(validOps) > 0:  
-            if tryParseInt(string): #got int but int not in list
-                # need to insert channel or group.
-                if len(self.tokens) == 0:
-                    self.tokens.append(CHANNEL)
-                    self.tokens.append(string)
-                elif self.tokens[-1] == THRU:
-                    self.tokens.append(self.tokens[-3])
-                    self.tokens.append(string)
-                elif self.tokens[-1] in [PLUS, MINUS]:
-                    self.tokens.append(CHANNEL)
-                    self.tokens.append(string)
-                elif CHANNEL in validOps:
-                    self.tokens.append(CHANNEL)
-                    self.tokens.append(string)
-            else:
-                print('Tried to enter ', string,
-                      'but valid operators are:',
-                      self.validOperators(self.tokens))
+        elif len(validOps) > 0: 
+            if RECORD in self.tokens:
+                if tryParseInt(string):
+                    if CUE in validOps:
+                        self.tokens.append(CUE)
+                        self.tokens.append(string)
+                        return
+                    elif CHANNEL in validOps:
+                        self.tokens.append(CHANNEL)
+                        self.tokens.append(string)
+                        return
+            else: 
+                if tryParseInt(string): #got int but int not in list
+                    # need to insert channel or group.                
+                    if CHANNEL in validOps:
+                        self.tokens.append(CHANNEL)
+                        self.tokens.append(string)
+                        return                    
+                
+            print('Tried to enter ', string,
+                  'but valid operators are:',
+                  self.validOperators(self.tokens))
+            return
              
             
     # called when user hits clear 

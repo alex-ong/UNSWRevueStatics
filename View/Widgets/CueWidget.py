@@ -139,8 +139,8 @@ class DBOChannelFrame(tk.Frame):
         newGreen = perc is not None
         if newGreen != self.prevGreen:
             self.prevGreen = newGreen        
-            for cgvc in self.values:
-                cgvc.config(bg=ACTIVE_BG if self.prevGreen else BG)
+            self.config(bg=ACTIVE_BG if self.prevGreen else BG)
+            self.label.config(bg=ACTIVE_BG if self.prevGreen else BG)
         
 class CueNumberFrame(tk.Frame):
     def __init__(self, *args):
