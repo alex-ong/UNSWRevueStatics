@@ -5,6 +5,7 @@ PAGE_MODAL = 'PageModal' #todo: check circular reference in patching...
 DMX_MODAL = 'DmxModal'
 GROUP_MODAL = 'GroupModal'
 FADER_MODAL = 'FaderModal'
+TEXT_ENTRY_MODAL = 'TextEntryModal'
 CONFIRMATION_MODAL = 'ConfirmationModal'
 CONFIRM_BACKUP_MODAL = 'ConfirmBackupModal'
 CONFIRM_RESTORE_MODAL = 'ConfirmRestoreModal'

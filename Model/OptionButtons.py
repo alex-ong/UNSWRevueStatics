@@ -5,19 +5,20 @@ File that lets you know the bindings for the S1->S4 buttons
 RAW_BUTTONS = ['S1', 'S2', 'S3', 'S4']
 
 
-from Model.CommandProgrammer.parser import DELETE
+from Model.CommandProgrammer.parser import DELETE, NAME
 from Model.FaderValues import NEXT_FADERS, PREV_FADERS
 FADER = 'Fader'
 enumToNiceText = {DELETE: 'Delete',
                   NEXT_FADERS: 'Next Faders',
                   PREV_FADERS: 'Prev Faders',
                   FADER: 'Fader',
+                  NAME: 'Name',
                   None: ''
                   }
 
 
 
-MAIN_STATE =   [PREV_FADERS, NEXT_FADERS, None, None]
+MAIN_STATE =   [PREV_FADERS, NEXT_FADERS, NAME, None]
 FADER_BINDING_STATE = [PREV_FADERS, NEXT_FADERS, FADER, None]
 NO_BINDINGS = [None, None, None, None]
 #globals are bad, mmkay?

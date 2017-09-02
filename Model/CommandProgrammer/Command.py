@@ -52,8 +52,16 @@ class DeleteCommand(AbstractCommand):
     def __str__(self):
         return ('Delete ' + self.target)
 
+class NameCommand(AbstractCommand):
+    def __init__(self, target):
+        self.target = target
+    def __str__(self):
+        if self.target is None:
+            return ("Set an item's name")
+        else:
+            return ("Sets " + str(self.target) + "'s name")
+
 class TimeCommand(AbstractCommand):
     def __str__(self):
         return ("Set current cue's up/down times")
     
-        

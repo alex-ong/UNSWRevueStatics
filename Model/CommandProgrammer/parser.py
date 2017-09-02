@@ -122,7 +122,7 @@ class operator_decimal_token:
 class operator_at_token:
     lbp = 10
     def led(self, left):
-        # you an only use left if you are selecting groups/channels
+        # you can only use left if you are selecting groups/channels
         if isinstance(left, list):
             if not subContainsList(left, [FADER, CUE]):
                 right = expression(5)
@@ -143,7 +143,17 @@ class operator_delete_token:
     def nud(self):
         right = expression(5)
         return evaluate_delete_value(right)
-    
+
+class operator_name_token:
+    lbp = 5
+    def nud(self):
+        try:
+            right = expression(5)
+        except Exception as e:
+            print(e)
+            right = None
+        return evaluate_name_value(right)
+        
 def splitLabelAndNumber(string):
     items = re.split('(\d+)', string)  # splits 'word123' into ['word','123','']
     return items[0], items[1]
@@ -191,6 +201,18 @@ def evaluate_delete_value(right):
             return Command.DeleteCommand(right[0])
     else:
         raise ValueError('Record expects a Cue, Group, or Fader')
+    
+def evaluate_name_value(right):
+    if isinstance(right, list):
+        if len(right) > 1:
+            raise ValueError('Record expects a SINGLE group or cue!')
+        else:
+            return Command.NameCommand(right[0])
+    elif right is None:
+        return Command.NameCommand(None)
+    else:
+        raise ValueError('Record expects None or a SINGLE group or cue!')
+            
 class end_token:
     lbp = 0
     
@@ -215,6 +237,7 @@ DECIMAL = '.'
 DELETE = 'Delete'
 FULL = 'Full'
 TIME = 'Time'
+NAME = 'Name'
     
 # tokenizer. Convert from list of strings to tokens
 def tokenize(program):
@@ -227,6 +250,8 @@ def tokenize(program):
             yield operator_at_token()
         elif RECORD == token:
             yield operator_record_token()
+        elif NAME == token:
+            yield operator_name_token()
         elif THRU == token:
             yield operator_thru_token()
         elif GROUP in token:
@@ -246,7 +271,7 @@ def tokenize(program):
         elif FULL == token:
             yield value_token(token)
         elif TIME == token:
-            yield time_token()
+            yield time_token()        
         else:        
             raise SyntaxError("unknown token")
     yield end_token()
