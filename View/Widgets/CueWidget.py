@@ -12,6 +12,7 @@ from View.ViewStyle import COLOR_NONE as BG
 from View.ViewStyle import COLOR_DIRECT as ACTIVE_CUE
 ACTIVE_BG = '#27A53E'
 BG_TITLE = 'grey'
+BG_TITLE2 = '#666666'
 FG_TITLE = 'black'
 RELEASE = 'purple'
 
@@ -192,14 +193,17 @@ class CueNumberFrame(tk.Frame):
                 self.cueSub.set('.' + str(string_dec.mantissa))
 UP_ARROW = '↑'
 DOWN_ARROW = '↓'                                
-class CueTimingFrame(tk.Frame):
+class CueTitleTimingFrame(tk.Frame):
+    TITLE_MAX = 8
     def __init__(self, *args):
         super().__init__(*args)
-        self.config(bg=BG_TITLE)
+        self.config(bg=BG_TITLE)        
+        self.titleLabel = tk.StringVar()
         self.upLabel = tk.StringVar()
         self.downLabel = tk.StringVar()
         self.runLabel = tk.StringVar()
-        self.columnconfigure(0, minsize=VS.pixel_size(30), weight=1)  # blank space
+        
+        self.columnconfigure(0, minsize=VS.pixel_size(60), weight=1)  # blank space
         self.columnconfigure(1, minsize=VS.pixel_size(40), weight=0)  # up text
         self.columnconfigure(2, minsize=VS.pixel_size(5), weight=0)  # up arrow
         self.columnconfigure(3, minsize=VS.pixel_size(40), weight=0)  # down text
@@ -207,12 +211,14 @@ class CueTimingFrame(tk.Frame):
         self.columnconfigure(5, minsize=VS.pixel_size(80), weight=0)  # runLabel
         self.rowconfigure(0, weight=1)
         
+        title = tk.Label(self, textvariable=self.titleLabel, bg=BG_TITLE2, fg=FG_TITLE, font=FONT_HEADING)
         label1 = tk.Label(self, textvariable=self.upLabel, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
         label2 = tk.Label(self, text=UP_ARROW, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
         label3 = tk.Label(self, textvariable=self.downLabel, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
         label4 = tk.Label(self, text=DOWN_ARROW, bg=BG_TITLE, fg=FG_TITLE, font=FONT_HEADING)
         label5 = tk.Label(self, textvariable=self.runLabel, bg=BG_TITLE, fg=FG_PLAY, font=FONT_HEADING)
         
+        title.grid(row=0, column=0, sticky=tk.NSEW)
         label1.grid(row=0, column=1, sticky=tk.E)
         label2.grid(row=0, column=2, sticky=tk.W)
         label3.grid(row=0, column=3, sticky=tk.E)
@@ -222,8 +228,13 @@ class CueTimingFrame(tk.Frame):
         self.prevUp = None
         self.prevDown = None
         self.prevRun = None
- 
-    def refresh(self, up, down, run):
+        self.prevTitle = None
+        
+    def refresh(self, title, up, down, run):
+        title = title[:CueTitleTimingFrame.TITLE_MAX]
+        if self.prevTitle != title:
+            self.prevTitle = title
+            self.titleLabel.set(title)
         if self.prevUp != up:            
             self.upLabel.set(str(up))
             self.prevUp = up
@@ -235,13 +246,14 @@ class CueTimingFrame(tk.Frame):
             if run is not None:    
                 self.runLabel.set(str(round(100 * run)) + '%')
             else:
-                self.runLabel.set('')
+                self.runLabel.set('')                
+        
         
 class CueActiveFrame(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)
         self.config(bg=BG)
-        self.lastColour = BG #colour of arrow
+        self.lastColour = BG  # colour of arrow
         self.label = tk.Label(self, text='>', bg=BG, fg=BG,
                               font=FONT_ACTIVE_CUE, justify=tk.CENTER)
         self.label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
@@ -272,8 +284,8 @@ class CueWidget(tk.Frame):
         sd = string_decimal.fromStr('99.99')
         self.cnf.refresh(sd)
         
-        self.ctf = CueTimingFrame(self)
-        self.ctf.refresh(5, 5, 1.0)
+        self.ctf = CueTitleTimingFrame(self)
+        self.ctf.refresh(':)', 5, 5, 1.0)
         
         self.caf = CueActiveFrame(self)
         self.caf.refresh(False, None)
@@ -283,11 +295,11 @@ class CueWidget(tk.Frame):
         
         self.dbo = DBOChannelFrame(self)
         
-        self.cnf.grid(row=0, column=0, sticky=tk.NSEW) #top left
-        self.ctf.grid(row=0, column=1, sticky=tk.NSEW) #top right
-        self.caf.grid(row=1, column=0, sticky=tk.NSEW) #bottom left 
-        self.cvf.grid(row=1, column=1, sticky=tk.NSEW) #bottom right        
-        self.dbo.grid(row=1, column=1, sticky=tk.NSEW) #bottom right
+        self.cnf.grid(row=0, column=0, sticky=tk.NSEW)  # top left
+        self.ctf.grid(row=0, column=1, sticky=tk.NSEW)  # top right
+        self.caf.grid(row=1, column=0, sticky=tk.NSEW)  # bottom left 
+        self.cvf.grid(row=1, column=1, sticky=tk.NSEW)  # bottom right        
+        self.dbo.grid(row=1, column=1, sticky=tk.NSEW)  # bottom right
         self.isVisible = True
         
     def refreshDisplay(self, cueName, cue, selected):
@@ -300,7 +312,9 @@ class CueWidget(tk.Frame):
                         
         displayPerc = cue.playableCue.displayPerc() if cue.playableCue else None
         self.cnf.refresh(cueName)            
-        self.ctf.refresh(cue.upTime, cue.downTime,
+        self.ctf.refresh('' if cue.label is None else cue.label,
+                         cue.upTime,
+                         cue.downTime,
                          displayPerc)
         self.caf.refresh(selected, displayPerc)
         self.cvf.refresh(cue.mappings, cue.playableCue, displayPerc)
