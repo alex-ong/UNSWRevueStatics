@@ -162,16 +162,13 @@ class Programmer(object):
     def _finishNameModal(self, target, response, data):
         if data is None:  # user cancelled.
             pass
-        else:
+        else:            
             if CUE in target:
                 self.cueList.changeLabel(target, data)
             elif GROUP in target:               
-                self.groupValues.changeLabel(target, data)            
+                self.deskModel.changeGroupLabel(target, data)            
         self.modals.popStack()
 
-
-
-            
     def clear(self):
         self.groupValues.clearRecord()
         self.channelValues.clearRecord()        

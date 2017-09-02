@@ -33,8 +33,7 @@ class ChannelGroupFrame(tk.Frame):
         layoutIndex = 0
         
         for i in range (len(layout)):
-            self.grid_columnconfigure(i, weight=1, minsize=16)
-        
+            self.grid_columnconfigure(i, weight=1, minsize=VS.pixel_size(16))        
                                                
         values = list(values.values.values())
         

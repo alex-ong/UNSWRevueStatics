@@ -15,8 +15,8 @@ import math
 
 class Group(object):
     def __init__(self, number, label, channelMappings):
-        self.number = number        
-        self.label = None
+        self.number = number
+        self.label = label
         self.setLabel(label)        
         
         self.directValue = 0
@@ -27,8 +27,8 @@ class Group(object):
         
     def setLabel(self, label):
         if label is None:
-            label = "Group " + str(self.number)
-        self.label = label
+            label = "Group " + str(self.number).zfill(2)
+        self.label = label        
         
     def setDirectValue(self, value):
         self.directValue = value

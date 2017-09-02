@@ -8,7 +8,7 @@ an array of groups
 '''
 import Model.Group as Group
 from _collections import OrderedDict
-
+from Model.CommandProgrammer.parser import GROUP
 
 class GroupValues(object):
     def __init__(self, groupsConfiguration, channelValues):     
@@ -42,7 +42,14 @@ class GroupValues(object):
         for (key, value) in prevRecordValues.items():
             if key in self.values:
                 self.values[key].setRecordValue(value)
-                        
+    
+    def changeLabel(self, groupName, newLabel):
+        try:
+            groupNumber = int(groupName.replace(GROUP,''))
+        except:
+            return
+        self.values[groupNumber].label = newLabel
+    
     def __iter__(self):
         return iter(self.values)
     

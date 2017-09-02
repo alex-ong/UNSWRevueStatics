@@ -298,6 +298,12 @@ class DeskModel(object):
         
         return "Recorded current state into group"
     
+    def changeGroupLabel(self, groupName, label):
+        number = int(groupName.replace('Group',''))
+        self.groupBindings[number]['name'] = label
+        self.groupValues.changeLabel(groupName, label)
+        self.config.writeGroupBindings(self.groupBindings)
+    
     ##############################################
     # Get Final Universe Output
     ##############################################

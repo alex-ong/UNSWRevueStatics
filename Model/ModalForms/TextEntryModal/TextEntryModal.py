@@ -6,8 +6,8 @@ from Model.ModalForms.AbstractModal import AbstractModal
 import string
 MAX_LENGTH = 8
 
-validchars = (string.ascii_uppercase + string.ascii_lowercase + ' '
-              +string.digits)
+validchars = (string.ascii_uppercase + string.ascii_lowercase +
+              string.digits)
 class TextEntryModal(AbstractModal):
     def subclassShow(self):
         self.message = self.onShowArguments

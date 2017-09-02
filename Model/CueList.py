@@ -85,7 +85,7 @@ class CueList(object):
             if value > 0:
                 mappings[channel.number] = value
         
-        cue = Cue.Cue(mappings, self.defaultUpDown)
+        cue = Cue.Cue(mappings, self.defaultUpDown, None)
         cueIndex = cueName.replace(CUE, '')
         cueIndex = string_decimal.fromStr(cueIndex)
         self.data[cueIndex] = cue        
@@ -177,7 +177,13 @@ class CueList(object):
     def hasCue(self, name):
         cueNumber = fromStr(name.replace(CUE,''))
         return cueNumber in self.data
-            
+    
+    def changeLabel(self, cueTarget, label):
+        cueNumber = fromStr(cueTarget.replace(CUE,''))
+        if cueNumber in self.data:
+            self.data[cueNumber].label = label
+        self.saveFunc(self.toDict())
+        
 if __name__ == '__main__':
     for i in range(10):
         print(alterPivot(10, 6, i, 4), i)

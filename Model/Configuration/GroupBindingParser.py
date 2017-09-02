@@ -21,7 +21,7 @@ def openFile(targetFile, numFaders):
  
 
 def defaultFile(targetFile, numFaders):
-    result = {x:{'name': 'Group' + str(x), 'channels':[]} 
+    result = {x:{'name': 'Group' + str(x).zfill(2), 'channels':[]} 
               for x in range(1, numFaders + 1)}
     saveFile(result, targetFile)
     return result

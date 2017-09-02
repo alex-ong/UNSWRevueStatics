@@ -159,11 +159,15 @@ class ChannelGroupWidget(tk.Frame):
     
     def getFaderLabelString(self):
         if self.dataType == CHANNEL:
-            faderLabelString = 'Chan' + str(self.data.number).zfill(2)
+            faderLabelString = 'Chan' + str(self.data.number).zfill(2) + '\n'
         elif self.dataType == GROUP:
-            faderLabelString = self.data.label
+            faderLabelString = 'Group' + str(self.data.number).zfill(2)
+            if faderLabelString != self.data.label:
+                faderLabelString += '\n' + self.data.label
+            else:
+                faderLabelString += '\n'     
         else:
-            faderLabelString = ''  
+            faderLabelString = '\n'
         return faderLabelString  
     
     def changeFader(self, channelOrGroup):

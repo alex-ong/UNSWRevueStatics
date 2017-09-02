@@ -25,9 +25,10 @@ class FaderFrame(tk.Frame):
         #get widest layout:
         lengths =[len(layout[x]) for x in range(len(layout))]
         
-        width = max(lengths)
-        for i in range (width):
-            self.grid_columnconfigure(i, weight=1, minsize=VS.pixel_size(16))                                     
+        width = max(lengths)            
+        for i in range(width):
+            self.grid_columnconfigure(i, weight=1, minsize=VS.pixel_size(16))
+
         
         # title bar
         title = tk.Label(self, text='Faders', bg='grey', font=HEADING_FONT)
