@@ -77,4 +77,8 @@ class LogicController(object):
         self.model.handleSliderInput(sliderName, value)
     
     def handleButtonInput(self, buttonName, value):
-        self.model.handleButtonInput(buttonName, value)
+        if buttonName.startswith('raw'):
+            self.model.handleRawButtonInput(buttonName, value)
+        else:
+            self.model.handleButtonInput(buttonName, value)
+        

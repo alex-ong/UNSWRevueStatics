@@ -4,6 +4,7 @@ Takes keyboard strings from tkinter, converts them into
 tcp packets
 '''
 import json
+
 CONVERSION = {'plus':'+',
             'minus':'-',
             'period':'.',
@@ -51,6 +52,7 @@ CONVERSION = {'plus':'+',
             'T':'Time'
             }
 
+
 import Networking.TCPClient as TCPClient 
 class KeyboardDaemon(object):
     def __init__(self):
@@ -69,9 +71,10 @@ class KeyboardDaemon(object):
         converted = self.convertKey(event.keysym)
         if converted is not None:            
             self.client.sendMessage(json.dumps({converted: True}))
+            self.client.sendMessage(json.dumps({'raw_'+str(event.keysym): True}))
 
     def handleKeyUp(self, event):
         converted = self.convertKey(event.keysym)
         if converted is not None:
             self.client.sendMessage(json.dumps({converted: False}))
-        
+            self.client.sendMessage(json.dumps({'raw_'+str(event.keysym): False}))

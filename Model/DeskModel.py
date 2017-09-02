@@ -116,7 +116,11 @@ class DeskModel(object):
             else:  # slider bound to group
                 groupNumber = int(toChange.replace('group', ''))
                 self.groupValues[groupNumber].setDirectFlashValue(value)
-
+    
+    def handleRawButtonInput(self, rawButtonName, buttonPressed):
+        if not self.modals.isEmpty():
+            self.modals.handleRawButtonInput(rawButtonName, buttonPressed)
+        
     def handleButtonInput(self, buttonName, buttonPressed):        
         # first, we remap virtual S1-S4 keys to current binding.                
         if buttonName in OptionButtons.RAW_BUTTONS:
@@ -291,8 +295,6 @@ class DeskModel(object):
         self.groupBindings[groupNumber]["channels"] = bindings
         self.groupValues.refreshGroupBindings(self.groupBindings, self.channelValues)
         self.config.writeGroupBindings(self.groupBindings)
-        
-        
         
         return "Recorded current state into group"
     

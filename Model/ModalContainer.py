@@ -54,7 +54,14 @@ class ModalList(object):
         #Hack - our modals only care about onButtonDown
         if (buttonPressed):        
             self.peekStack().handleCommand(input)
-            
+    
+    def handleRawButtonInput(self, rawButtonName, buttonPressed):
+        #Hack - our modals only care about onButtonDown
+        if (buttonPressed):            
+            self.peekStack().handleRawButton(rawButtonName)
+                    
     def handleSliderInput(self, input, value):
         #hack - we don't accept slider input in modals
         return
+    
+    

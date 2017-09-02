@@ -54,7 +54,7 @@ class Programmer(object):
         if (self.cueList.currentCue is not None):
             self.modals.addToStack(TIME_MODAL)
             cueLabel = str(self.cueList.currentCue)
-            self.modals.peekStack().show(cueLabel, self._finishTimeModal)
+            self.modals.peekStack().show("Set time for cue " + cueLabel, self._finishTimeModal)
             return None
         else:
             return ("Error: No Cues. Can't modify time")

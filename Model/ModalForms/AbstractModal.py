@@ -23,4 +23,6 @@ class AbstractModal(object):
     def handleCommand(self, command):
         raise NotImplementedError()
     
-    
+    # silently accept rawButtons unless overridden    
+    def handleRawButton(self, rawButton):
+        pass
