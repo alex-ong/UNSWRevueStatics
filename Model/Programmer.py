@@ -155,7 +155,7 @@ class Programmer(object):
 
     def _doNameModal(self, target):        
         self.modals.addToStack(TEXT_ENTRY_MODAL)        
-        self.modals.peekStack().show("Set label for" + target,
+        self.modals.peekStack().show("Set label for " + target,
                                      lambda response, data: self._finishNameModal(target, response, data))
         
     

@@ -7,12 +7,15 @@ RAW_BUTTONS = ['S1', 'S2', 'S3', 'S4']
 
 from Model.CommandProgrammer.parser import DELETE, NAME
 from Model.FaderValues import NEXT_FADERS, PREV_FADERS
+EXIT2 = 'Exit2'
+
 FADER = 'Fader'
 enumToNiceText = {DELETE: 'Delete',
                   NEXT_FADERS: 'Next Faders',
                   PREV_FADERS: 'Prev Faders',
                   FADER: 'Fader',
                   NAME: 'Name',
+                  EXIT2: 'Cancel', #used for textEntry only
                   None: ''
                   }
 
@@ -20,6 +23,7 @@ enumToNiceText = {DELETE: 'Delete',
 
 MAIN_STATE =   [PREV_FADERS, NEXT_FADERS, NAME, None]
 FADER_BINDING_STATE = [PREV_FADERS, NEXT_FADERS, FADER, None]
+TEXT_ENTRY_STATE = [EXIT2, None, None, None]
 NO_BINDINGS = [None, None, None, None]
 #globals are bad, mmkay?
 _instance = None
@@ -45,7 +49,7 @@ class OptionButtons(object):
     def getCurrentState(self):
         return self.currentState
     
-    def getNiceText(self):
+    def getNiceText(self):        
         result = []
         for item in self.currentState:
             result.append(enumToNiceText[item])            

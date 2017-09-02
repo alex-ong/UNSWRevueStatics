@@ -32,7 +32,7 @@ class LogicController(object):
         self.view.setupConsole(model.console)
         self.view.setupCueList(model.cueList)
         self.view.setupModalForms(model.modals)
-        self.view.setupFunctionButtons(OptionButtons.getInstance().getCurrentState)
+        self.view.setupFunctionButtons(OptionButtons.getInstance().getNiceText)
         self.view.focus_force()
     
     def setupOutput(self):
