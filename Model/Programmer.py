@@ -4,7 +4,7 @@ from libs.sorted_containers.sortedset import SortedSet
 
 from Model.CommandProgrammer.Command import (SelectCommand, SetCommand, SelectAndSetCommand,
                                               DeleteCommand, RecordCommand, DecimalCommand, TimeCommand,
-                                              MenuCommand)
+                                              MenuCommand, NameCommand)
 from Model.CommandProgrammer.parser import  CUE, CHANNEL, GROUP
 
 from Model.ModalContainer import TIME_MODAL, MENU_MODAL
@@ -31,18 +31,20 @@ class Programmer(object):
             return self._doDelete(command)
         elif isinstance(command, RecordCommand):
             return self._doRecord(command)
+        elif isinstance(command, NameCommand):
+            return self._doName(command)
         elif isinstance(command, DecimalCommand):  # should never reach this
             return ("Entering a decimal number isn't a command.")
         elif isinstance(command, TimeCommand):
             return self._doTime()
         elif isinstance(command, MenuCommand):
-            return self._doMenu()
+            return self._doMenu()        
         else:
             return "Command not recognized"
         
     def _doMenu(self):
         self.modals.addToStack(MENU_MODAL)
-        #Todo: forward all data required...
+        # Todo: forward all data required...
         self.modals.peekStack().show(None, self._finishMenuModal)
         return None
     
@@ -60,10 +62,10 @@ class Programmer(object):
             return ("Error: No Cues. Can't modify time")
     
     def _finishTimeModal(self, response, data):
-        if data is None: #user cancelled.
+        if data is None:  # user cancelled.
             pass
         else:
-            self.cueList.changeCueTime(data[0],data[1])            
+            self.cueList.changeCueTime(data[0], data[1])            
         self.modals.popStack()
         
     def _doSelect(self, command):
@@ -127,6 +129,48 @@ class Programmer(object):
             return self.cueList.recordCue(command.target)
         elif GROUP in command.target:
             return self.deskModel.recordGroup(command.target)         
+        
+    def _doName(self, command):
+        # auto-target if no target given.
+        if command.target is None:
+            command.target = self.cueList.currentCue
+            if command.target is None:
+                return("No target selected for naming")
+            else:
+                command.target = CUE + str(self.cueList.currentCue)
+        if CUE in command.target:
+            # quick validation before bringing up modal
+            if (self.cueList.hasCue(command.target)):
+                self._doNameModal(command.target)
+            else:
+                return("Cue doesn't exist")
+        elif GROUP in command.target:        
+            # quick validation before bringing up modal
+            try:
+                target = int(command.target.replace(GROUP, ''))
+            except:
+                return("Invalid Group:", str(command.target))
+            if target in self.groupValues:
+                self._doNameModal(command.target)        
+
+    def _doNameModal(self, target):        
+        self.modals.addToStack(NAME_MODAL)        
+        self.modals.peekStack().show("Set label for" + target,
+                                     lambda response, data: self._finishNameModal(target, response, data))
+        
+    
+    def _finishNameModal(self, target, response, data):
+        if data is None:  # user cancelled.
+            pass
+        else:
+            if CUE in target:
+                self.cueList.changeLabel(target, data)
+            elif GROUP in target:               
+                self.groupValues.changeLabel(target, data)            
+        self.modals.popStack()
+
+
+
             
     def clear(self):
         self.groupValues.clearRecord()

@@ -173,7 +173,11 @@ class CueList(object):
         self.data.clear()
         self.currentCue = None
         self.saveFunc(self.toDict())
-        
+    
+    def hasCue(self, name):
+        cueNumber = fromStr(name.replace(CUE,''))
+        return cueNumber in self.data
+            
 if __name__ == '__main__':
     for i in range(10):
         print(alterPivot(10, 6, i, 4), i)
