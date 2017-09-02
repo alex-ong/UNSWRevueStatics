@@ -71,7 +71,7 @@ class LogicController(object):
                         self.handleButtonInput(key, buttonEvent.down)
     
     def handleOutput(self):
-        self.dmxSender.update()        
+        self.dmxSender.update()
             
     def handleSliderInput(self, sliderName, value):
         self.model.handleSliderInput(sliderName, value)

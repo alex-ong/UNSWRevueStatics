@@ -5,8 +5,10 @@ from .ModalForms.DMXModal import DMXModal
 from .ModalForms.ConfirmationModal import ConfirmationModal
 from .ModalForms.GroupModal import GroupModal
 from .ModalForms.FaderModal import FaderModal
+from .ModalForms.TextEntryModal import TextEntryModal
 from .ModalForms.ModalFormConsts import *
 from Model import OptionButtons
+
 
 '''
 This class has an instance of every possible modal.
@@ -28,7 +30,8 @@ class ModalList(object):
         self.data[GROUP_MODAL] = GroupModal.GroupModal(model)
         self.data[FADER_MODAL] = FaderModal.FaderModal(model)
         self.data[CONFIRMATION_MODAL] = ConfirmationModal.ConfirmationModal()
-            
+        self.data[TEXT_ENTRY_MODAL] = TextEntryModal.TextEntryModal()
+        
     def getModal(self, modalType):
         return self.data[modalType]
 

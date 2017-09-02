@@ -7,7 +7,7 @@ from Model.CommandProgrammer.Command import (SelectCommand, SetCommand, SelectAn
                                               MenuCommand, NameCommand)
 from Model.CommandProgrammer.parser import  CUE, CHANNEL, GROUP
 
-from Model.ModalContainer import TIME_MODAL, MENU_MODAL
+from Model.ModalContainer import TIME_MODAL, MENU_MODAL, TEXT_ENTRY_MODAL
 from libs.string_decimal import string_decimal
 
 class Programmer(object):
@@ -154,7 +154,7 @@ class Programmer(object):
                 self._doNameModal(command.target)        
 
     def _doNameModal(self, target):        
-        self.modals.addToStack(NAME_MODAL)        
+        self.modals.addToStack(TEXT_ENTRY_MODAL)        
         self.modals.peekStack().show("Set label for" + target,
                                      lambda response, data: self._finishNameModal(target, response, data))
         

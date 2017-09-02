@@ -4,6 +4,7 @@ from . import TimeModal
 from . import MainMenuModal
 from . import PatchMenuModal
 from . import DMXModal
+from . import TextEntryModal
 from . import ConfirmationModal
 from . import GroupModal
 from . import FaderModal
@@ -14,7 +15,8 @@ modalMapping = { TIME_MODAL: TimeModal.TimeModal,
                  DMX_MODAL: DMXModal.DMXModal,
                  GROUP_MODAL: GroupModal.GroupModal,
                  FADER_MODAL: FaderModal.FaderModal,
-                 CONFIRMATION_MODAL: ConfirmationModal.ConfirmationModal}  # todo!
+                 TEXT_ENTRY_MODAL: TextEntryModal.TextEntryModal,
+                 CONFIRMATION_MODAL: ConfirmationModal.ConfirmationModal}  
 
 
 class ModalManager():
@@ -24,7 +26,7 @@ class ModalManager():
         self.myStack = []
         self.hackMainWindow = hackMainWindow  # TODO: make mainwindow a full fledged modal
         for key, value in modalContainer.data.items():
-            viewClass = modalMapping[key]
+            viewClass = modalMapping[key]            
             self.modalForms[key] = viewClass(value, keyDownHandler, keyUpHandler)
             
     def destroy(self):

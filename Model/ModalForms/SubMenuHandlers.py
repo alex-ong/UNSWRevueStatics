@@ -13,8 +13,8 @@ def GenerateSelectHandler(menuType, model, modalContainer):
         return GroupModalSelectHandler(model, modalContainer)
     elif menuType == FADER_MODAL:
         return FaderModalSelectHandler(model, modalContainer)
-    elif menuType == TEXT_ENTRY_MODAL:
-        return TextEntryModalSelectHandler(model, modalContainer)
+#     elif menuType == TEXT_ENTRY_MODAL:
+#         return TextEntryModalSelectHandler(model, modalContainer)
     elif menuType == CONFIRM_BACKUP_MODAL:        
         return ConfirmBackupSelectHandler(model, modalContainer)
     elif menuType == CONFIRM_RESTORE_MODAL:
@@ -42,8 +42,8 @@ def GenerateFinishHandler(menuType, model, modalContainer):
         return GroupModalFinishHandler(model, modalContainer)
     elif menuType == FADER_MODAL:
         return FaderModalFinishHandler(model, modalContainer)
-    elif menuType == TEXT_ENTRY_MODAL:
-        return TextEntryModalFinishHandler(model, modalContainer)
+#     elif menuType == TEXT_ENTRY_MODAL:
+#         return TextEntryModalFinishHandler(model, modalContainer)
     elif menuType == CONFIRM_BACKUP_MODAL:
         return ConfirmBackupFinishHandler(model, modalContainer)
     elif menuType == CONFIRM_RESTORE_MODAL:

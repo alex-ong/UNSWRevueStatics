@@ -71,10 +71,12 @@ class KeyboardDaemon(object):
         converted = self.convertKey(event.keysym)
         if converted is not None:            
             self.client.sendMessage(json.dumps({converted: True}))
-            self.client.sendMessage(json.dumps({'raw_'+str(event.keysym): True}))
+        self.client.sendMessage(json.dumps({'raw_'+str(event.keysym): True}))
 
     def handleKeyUp(self, event):
         converted = self.convertKey(event.keysym)
         if converted is not None:
             self.client.sendMessage(json.dumps({converted: False}))
-            self.client.sendMessage(json.dumps({'raw_'+str(event.keysym): False}))
+        self.client.sendMessage(json.dumps({'raw_'+str(event.keysym): False}))
+        
+        
