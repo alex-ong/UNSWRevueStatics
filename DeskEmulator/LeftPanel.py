@@ -37,7 +37,7 @@ class LeftPanel(tk.Frame):
         self.grandMaster = SliderPlusButton.SliderPlusButton(-1, "GM", self)
         self.grandMaster.grid(row=0, column=2, rowspan=6)
         for i in range(0, 9):            
-            sliderPair = SliderPlusButton.SliderPlusButton(19 + i, 19 + i, self)
+            sliderPair = SliderPlusButton.SliderPlusButton(19 + i, 1 + i, self)
             sliderPair.grid(row=0, column=4 + i, rowspan=6)
             self.sliders.append(sliderPair)
              

@@ -18,19 +18,17 @@ class DeskEmulator(tk.Frame):
     def __init__(self, *args):
         super().__init__(*args)        
         self.grid()        
-        
-        self.topPanel = TopPanel.TopPanel(self)
-        self.topPanel.grid(row=0, columnspan=2)
-        
+
         self.leftPanel = LeftPanel.LeftPanel(self)
-        self.leftPanel.grid(row=1)
-        
+        self.leftPanel.grid(row=0)
+        self.middlePanel = TopPanel.TopPanel(self)
+        self.middlePanel.grid(row=0, column=1)        
         self.rightPanel = RightPanel.RightPanel(self)
-        self.rightPanel.grid(row=1, column=1)
+        self.rightPanel.grid(row=0, column=2)
     
     def getState(self):
         result = OrderedDict()
-        result.update(self.topPanel.getState())
+        result.update(self.middlePanel.getState())
         result.update(self.leftPanel.getState())
         result.update(self.rightPanel.getState())        
         return result

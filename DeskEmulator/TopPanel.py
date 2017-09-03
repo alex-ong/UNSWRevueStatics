@@ -12,7 +12,7 @@ class TopPanel(tk.Frame):
         
     def initTopPanel(self):        
         for i in range(1, 19):            
-            sliderPair = SliderPlusButton.SliderPlusButton(i, i, self)
+            sliderPair = SliderPlusButton.SliderPlusButton(i, i+9, self)
             sliderPair.grid(row=0, column=i)
             self.sliders.append(sliderPair)
     
