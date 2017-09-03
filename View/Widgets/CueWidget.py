@@ -100,6 +100,7 @@ class CompactValueFrame(tk.Frame):
                 self.values.append(cgvc)
                 
         self.prevGreen = False;
+    
     def refresh(self, bindings, playableCue, perc):        
         i = 0
         finalBindings = {}
@@ -114,8 +115,12 @@ class CompactValueFrame(tk.Frame):
             for key, value in bindings2.items():
                 finalBindings[key].append(value)
                 
-        for key, value in finalBindings.items():            
-            self.values[i].setValue(key, value[0], value[1])
+        for key, value in finalBindings.items():
+            #MASSIVE HACK
+            try:            
+                self.values[i].setValue(key, value[0], value[1])
+            except:
+                pass
             i += 1
             
         while i < len(self.values):
