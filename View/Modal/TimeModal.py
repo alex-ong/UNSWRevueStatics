@@ -13,7 +13,7 @@ FG = 'white'
 DESC_TEXT1 = 'Input Up time'
 DESC_TEXT2 = 'Input Down time'
 FONT = (VS.FONT, VS.font_size(28))
-TITLE_FONT = (VS.FONT, VS.font_size(48))
+TITLE_FONT = (VS.FONT, VS.font_size(28))
 COLOR_CONSOLE = 'red'
 def autoString(value):
     if value is None:
