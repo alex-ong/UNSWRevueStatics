@@ -49,7 +49,10 @@ class ChannelGroupValueCompact(tk.Frame):
         
     def setValue(self, title, cueValue, playValue):
         if self.prevTitle != title:
-            self.title.set(str(title) + ":")
+            if title == '...':
+                self.title.set(title)
+            else:            
+                self.title.set(str(title) + ":")
             self.prevTitle = title
         if self.prevCueValue != cueValue:
             self.cueValue.set(cueValue)
@@ -104,6 +107,7 @@ class CompactValueFrame(tk.Frame):
     def refresh(self, bindings, playableCue, perc):        
         i = 0
         finalBindings = {}
+        lastIndex = len(self.values) - 1
         for key, value in bindings.items():
             if playableCue is None:
                 finalBindings[key] = [value, None]       
@@ -114,14 +118,19 @@ class CompactValueFrame(tk.Frame):
             bindings2 = playableCue.getValues()
             for key, value in bindings2.items():
                 finalBindings[key].append(value)
-                
+
         for key, value in finalBindings.items():
-            #MASSIVE HACK
-            try:            
-                self.values[i].setValue(key, value[0], value[1])
-            except:
-                pass
+            if i == lastIndex:
+                if len(self.values) == len(finalBindings.items()):
+                    self.values[i].setValue(key, value[0], value[1])
+                else:
+                    self.values[i].setValue('...', '...', '')    
+            else:                            
+                self.values[i].setValue(key, value[0], value[1])            
             i += 1
+            if i >= len(self.values):
+                break
+            
             
         while i < len(self.values):
             self.values[i].clear()
