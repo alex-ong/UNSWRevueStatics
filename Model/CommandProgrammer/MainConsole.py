@@ -56,8 +56,9 @@ def validOperators(program):
         else:
             return [FULL, NUMBER]
     else:  # assume no @ in program
-        if lastSymbol in [GROUP, CHANNEL]:
+        if lastSymbol in [GROUP, CHANNEL,CUE]:
             return [NUMBER]
+                
         elif tryParseInt(lastSymbol):  # isNumber
             if program[-2] in [GROUP, CHANNEL]:
                 result = [NUMBER, PLUS, MINUS, AT]
