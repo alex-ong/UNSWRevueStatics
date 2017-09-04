@@ -7,6 +7,9 @@ from Model.ChannelValues import ChannelValues
 def clamp(minimum, maximum, x):
     return max(minimum, min(x, maximum))
 
+def lerp(start, end, perc):
+    return start + perc * (end - start)
+
 def tryParseInt(token):
     try:
         int(token)
@@ -18,16 +21,27 @@ class PlayableCue(object):
     MODE_PLAY = 0
     MODE_STOP = 1
     
-    def __init__(self, cue, onFinished):
+    def __init__(self, cue, currentState, onFinished):
         self.target = None
         self.mode = PlayableCue.MODE_NONE
         self.cue = cue
         self.cue.playableCue = self
+        self.startState = self.copyCurrentState(currentState)
         self.onFinished = onFinished
         self.timer = 0.0        
         self._play()
         self.canRemove = False
-        
+    
+    def copyCurrentState(self, currentState):
+        result = {}    
+        cueBindings = self.cue.getValues()
+        for key in cueBindings:
+            try:
+                result[key] = currentState[key]
+            except Exception as e:
+                print(e)
+        return result    
+                
     def _play(self):
         self.mode = PlayableCue.MODE_PLAY
         self.target = self.cue.upTime.toFloat()    
@@ -39,6 +53,10 @@ class PlayableCue(object):
             startValue = (1.0 - self._perc()) * newTarget
             self.timer = startValue
             self.target = newTarget
+            
+            self.startState = self.cue.getValues().copy()
+            for key, value in self.startState.items():
+                self.startState[key] = 0
     
     def instantStop(self):
         self.stop()
@@ -68,11 +86,14 @@ class PlayableCue(object):
         
     def getValues(self):
         result = self.cue.getValues().copy()
-        multiplier = self._perc()
+        perc = self._perc()
         if self.mode == PlayableCue.MODE_STOP:
-            multiplier = 1.0 - multiplier
-        for key, value in result.items():
-            result[key] = round(value * multiplier) 
+            perc = 1.0 - perc
+            
+        for key, value in result.items():                
+            startValue = self.startState[key]                
+            result[key] = round(lerp(startValue, result[key], perc))
+                 
         return result
     
 class CuePlayer(object):
@@ -95,9 +116,16 @@ class CuePlayer(object):
     def release(self):
         for cue in self.currentCues:
             cue.instantStop()
-            
+    
+    def _currentValues(self):
+        groupResult = self.groupValues.getCurrentPlaybackValues()
+        channelResult = self.channelValues.getCurrentPlaybackValues()
+        
+        groupResult.update(channelResult)        
+        return groupResult
+        
     def playCue(self, cue):
-        #if cue exists, play it
+        # if cue exists, play it
         exists = False        
         for playableCue in self.currentCues:
             if playableCue.cue == cue:                
@@ -105,11 +133,15 @@ class CuePlayer(object):
                 break
         
         if not exists:        
-            #stop all existing cues
+            # stop all existing cues
+            # copy state before releasing...
+            currentState = self._currentValues()
             self.clear()
-            self.currentCues.append(PlayableCue(cue, self._removeCue))
+            playableCue = PlayableCue(cue, currentState, self._removeCue)
+            self.currentCues.append(playableCue)
         
     def update(self, deltaTime):
+        # since self.currentCues is ordered, last cue value overrides previous cue values. 
         for cue in self.currentCues:
             cue.update(deltaTime)            
         

@@ -43,6 +43,12 @@ class GroupValues(object):
             if key in self.values:
                 self.values[key].setRecordValue(value)
     
+    def getCurrentPlaybackValues(self):
+        result = {}
+        for groupNumber, value in self.values.items():
+            result['group'+str(groupNumber)] = value.playbackValue
+        return result
+    
     def changeLabel(self, groupName, newLabel):
         try:
             groupNumber = int(groupName.replace(GROUP,''))

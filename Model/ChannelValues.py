@@ -37,3 +37,10 @@ class ChannelValues(object):
     def clearRecord(self):
         for value in self.values.values():
             value.clearRecord()
+    
+    def getCurrentPlaybackValues(self):
+        result = {}
+        for channelNumber, value in self.values.items():
+            result[channelNumber] = value.playbackValue
+        return result
+    
