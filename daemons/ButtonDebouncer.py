@@ -1,4 +1,4 @@
-DEBOUNCE_TIME = 0.005  # five milliseconds
+DEBOUNCE_TIME = 0.005 # five milliseconds
 # DEBOUNCE_TIME = 1.000
 import time
 '''
@@ -21,7 +21,7 @@ class ButtonDebouncer(object):
             (timeStamp - DEBOUNCE_TIME) > self.lastButtonDownTime):
             if self.lastInput == False and self.outputValue != False:
                 self.outputValue = False
-                self.onChange(False, self.buttonName)
+                self.onChange(self.buttonName, self.outputValue)
     
     # can immediately fire buttonDown
     def receiveInput(self, value, timeStamp):        
@@ -30,7 +30,9 @@ class ButtonDebouncer(object):
                 self.outputValue = True
                 self.lastInput = True
                 self.lastButtonDownTime = timeStamp
-                self.onChange(True, self.buttonName)            
+                self.onChange(self.buttonName, value)
+            else:
+                self.lastInput = value
         else:  # received buttonUp
             self.lastInput = False
             

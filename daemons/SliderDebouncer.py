@@ -19,5 +19,5 @@ class SliderDebouncer(object):
     
     # can immediately fire buttonDown
     def receiveInput(self, value, timeStamp):            
-        self.onChange(value, self.sliderName)            
+        self.onChange(self.sliderName, value)            
         

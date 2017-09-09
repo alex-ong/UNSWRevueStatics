@@ -27,11 +27,12 @@ SLIDER_LIST = ['slider' + str(i) for i in range(1, 28)] + ['slider-1']
 
 class DebouncedDictionary(object):
     def __init__(self):
-        buttonDebouncers = {buttonName: ButtonDebouncer.ButtonDebouncer(buttonName, 
-                                                                        lambda name, value: currentState.update({name, value})) 
+        buttonDebouncers = {buttonName: ButtonDebouncer.ButtonDebouncer(buttonName,
+                                                                        lambda name, value: self.debounceCallback(name, value))
+                                                                        # lambda name, value: currentState.update({name, value})) 
                                                                         for buttonName in B_LIST}
-        sliderDebouncers = {sliderName: SliderDebouncer.SliderDebouncer(sliderName, 
-                                                                        lambda name, value: currentState.update({name, value}))
+        sliderDebouncers = {sliderName: SliderDebouncer.SliderDebouncer(sliderName,
+                                                                        lambda name, value: self.debounceCallback(name, value))
                                                                         for sliderName in SLIDER_LIST}
         # merge the two dictionaries of debouncers
         buttonDebouncers.update(sliderDebouncers)
@@ -45,6 +46,10 @@ class DebouncedDictionary(object):
     def updateValue(self, key, value):
         if key in self.debouncers:
             self.debouncers[key].receiveInput(value, time.time())
+    
+    def debounceCallback(self, key, value):
+        # hack! calls a GLOBAL        
+        currentState.update({key: value})
         
 DEBOUNCE_DICT = DebouncedDictionary()
  
@@ -135,8 +140,15 @@ class MidiInputHandler(object):
         elif status == CONTROLLER_CHANGE:
             key = MIDI_MAP["sliders"][channel][message[1]]
             value = round(message[2] * 100 / 127)
-            DEBOUNCE_DICT.update(key, value)
+            DEBOUNCE_DICT.updateValue(key, value)
         
+def dict_diff(dictA, dictB):
+    result = {}
+    for key in dictB:
+        if key not in dictA or dictB[key] != dictA[key]:
+            result[key] = dictB[key]
+    return result
+
 if __name__ == '__main__':      
     try:
         midiin, port_name = open_midiinput(0)
@@ -161,10 +173,12 @@ if __name__ == '__main__':
         # everything else is handled via the input callback.
         while True:
             if currentState != lastState:
-                lastState = currentState.copy()
-                client.sendMessage(json.dumps(currentState))            
+                toSend = dict_diff(lastState, currentState)
+                lastState = currentState.copy()                
+                client.sendMessage(json.dumps(toSend))
             # 100 fps refresh rate 
             time.sleep(0.01)
+            DEBOUNCE_DICT.updateTime(time.time())
 
     except KeyboardInterrupt:
         print('Received KeyboardInterrupt')
