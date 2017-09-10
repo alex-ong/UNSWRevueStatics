@@ -39,7 +39,7 @@ class CueList(object):
     def __init__(self, sortedDict, groupValues, channelValues, saveFunc, defaultUpDown):
         self.data = sortedDict
         self.player = CuePlayer(groupValues, channelValues)
-        self.defaultUpDown = (fromStr(defaultUpDown[0]),fromStr(defaultUpDown[1]))
+        self.defaultUpDown = (fromStr(defaultUpDown[0]), fromStr(defaultUpDown[1]))
         self.currentCue = None
         if len(self.data.keys()) > 0:
             self.currentCue = self.data.keys()[0]        
@@ -55,7 +55,7 @@ class CueList(object):
         return result
             
     def deleteCue(self, cueName):
-        key = string_decimal.fromStr(cueName.replace(CUE,''))
+        key = string_decimal.fromStr(cueName.replace(CUE, ''))
         if key in self.data:
             if key == self.currentCue:
                 allKeys = self.data.keys()
@@ -140,16 +140,18 @@ class CueList(object):
                 channelNumber = int(binding)
                 self.channelValues[channelNumber].setPlaybackValue(value)
             else:
-                groupNumber = int(binding.replace('group',''))
+                groupNumber = int(binding.replace('group', ''))
                 self.groupValues[groupNumber].setPlaybackValue(value)
     
     
     def changeDefaultCueTime(self, upDown):
         up = upDown[0]
         down = upDown[1]
-        if not isinstance(up, string_decimal.string_decimal):
+        if (not isinstance(up, string_decimal.string_decimal) or 
+            not isinstance(down, string_decimal.string_decimal)):
             up = fromStr(up)
-            down = fromStr(down)            
+            down = fromStr(down)
+            upDown = [up, down]            
         self.defaultUpDown = upDown
         
     # changes cue timing for currently selected cue.
@@ -175,11 +177,11 @@ class CueList(object):
         self.saveFunc(self.toDict())
     
     def hasCue(self, name):
-        cueNumber = fromStr(name.replace(CUE,''))
+        cueNumber = fromStr(name.replace(CUE, ''))
         return cueNumber in self.data
     
     def changeLabel(self, cueTarget, label):
-        cueNumber = fromStr(cueTarget.replace(CUE,''))
+        cueNumber = fromStr(cueTarget.replace(CUE, ''))
         if cueNumber in self.data:
             self.data[cueNumber].label = label
         self.saveFunc(self.toDict())
