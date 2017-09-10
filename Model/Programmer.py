@@ -4,7 +4,7 @@ from libs.sorted_containers.sortedset import SortedSet
 
 from Model.CommandProgrammer.Command import (SelectCommand, SetCommand, SelectAndSetCommand,
                                               DeleteCommand, RecordCommand, DecimalCommand, TimeCommand,
-                                              MenuCommand, NameCommand)
+                                              MenuCommand, NameCommand, SuckCommand)
 from Model.CommandProgrammer.parser import  CUE, CHANNEL, GROUP
 
 from Model.ModalContainer import TIME_MODAL, MENU_MODAL, TEXT_ENTRY_MODAL
@@ -38,7 +38,9 @@ class Programmer(object):
         elif isinstance(command, TimeCommand):
             return self._doTime()
         elif isinstance(command, MenuCommand):
-            return self._doMenu()        
+            return self._doMenu()       
+        elif isinstance(command, SuckCommand): 
+            self._doSuckDick()
         else:
             return "Command not recognized"
         
@@ -60,7 +62,19 @@ class Programmer(object):
             return None
         else:
             return ("Error: No Cues. Can't modify time")
-    
+        
+    def _doSuckDick(self): #hehe. Should be _doSuck        
+        for group in self.groupValues.values.values():            
+            value, _ = group.getCueValueAndReason()            
+            if value > 0:
+                self.groupValues[group.number].setRecordValue(value)
+                
+        for channel in self.channelValues.values.values():
+            value, _ = channel.getCueValueAndReason()
+            if value > 0:
+                self.channelValues[channel.number].setRecordValue(value)
+        return ("Set active values into programmer")
+        
     def _finishTimeModal(self, response, data):
         if data is None:  # user cancelled.
             pass

@@ -1,5 +1,5 @@
 from .parser import (RECORD, THRU, GROUP, CHANNEL, CUE, FADER, AT,
-                    PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL, TIME, NAME,
+                    PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL, TIME, NAME, SUCK,
                     tryParseInt, subContains)
 
 # we could use this function in future to provide auto-complete features...

@@ -3,7 +3,7 @@ Our tokenizer.
 Can receive arbitrary strings, and then attempt to tokenize them and parse them...
 '''
 from Model.CommandProgrammer.parser import (RECORD, THRU, GROUP, CHANNEL, CUE, FADER, AT,
-                                            PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL, TIME,
+                                            PLUS, MINUS, NUMBER, DECIMAL, DELETE, FULL, TIME, SUCK,
                                             tryParseInt, subContains)
 
 from Model.CommandProgrammer.parser import safeParse
@@ -96,6 +96,8 @@ class Console(object):
                 if string == FULL: 
                     return self.parseString(ENTER)
                 elif string == TIME:
+                    return self.parseString(ENTER)
+                elif string == SUCK:
                     return self.parseString(ENTER)
         elif string == FULL: #can insert full before @
             #insert an at, then check if FULL is possible.
