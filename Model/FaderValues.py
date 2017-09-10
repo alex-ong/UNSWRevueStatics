@@ -29,6 +29,6 @@ class FaderValues(object):
         return len(self.values)
     
     def resetValues(self):
-        for value in self.values:
+        for value in self.values.values():
             value.reset()
             

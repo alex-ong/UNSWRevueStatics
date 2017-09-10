@@ -34,6 +34,10 @@ class time_token:  # just time by itself is a command
     def nud(self):
         return Command.TimeCommand()     
     
+class suck_token: #just suck by itself is a command
+    def nud(self):
+        return Command.SuckCommand()
+    
 class value_token:  # basically just numbers
     def __init__(self, value):
         if value == FULL:
@@ -147,8 +151,8 @@ class operator_delete_token:
 class operator_name_token:
     lbp = 5
     def nud(self):
-        #hack so we can support NAME by itself and also NAME + Group/Cue + number.
-        #side-effect is that NAME + GROUP/Cue without number will also work as just NAME
+        # hack so we can support NAME by itself and also NAME + Group/Cue + number.
+        # side-effect is that NAME + GROUP/Cue without number will also work as just NAME
         try:
             right = expression(5)
         except StopIteration as e:            
@@ -239,7 +243,8 @@ DELETE = 'Delete'
 FULL = 'Full'
 TIME = 'Time'
 NAME = 'Name'
-    
+SUCK = 'Suck'
+
 # tokenizer. Convert from list of strings to tokens
 def tokenize(program):
     for token in program:
@@ -267,6 +272,8 @@ def tokenize(program):
             yield operator_decimal_token()
         elif DELETE == token:
             yield operator_delete_token()
+        elif SUCK == token:
+            yield suck_token()
         elif tryParseInt(token):
             yield value_token(token)
         elif FULL == token:

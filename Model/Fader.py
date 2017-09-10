@@ -12,3 +12,6 @@ class Fader(object):
                     
     def getBinding(self):
         return self._binding
+    
+    def reset(self):
+        self._binding.resetDirect()

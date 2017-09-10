@@ -64,4 +64,7 @@ class NameCommand(AbstractCommand):
 class TimeCommand(AbstractCommand):
     def __str__(self):
         return ("Set current cue's up/down times")
-    
+
+class SuckCommand(AbstractCommand):
+    def __str__(self):
+        return ("Write current channel values into programmer")    
