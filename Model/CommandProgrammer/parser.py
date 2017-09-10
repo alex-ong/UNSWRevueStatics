@@ -147,8 +147,8 @@ class operator_delete_token:
 class operator_name_token:
     lbp = 5
     def nud(self):
-        #hack so we can support NAME by itself and also NAME + Group/Cue + number.
-        #side-effect is that NAME + GROUP/Cue without number will also work as just NAME
+        # hack so we can support NAME by itself and also NAME + Group/Cue + number.
+        # side-effect is that NAME + GROUP/Cue without number will also work as just NAME
         try:
             right = expression(5)
         except StopIteration as e:            

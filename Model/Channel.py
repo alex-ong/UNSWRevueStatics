@@ -32,6 +32,9 @@ class Channel(object):
     def setDMXAddress(self, newAddress):
         self._dmxAddress = newAddress
              
+    def resetDirect(self):
+        self.directValue = 0
+        
     def setDirectValue(self, value):
         self.directValue = value
         

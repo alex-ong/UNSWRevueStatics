@@ -170,12 +170,14 @@ class DeskModel(object):
     # Change fader bindings
     ################################
     def nextFaderBindings(self):
+        self.faderValues.resetValues()
         self.currentfaderBinding += 1
         if self.currentfaderBinding >= len(self.faderBindings):
             self.currentfaderBinding = 0
         self.refreshFaderBindings()
     
     def prevFaderBindings(self):
+        self.faderValues.resetValues()
         self.currentfaderBinding -= 1
         if self.currentfaderBinding < 0:
             self.currentfaderBinding = len(self.faderBindings) - 1

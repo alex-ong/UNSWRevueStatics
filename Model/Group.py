@@ -57,6 +57,9 @@ class Group(object):
     def setChannelMappings(self, mappings):
         self.channelMappings = mappings
     
+    def resetDirect(self):
+        self.directValue = 0
+
     def reset(self):
         self.directValue = 0
         self.directFlashValue = 0
