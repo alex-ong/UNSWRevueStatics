@@ -7,7 +7,7 @@ def validOperators(program):
     # TODO: complete this...
         
     if len(program) == 0:
-        return [AT, RECORD, GROUP, CUE, CHANNEL, DELETE, TIME, NAME]
+        return [AT, RECORD, GROUP, CUE, CHANNEL, DELETE, TIME, NAME, SUCK]
     
     lastSymbol = program[-1]
     
@@ -35,6 +35,8 @@ def validOperators(program):
             return [NUMBER]
     elif program[0] == TIME:
         return []
+    elif program[0] == SUCK:
+        return []    
     elif program[0] == NAME:
         if len(program) == 1:
             return [CUE, GROUP]
@@ -45,7 +47,7 @@ def validOperators(program):
         elif program[-1] == DECIMAL:
             return [NUMBER]
         else:
-            return [NUMBER]            
+            return [NUMBER]                
     elif lastSymbol == AT:  # program ends with @
         return [NUMBER, FULL]
     elif AT in program:  # we are at [expression] @ number

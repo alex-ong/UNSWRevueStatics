@@ -23,7 +23,8 @@ from Model.ModalForms.ModalFormConsts import MENU_MODAL
 # validOperators for main console
 from Model.CommandProgrammer.MainConsole import validOperators 
 from Model.FaderValues import FADER_COMMANDS, NEXT_FADERS, PREV_FADERS
-
+from Model.OptionButtons import MORE_OPTIONS
+META_COMMANDS = [OptionButtons.MORE_OPTIONS]
 
 class DeskModel(object):
     def __init__(self):
@@ -146,12 +147,21 @@ class DeskModel(object):
                 self.handleFlash(faderNumber, buttonPressed)
             elif buttonPressed:  # we only care about keyDown
                 # now, if it's a playback command handle it
-                if buttonName in PLAYBACK_COMMANDS:
+                if buttonName in META_COMMANDS:
+                    self.handleMetaCommand(buttonName)
+                elif buttonName in PLAYBACK_COMMANDS:
                     self.handlePlaybackCommand(buttonName)
                 elif buttonName in FADER_COMMANDS:
                     self.handleFaderCommand(buttonName)                
                 else:  # otherwise we add the command to console
                     self.handleConsoleInput(buttonName)
+    
+    def handleMetaCommand(self, buttonName):
+        if buttonName == MORE_OPTIONS:
+            OptionButtons.getInstance().cycleMainState()
+        else:
+            print ("unknown Meta command", buttonName)
+            
     def handleFaderCommand(self, buttonName):
         if buttonName == NEXT_FADERS:
             self.nextFaderBindings()
