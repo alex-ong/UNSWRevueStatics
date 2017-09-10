@@ -139,7 +139,7 @@ class MidiInputHandler(object):
             DEBOUNCE_DICT.updateValue(key, value)  # debounceDict will decide final value to send
         elif status == CONTROLLER_CHANGE:
             key = MIDI_MAP["sliders"][channel][message[1]]
-            value = round(message[2] * 100 / 127)
+            value = round(message[2] * 100.0 / 127.0)
             DEBOUNCE_DICT.updateValue(key, value)
         
 def dict_diff(dictA, dictB):
@@ -174,7 +174,7 @@ if __name__ == '__main__':
         while True:
             if currentState != lastState:
                 toSend = dict_diff(lastState, currentState)
-                lastState = currentState.copy()                
+                lastState = currentState.copy()                              
                 client.sendMessage(json.dumps(toSend))
             # 100 fps refresh rate 
             time.sleep(0.01)
