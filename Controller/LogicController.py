@@ -36,13 +36,12 @@ class LogicController(object):
         self.view.focus_force()
     
     def setupOutput(self):
-        model = self.model
         if self.dmxSender is not None:
             self.dmxSender.stop()
             self.dmxSender = None
         self.dmxSender = DMXOutputter(self.model.getDMXOutput)
     
-    # model calls this whenenevr model is Reset
+    # model calls this whenever model is Reset
     def OnModelReset(self):            
         self.view.reset()  # destroy as much view things as possible.
         self.setupView()        
