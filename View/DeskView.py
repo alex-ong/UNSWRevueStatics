@@ -62,8 +62,20 @@ class DeskView(tk.Frame):
         self.cueListWidget = None
         self.modalManager = None
         self.topBar = None
-
-
+        self.propagationEnabled = True        
+        
+    def disablePropagation(self):
+        if self.propagationEnabled:
+            self.root.grid_propagate(False)
+            self.channelFrame.grid_propagate(False)
+            #self.groupFrame.grid_propagate(False)
+            self.faderFrame.grid_propagate(False)
+            self.consoleWidget.grid_propagate(False)
+            self.cueListWidget.grid_propagate(False)
+            #self.modalManager.grid_propagate(False)
+            self.topBar.grid_propagate(False)
+            self.propagationEnabled = False
+        
     # called by model during setup
     def setupChannels(self, channels):
         cf = ChannelGroupFrame(channels, CHANNEL, self)
@@ -79,7 +91,7 @@ class DeskView(tk.Frame):
     # todo: change faderLayout to "x x x  x" layout 
     def setupFaders(self, getFaderFunc, numFaders, faderLayout=[9, 18]):        
         ff = FaderFrame(getFaderFunc, numFaders, faderLayout, self)
-        ff.grid(row=2, column=1, sticky=tk.NSEW, columnspan=3)
+        ff.grid(row=2, column=1, sticky=tk.NSEW, columnspan=3)        
         self.faderFrame = ff
     
     def setupConsole(self, console):
@@ -124,7 +136,8 @@ class DeskView(tk.Frame):
             self.functionButtonFrame.refreshDisplay()
         if self.topBar:
             self.topBar.refreshDisplay()
-
+        self.disablePropagation()
+        
     def reset(self):
         if self.channelFrame is not None:
             self.channelFrame.destroy()
@@ -147,3 +160,4 @@ class DeskView(tk.Frame):
         if self.topBar is not None:
             self.topBar.destroy()
             self.topBar = None
+        self.propagationEnabled = True
