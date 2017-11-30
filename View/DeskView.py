@@ -10,10 +10,14 @@ from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
 from View.Widgets.ConsoleWidget import ConsoleWidget
 from View.Widgets.CueListWidget import CueListWidget
 from View.Modal.ModalManager import ModalManager
+
 from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
 from View.Widgets.FunctionButtonWidget import FunctionButtonFrame
 from View.Widgets.TopBar import TopBar
+
+#optimized channelFrame
+from View.Widgets.MergedTextBox.ChannelFrame import ChannelFrameMTB
 
 from sys import platform
 
@@ -64,7 +68,7 @@ class DeskView(tk.Frame):
         self.topBar = None
         self.propagationEnabled = True        
         
-    def disablePropagation(self):
+    def disablePropagation(self):        
         if self.propagationEnabled:
             self.root.grid_propagate(False)
             self.channelFrame.grid_propagate(False)
@@ -78,7 +82,8 @@ class DeskView(tk.Frame):
         
     # called by model during setup
     def setupChannels(self, channels):
-        cf = ChannelGroupFrame(channels, CHANNEL, self)
+        #cf = ChannelGroupFrame(channels, CHANNEL, self)
+        cf = ChannelFrameMTB(channels,CHANNEL, self)
         cf.grid(row=1, column=1, sticky=tk.NSEW, columnspan=3)
         self.channelFrame = cf    
     
