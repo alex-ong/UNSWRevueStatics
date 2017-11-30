@@ -46,24 +46,7 @@ class ChannelFrameMTB(tk.Frame):
             rowFinalValue = ChannelFinalValueRow.ChannelFinalValueRow(chunk, layout, self)
             rowFinalValue.grid(sticky=tk.NSEW)
             self.widgets.append(rowFinalValue)
-        '''
-        maxRow = 0
-        while itemIndex < len(values):        
-            col = layoutIndex % len(layout)
-            row = layoutIndex // len(layout)
-            maxRow = row
-            layoutItem = layout[col]
-            
-            if layoutItem == 'x':
-                value = values[itemIndex]
-                itemIndex += 1
-                cw = ChannelGroupWidget(value, itemIndex, False, self)
-                cw.grid(row=row + 1, column=col, sticky=tk.NSEW)
-                self.widgets.append(cw)
-            layoutIndex += 1
-        for i in range(maxRow):
-            self.rowconfigure(i, weight=1)
-        '''    
+
     
     def refreshDisplay(self):
         for widget in self.widgets:

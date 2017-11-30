@@ -35,16 +35,17 @@ class indexStorer(object):
         return self.stringIndex + 2
     
     def modifyString(self, string, newValue):
-        return string[:self.stringIndex] + newValue + string[:self.endStringIndex()]
+        return string[:self.stringIndex] + newValue + string[self.endStringIndex():]
     
     def getCurrentValue(self, string):
         return string[self.stringIndex:self.endStringIndex()]
     
-    def setReason(self, reason, tkLabel):        
-        color = VS.typeColourMapping[reason]
-        tkLabel.tag_remove(self.prevReason, "1." + str(self.stringIndex), "1." + str(self.endStringIndex()))
-        tkLabel.tag_add(color, "1." + str(self.stringIndex), "1." + str(self.endStringIndex()))
+    def setReason(self, reason):
         self.prevReason = reason
+    
+    def enforceReason(self, tkLabel):
+        color = VS.typeColourMapping[self.prevReason]        
+        tkLabel.tag_add(color, "1." + str(self.stringIndex), "1." + str(self.endStringIndex()))
     
     def valueChanged(self, newValue, fullString):
         oldValue = self.getCurrentValue(fullString)
@@ -71,12 +72,12 @@ class ChannelFinalValueRow(tk.Text):
         self.config(font=NUMBER_LABEL_FONT)
         self.config(fg='white', bg='black')
         self.config(width=len(self.prevString))
-        self.config(height=1)
-        self.config(highlightbackground='black')
+        self.config(height=1)    
+        
         
     def setText(self, value):
         self.configure(state='normal')
-        self.delete('1.0', tk.END)
+        self.delete(1.0, tk.END)
         self.insert('end', value)
         self.configure(state='disabled')
         
@@ -84,6 +85,7 @@ class ChannelFinalValueRow(tk.Text):
         totalString = ''    
         i = 0
         stringIndex = 0
+        
         for item in layout:
             if item == 'x':
                 (displayValue, reason) = self.channels[i].getDisplayValueAndReason() 
@@ -94,11 +96,20 @@ class ChannelFinalValueRow(tk.Text):
                 i += 1            
             else:
                 totalString += '  '
-                stringIndex += 2                
+                stringIndex += 2
+
         self.prevString = totalString
-        
+    
+    '''
+    Sets the colours. Necessary everytime we reset our string as well
+    '''
+    def enforceReasons(self):
+        for index in self.indices:
+            index.enforceReason(self)
+            
     def refreshDisplay(self):
-        stringChanges = False        
+        stringChanges = False
+        reasonChanges = False
         for (i, channel) in enumerate(self.channels):
             value, reason = channel.getDisplayValueAndReason()
             value = autoString(value, reason)
@@ -107,10 +118,14 @@ class ChannelFinalValueRow(tk.Text):
                 stringChanges = True
                 self.prevString = indexStorer.modifyString(self.prevString, value)
             if(indexStorer.reasonChanged(reason)):
-                indexStorer.setReason(reason, self)
+                reasonChanges = True
+                indexStorer.setReason(reason)
             
         if stringChanges:
             self.setText(self.prevString)
+            self.enforceReasons()
+        elif reasonChanges:
+            self.enforceReasons()
 
             
     
