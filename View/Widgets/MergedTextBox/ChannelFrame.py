@@ -1,8 +1,8 @@
 import tkinter as tk
 
 def ChannelLayout():
-    layout = [('x x x x x x') for _ in range(4)]
-    layout = "  ".join(layout)
+    layout = [('x  x  x  x  x  x') for _ in range(4)]
+    layout = "    ".join(layout)
     layout = ' ' + layout + ' '
     count = layout.count('x')
     return (layout, count)

@@ -19,7 +19,7 @@ class ChannelLabelRow(tk.Label):
                 result += channelNames[i].label.zfill(2)
                 i += 1
             else:
-                result += '  '
+                result += ' '
                 
         return result
         

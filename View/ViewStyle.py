@@ -18,9 +18,9 @@ typeColourMapping = { Channel.ValueType.DIRECT : COLOR_DIRECT,
                      GROUP : COLOR_GROUP,
                      None: COLOR_NONE}
 
-#needs to be 16:9
+# needs to be 16:9
 SCREEN_RESOLUTION = '1920x1080'
-BASE_RESOLUTION=1920
+BASE_RESOLUTION = 1920
 
 # CHANGING THEME:
 # To change font, all you have to do is modify font_size and FONT so that 

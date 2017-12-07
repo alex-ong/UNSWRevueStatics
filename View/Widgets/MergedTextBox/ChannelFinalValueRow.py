@@ -96,8 +96,8 @@ class ChannelFinalValueRow(tk.Text):
                 totalString += displayValue                 
                 i += 1            
             else:
-                totalString += '  '
-                stringIndex += 2
+                totalString += ' '
+                stringIndex += 1
 
         self.prevString = totalString
     

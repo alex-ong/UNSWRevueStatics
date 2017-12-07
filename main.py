@@ -30,7 +30,7 @@ async def run_tk(root, controller, interval=GUI_REFRESH):
             await asyncio.sleep(interval)
             
             # keep track of deltaTimes for performance debugging
-
+            #print(delta)
             timer = newTime
             
     except tkinter.TclError as e:
