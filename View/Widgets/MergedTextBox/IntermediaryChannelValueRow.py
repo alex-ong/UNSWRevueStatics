@@ -12,7 +12,7 @@ COLOR_NONE = 'black'
 GROUP = 'Group'
 CHANNEL = 'Channel'
 
-NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(20))
+NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(8))
 
 def autoString(value, reason=None):        
     if value is None:
@@ -23,15 +23,17 @@ def autoString(value, reason=None):
         return '00'
     else:
         return str(value).zfill(2)
-    
+
+#play, direct, group, record
 class indexStorer(object):
-    def __init__(self, channelIndex, stringIndex, reason):
+    #string comes in format [direct group play]
+    def __init__(self, channelIndex, stringIndex):
         self.channelIndex = channelIndex
         self.stringIndex = stringIndex
-        self.prevReason = reason
+        
         
     def endStringIndex(self):
-        return self.stringIndex + 2
+        return self.stringIndex + 8
     
     def modifyString(self, string, newValue):
         return string[:self.stringIndex] + newValue + string[self.endStringIndex():]
@@ -43,8 +45,12 @@ class indexStorer(object):
         self.prevReason = reason
     
     def enforceReason(self, tkLabel):
-        color = VS.typeColourMapping[self.prevReason]        
-        tkLabel.tag_add(color, "1." + str(self.stringIndex), "1." + str(self.endStringIndex()))
+        directIndices = self.stringIndex
+        groupIndices = self.stringIndex+3
+        playbackIndices = self.stringIndex+5        
+        tkLabel.tag_add(COLOR_DIRECT, "1." + str(directIndices), "1." + str(groupIndices))
+        tkLabel.tag_add(COLOR_GROUP, "1." + str(groupIndices), "1." + str(playbackIndices))
+        tkLabel.tag_add(COLOR_PLAYBACK, "1." + str(playbackIndices), "1." + str(playbackIndices+1))
     
     def valueChanged(self, newValue, fullString):
         oldValue = self.getCurrentValue(fullString)
@@ -53,7 +59,7 @@ class indexStorer(object):
     def reasonChanged(self, newReason):
         return self.prevReason != newReason  
         
-class ChannelFinalValueRow(tk.Text):
+class IntermediaryChannelValueRow(tk.Text):
     def __init__(self, channels, layout, *args):
         super().__init__(*args)
         self.indices = []
@@ -69,11 +75,19 @@ class ChannelFinalValueRow(tk.Text):
                 
         self.setText(self.prevString)
         self.config(font=NUMBER_LABEL_FONT)
-        self.config(fg='black', bg='black')
+        self.config(fg='white', bg='black')
         self.config(width=len(self.prevString))
         self.config(height=1)
         self.config(borderwidth=0)    
-        
+      
+    def getTextString(self, channel):
+        direct = channel.getDirectValue()
+        group = channel.getGroupValue()
+        playback = channel.playbackValue
+        result = [autoString(direct),
+                  autoString(group),
+                  autoString(playback)]
+        return " ".join(result)  
         
     def setText(self, value):
         self.configure(state='normal')
@@ -88,11 +102,10 @@ class ChannelFinalValueRow(tk.Text):
         
         for item in layout:
             if item == 'x':
-                (displayValue, reason) = self.channels[i].getDisplayValueAndReason() 
-                self.indices.append(indexStorer(i, stringIndex, reason))
-                displayValue = autoString(displayValue, reason)
-                stringIndex += len(displayValue)
-                totalString += displayValue                 
+                stringValue = self.getTextString(self.channels[i])                
+                self.indices.append(indexStorer(i, stringIndex))                
+                stringIndex += len(stringValue)
+                totalString += stringValue              
                 i += 1            
             else:
                 totalString += ' '
@@ -109,23 +122,16 @@ class ChannelFinalValueRow(tk.Text):
             
     def refreshDisplay(self):
         stringChanges = False
-        reasonChanges = False
         for (i, channel) in enumerate(self.channels):
-            value, reason = channel.getDisplayValueAndReason()
-            value = autoString(value, reason)
+            value = self.getTextString(channel)            
             indexStorer = self.indices[i]            
             if(indexStorer.valueChanged(value, self.prevString)):
                 stringChanges = True
                 self.prevString = indexStorer.modifyString(self.prevString, value)
-            if(indexStorer.reasonChanged(reason)):
-                reasonChanges = True
-                indexStorer.setReason(reason)
-            
+                            
         if stringChanges:
             self.setText(self.prevString)
-            self.enforceReasons()
-        elif reasonChanges:
-            self.enforceReasons()
+
 
             
     

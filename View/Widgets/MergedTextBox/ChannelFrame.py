@@ -1,4 +1,5 @@
 import tkinter as tk
+from View.Widgets.MergedTextBox.IntermediaryChannelValueRow import IntermediaryChannelValueRow
 
 def ChannelLayout():
     layout = [('x  x  x  x  x  x') for _ in range(4)]
@@ -35,7 +36,7 @@ class ChannelFrameMTB(tk.Frame):
         values = list(channels.values.values())
         
         # title bar
-        title = tk.Label(self, text='Channels', bg='grey', 
+        title = tk.Label(self, text='Channels', bg='grey',
                          font=(VS.FONT, VS.font_size(16), 'bold'))
         title.grid(row=0, sticky=tk.NSEW)
         
@@ -45,7 +46,10 @@ class ChannelFrameMTB(tk.Frame):
             rowLabel.grid(sticky=tk.NSEW)
             rowFinalValue = ChannelFinalValueRow.ChannelFinalValueRow(chunk, layout, self)
             rowFinalValue.grid(sticky=tk.NSEW)
+            rowSubValue = IntermediaryChannelValueRow(chunk, layout, self)
+            rowSubValue.grid(sticky=tk.NSEW)
             self.widgets.append(rowFinalValue)
+            self.widgets.append(rowSubValue)
 
     
     def refreshDisplay(self):
