@@ -24,16 +24,16 @@ def autoString(value, reason=None):
     else:
         return str(value).zfill(2)
 
-#play, direct, group, record
+# play, direct, group, record
 class indexStorer(object):
-    #string comes in format [direct group play]
+    # string comes in format [direct group play]
     def __init__(self, channelIndex, stringIndex):
         self.channelIndex = channelIndex
         self.stringIndex = stringIndex
         
         
     def endStringIndex(self):
-        return self.stringIndex + 8
+        return self.stringIndex + 6
     
     def modifyString(self, string, newValue):
         return string[:self.stringIndex] + newValue + string[self.endStringIndex():]
@@ -45,12 +45,13 @@ class indexStorer(object):
         self.prevReason = reason
     
     def enforceReason(self, tkLabel):
+        segmentLength = 2
         directIndices = self.stringIndex
-        groupIndices = self.stringIndex+3
-        playbackIndices = self.stringIndex+5        
-        tkLabel.tag_add(COLOR_DIRECT, "1." + str(directIndices), "1." + str(groupIndices))
-        tkLabel.tag_add(COLOR_GROUP, "1." + str(groupIndices), "1." + str(playbackIndices))
-        tkLabel.tag_add(COLOR_PLAYBACK, "1." + str(playbackIndices), "1." + str(playbackIndices+1))
+        groupIndices = self.stringIndex + 2
+        playbackIndices = self.stringIndex + 4
+        tkLabel.tag_add(COLOR_DIRECT, "1." + str(directIndices), "1." + str(directIndices + segmentLength))
+        tkLabel.tag_add(COLOR_GROUP, "1." + str(groupIndices), "1." + str(groupIndices + segmentLength))
+        tkLabel.tag_add(COLOR_PLAYBACK, "1." + str(playbackIndices), "1." + str(playbackIndices + segmentLength))
     
     def valueChanged(self, newValue, fullString):
         oldValue = self.getCurrentValue(fullString)
@@ -97,9 +98,9 @@ class IntermediaryChannelValueRow(tk.Text):
             result = [autoString(direct),
                       autoString(group),
                       autoString(playback)]
-            result = " ".join(result)
+            result = "".join(result)
         else:
-            result = " " * 8
+            result = " " * 6
             
         return result  
         
@@ -121,9 +122,16 @@ class IntermediaryChannelValueRow(tk.Text):
                 stringIndex += len(stringValue)
                 totalString += stringValue              
                 i += 1            
-            else:
-                totalString += ' '
-                stringIndex += 1
+            elif item == ' ':
+                totalString += ' ' * 2
+                stringIndex += 2
+            elif item == '|':  # group split
+                totalString += ' ' * 9
+                stringIndex += 9
+            elif item == 'm':  # margin 
+                totalString += ' ' 
+                stringIndex += 2
+                
 
         self.prevString = totalString
     

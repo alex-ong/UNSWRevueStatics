@@ -18,8 +18,11 @@ class ChannelLabelRow(tk.Label):
             if item == 'x':
                 result += channelNames[i].label.zfill(2)
                 i += 1
-            else:
+            elif item == ' ':
+                result += ' '
+            elif item == '|':  # group split
+                result += ' ' * 4
+            elif item == 'm':  # margin
                 result += ' '
                 
         return result
-        

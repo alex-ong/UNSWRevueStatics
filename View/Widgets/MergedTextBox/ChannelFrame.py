@@ -3,8 +3,8 @@ from View.Widgets.MergedTextBox.IntermediaryChannelValueRow import IntermediaryC
 
 def ChannelLayout():
     layout = [('x  x  x  x  x  x') for _ in range(4)]
-    layout = "    ".join(layout)
-    layout = ' ' + layout + ' '
+    layout = "|".join(layout) #add group splits
+    layout = 'm' + layout + 'm' #add margins
     count = layout.count('x')
     return (layout, count)
 

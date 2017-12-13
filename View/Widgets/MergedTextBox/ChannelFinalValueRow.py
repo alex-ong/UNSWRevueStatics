@@ -94,8 +94,14 @@ class ChannelFinalValueRow(tk.Text):
                 stringIndex += len(displayValue)
                 totalString += displayValue                 
                 i += 1            
-            else:
+            elif item == ' ':
                 totalString += ' '
+                stringIndex += 1
+            elif item == '|': #group split
+                totalString += '    '
+                stringIndex += 4
+            elif item == 'm': #margin
+                totalString += ' '                
                 stringIndex += 1
 
         self.prevString = totalString
