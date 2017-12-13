@@ -84,10 +84,24 @@ class IntermediaryChannelValueRow(tk.Text):
         direct = channel.getDirectValue()
         group = channel.getGroupValue()
         playback = channel.playbackValue
-        result = [autoString(direct),
-                  autoString(group),
-                  autoString(playback)]
-        return " ".join(result)  
+        
+        nonZero = 0
+        if direct != 0:
+            nonZero += 1
+        if group != 0:
+            nonZero += 1
+        if playback != 0:
+            nonZero += 1
+        
+        if nonZero > 1:
+            result = [autoString(direct),
+                      autoString(group),
+                      autoString(playback)]
+            result = " ".join(result)
+        else:
+            result = " " * 8
+            
+        return result  
         
     def setText(self, value):
         self.configure(state='normal')
@@ -131,6 +145,7 @@ class IntermediaryChannelValueRow(tk.Text):
                             
         if stringChanges:
             self.setText(self.prevString)
+            self.enforceReasons()
 
 
             
