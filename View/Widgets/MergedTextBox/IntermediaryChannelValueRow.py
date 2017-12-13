@@ -16,11 +16,11 @@ NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(8))
 
 def autoString(value, reason=None):        
     if value is None:
-        return '00'    
+        return '  '    
     elif value == 100:
-        return ('FL')
+        return 'FL'
     elif value == 0:
-        return '00'
+        return '  '
     else:
         return str(value).zfill(2)
 
@@ -29,8 +29,7 @@ class indexStorer(object):
     # string comes in format [direct group play]
     def __init__(self, channelIndex, stringIndex):
         self.channelIndex = channelIndex
-        self.stringIndex = stringIndex
-        
+        self.stringIndex = stringIndex        
         
     def endStringIndex(self):
         return self.stringIndex + 6
@@ -85,7 +84,8 @@ class IntermediaryChannelValueRow(tk.Text):
         direct = channel.getDirectValue()
         group = channel.getGroupValue()
         playback = channel.playbackValue
-        
+                
+            
         nonZero = 0
         if direct != 0:
             nonZero += 1
@@ -130,7 +130,7 @@ class IntermediaryChannelValueRow(tk.Text):
                 stringIndex += 9
             elif item == 'm':  # margin 
                 totalString += ' ' 
-                stringIndex += 2
+                stringIndex += 1
                 
 
         self.prevString = totalString
@@ -155,8 +155,3 @@ class IntermediaryChannelValueRow(tk.Text):
             self.setText(self.prevString)
             self.enforceReasons()
 
-
-            
-    
-        
-        

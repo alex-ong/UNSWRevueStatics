@@ -3,7 +3,6 @@
 @date 2017-05-07
 '''
 import tkinter as tk
-import os
 
 from View.Widgets.FaderFrame import FaderFrame
 from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
@@ -18,6 +17,7 @@ from View.Widgets.TopBar import TopBar
 
 #optimized channelFrame
 from View.Widgets.MergedTextBox.ChannelFrame import ChannelFrameMTB
+from View.Widgets.MergedTextBox.FaderFrame import FaderFrameMTB
 
 from sys import platform
 
@@ -50,7 +50,7 @@ class DeskView(tk.Frame):
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         NUM_ROWS = 3
-        NUM_COLS = 4
+        #NUM_COLS = 4
         for i in range(NUM_ROWS):
             self.rowconfigure(i, weight=1)
         
@@ -94,7 +94,7 @@ class DeskView(tk.Frame):
         self.groupFrame = gf
         
     # todo: change faderLayout to "x x x  x" layout 
-    def setupFaders(self, getFaderFunc, numFaders, faderLayout=[9, 18]):        
+    def setupFaders(self, getFaderFunc, numFaders, faderLayout=[14, 13]):        
         ff = FaderFrame(getFaderFunc, numFaders, faderLayout, self)
         ff.grid(row=2, column=1, sticky=tk.NSEW, columnspan=3)        
         self.faderFrame = ff

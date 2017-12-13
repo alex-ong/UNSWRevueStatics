@@ -16,10 +16,10 @@ async def run_tk(root, controller, interval=GUI_REFRESH):
     From: https://www.reddit.com/r/Python/comments/33ecpl/neat_discovery_how_to_combine_asyncio_and_tkinter/
     '''    
     try:
-        timer = time.time()
+        timer = time.perf_counter()
         while True:
             # update gui
-            newTime = time.time()
+            newTime = time.perf_counter()
             delta = newTime - timer            
                                     
             root.update()      
@@ -30,7 +30,7 @@ async def run_tk(root, controller, interval=GUI_REFRESH):
             await asyncio.sleep(interval)
             
             # keep track of deltaTimes for performance debugging
-            #print(delta)
+            # print(delta)
             timer = newTime
             
     except tkinter.TclError as e:

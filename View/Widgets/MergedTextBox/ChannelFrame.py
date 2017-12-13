@@ -29,6 +29,7 @@ class ChannelFrameMTB(tk.Frame):
         super().__init__(*args)     
         self.configure(bg='black')
         self.widgets = []
+        self.columnconfigure(0,weight=1)
         
         # setup layout. Groups of 6 with gaps between elements,
         # double gaps between groups.        
@@ -41,19 +42,18 @@ class ChannelFrameMTB(tk.Frame):
                          font=(VS.FONT, VS.font_size(16), 'bold'))
         title.grid(row=0, sticky=tk.NSEW)
         
-        
         for chunk in chunks(values, layoutLen):            
             rowLabel = ChannelLabelRow.ChannelLabelRow(chunk, layout, self)
-            rowLabel.grid(sticky=tk.NSEW)
+            rowLabel.grid(sticky=tk.NS)
             rowFinalValue = ChannelFinalValueRow.ChannelFinalValueRow(chunk, layout, self)
-            rowFinalValue.grid(sticky=tk.NSEW)
+            rowFinalValue.grid(sticky=tk.NS)
             
             self.widgets.append(rowFinalValue)
             
             # we only show intermediary values if resolution is high enough
             if ViewStyle.screen_x() >= 1366:
                 rowSubValue = IntermediaryChannelValueRow(chunk, layout, self)
-                rowSubValue.grid(sticky=tk.NSEW)
+                rowSubValue.grid(sticky=tk.NS)
                 self.widgets.append(rowSubValue)
 
     

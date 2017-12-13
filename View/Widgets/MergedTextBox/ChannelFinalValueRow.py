@@ -103,7 +103,7 @@ class ChannelFinalValueRow(tk.Text):
             elif item == 'm': #margin
                 totalString += ' '                
                 stringIndex += 1
-
+        
         self.prevString = totalString
     
     '''
