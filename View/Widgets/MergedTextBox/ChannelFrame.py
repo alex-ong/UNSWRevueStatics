@@ -1,5 +1,6 @@
 import tkinter as tk
 from View.Widgets.MergedTextBox.IntermediaryChannelValueRow import IntermediaryChannelValueRow
+from View import ViewStyle
 
 def ChannelLayout():
     layout = [('x  x  x  x  x  x') for _ in range(4)]
@@ -46,10 +47,14 @@ class ChannelFrameMTB(tk.Frame):
             rowLabel.grid(sticky=tk.NSEW)
             rowFinalValue = ChannelFinalValueRow.ChannelFinalValueRow(chunk, layout, self)
             rowFinalValue.grid(sticky=tk.NSEW)
-            rowSubValue = IntermediaryChannelValueRow(chunk, layout, self)
-            rowSubValue.grid(sticky=tk.NSEW)
+            
             self.widgets.append(rowFinalValue)
-            self.widgets.append(rowSubValue)
+            
+            # we only show intermediary values if resolution is high enough
+            if ViewStyle.screen_x() >= 1366:
+                rowSubValue = IntermediaryChannelValueRow(chunk, layout, self)
+                rowSubValue.grid(sticky=tk.NSEW)
+                self.widgets.append(rowSubValue)
 
     
     def refreshDisplay(self):
