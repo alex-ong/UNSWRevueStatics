@@ -41,11 +41,15 @@ class FaderFrameMTB(tk.Frame):
         faderIndex = 0
         for (rowNumber, rowLayout) in enumerate(self.layout):   
             rowSize = rowLayout.count('x')
-            faderNumbers = FaderNumberRow(faderValues, rowLayout, faderIndex, self)            
+            rowFaderValues = faderValues[faderIndex:faderIndex + rowSize]
+            
+            faderNumbers = FaderNumberRow(rowFaderValues, rowLayout, self)            
             faderNumbers.grid(sticky=tk.W)
-            faderFinalValueRow = FaderFinalValueRow(faderValues[faderIndex:faderIndex+rowSize], rowLayout, self)
-            faderFinalValueRow.grid(sticky=tk.W)
+            
+            faderFinalValueRow = FaderFinalValueRow(rowFaderValues, rowLayout, self)
+            faderFinalValueRow.grid(sticky=tk.W)            
             self.widgets[str(rowNumber) + '_faderFinalValueRow'] = faderFinalValueRow
+            
             faderIndex += rowSize
             
         '''
@@ -75,8 +79,8 @@ class FaderFrameMTB(tk.Frame):
         faderIndex = 0
         for (rowNumber, rowLayout) in enumerate(self.layout):   
             rowSize = rowLayout.count('x')            
-            faderFinalValueRow = self.widgets[str(rowNumber)+'_faderFinalValueRow']
-            faderFinalValueRow.rebuild(faderValues[faderIndex:faderIndex+rowSize])            
+            faderFinalValueRow = self.widgets[str(rowNumber) + '_faderFinalValueRow']
+            faderFinalValueRow.rebuild(faderValues[faderIndex:faderIndex + rowSize])            
             faderIndex += rowSize
     
     def refreshDisplay(self):    

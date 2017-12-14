@@ -6,15 +6,15 @@ FADER_LABEL_FONT = (VS.FONT, VS.font_size(10))
 NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(20))
 
 class FaderNumberRow(tk.Label):
-    def __init__(self, channels, layout, startIndex, *args):
+    def __init__(self, channels, layout, *args):
         super().__init__(*args)
-        self.config(text=self.determineString(channels, layout, startIndex))
+        self.config(text=self.determineString(channels, layout))
         self.config(font=NUMBER_LABEL_FONT)
         self.config(fg='grey', bg='black')
         
-    def determineString(self, faders, layout, startIndex):
+    def determineString(self, faders, layout):
         result = ''
-        i = startIndex
+        i = 0
         for item in layout:
             if item == 'x':
                 result += str(faders[i].number).zfill(2)
