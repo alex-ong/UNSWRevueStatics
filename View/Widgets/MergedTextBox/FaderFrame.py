@@ -3,10 +3,12 @@
 # @date 2017-12-13
  
 import tkinter as tk
-import View.Widgets.FaderWidget as FaderWidget
+
+from .FaderNumberRow import FaderNumberRow
+from .FaderFinalValueRow import FaderFinalValueRow
 
 import View.ViewStyle as VS
-from View.Widgets.MergedTextBox.FaderLabelRow import FaderLabelRow
+
 HEADING_FONT = (VS.FONT, VS.font_size(16), 'bold')
 
 
@@ -26,7 +28,7 @@ class FaderFrameMTB(tk.Frame):
         self.getFaderFunc = getFaderFunc
         self.numFaders = numFaders
         
-        layout = getLayout(faderLayout)
+        self.layout = getLayout(faderLayout)
                                     
         
         
@@ -37,12 +39,15 @@ class FaderFrameMTB(tk.Frame):
         faderValues = list(getFaderFunc().values.values())    
         # fader numbers
         faderIndex = 0
-        for row in layout:   
-            #faderFinalValueRow = FaderFinalValueRow(faderValues, row, faderIndex, self)
-            
-            faderNumbers = FaderLabelRow(faderValues, row, faderIndex, self)
+        for (rowNumber, rowLayout) in enumerate(self.layout):   
+            rowSize = rowLayout.count('x')
+            faderNumbers = FaderNumberRow(faderValues, rowLayout, faderIndex, self)            
             faderNumbers.grid(sticky=tk.W)
-            faderIndex += row.count('x')
+            faderFinalValueRow = FaderFinalValueRow(faderValues[faderIndex:faderIndex+rowSize], rowLayout, self)
+            faderFinalValueRow.grid(sticky=tk.W)
+            self.widgets[str(rowNumber) + '_faderFinalValueRow'] = faderFinalValueRow
+            faderIndex += rowSize
+            
         '''
         while faderIndex < self.numFaders:        
             if col >= len(layout[row]):
@@ -65,12 +70,14 @@ class FaderFrameMTB(tk.Frame):
     
     # done everytime use presses next/prev fader
     def rebuild(self, faderValues):
+        print (faderValues)
+        print ("rebuilding...")
         faderIndex = 0
-        for faderIndex in range(self.numFaders):
-            channel = None
-            if faderIndex < len(faderValues):
-                channel = faderValues[faderIndex]
-            self.widgets[faderIndex + 1].changeFader(channel)
+        for (rowNumber, rowLayout) in enumerate(self.layout):   
+            rowSize = rowLayout.count('x')            
+            faderFinalValueRow = self.widgets[str(rowNumber)+'_faderFinalValueRow']
+            faderFinalValueRow.rebuild(faderValues[faderIndex:faderIndex+rowSize])            
+            faderIndex += rowSize
     
     def refreshDisplay(self):    
         # check for if user changed page    

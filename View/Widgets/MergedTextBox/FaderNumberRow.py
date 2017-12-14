@@ -5,7 +5,7 @@ import tkinter as tk
 FADER_LABEL_FONT = (VS.FONT, VS.font_size(10))
 NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(20))
 
-class FaderLabelRow(tk.Label):
+class FaderNumberRow(tk.Label):
     def __init__(self, channels, layout, startIndex, *args):
         super().__init__(*args)
         self.config(text=self.determineString(channels, layout, startIndex))
@@ -20,7 +20,7 @@ class FaderLabelRow(tk.Label):
                 result += str(faders[i].number).zfill(2)
                 i += 1
             elif item == ' ':
-                result += '    '
+                result += ' ' * 4
             elif item == '|':  # group split
                 result += ' ' * 4
             elif item == 'm':  # margin
