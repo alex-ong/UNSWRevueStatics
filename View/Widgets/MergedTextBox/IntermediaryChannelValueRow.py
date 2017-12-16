@@ -79,6 +79,7 @@ class IntermediaryChannelValueRow(tk.Text):
         self.config(width=len(self.prevString))
         self.config(height=1)
         self.config(borderwidth=0)    
+        self.config(highlightthickness=0) #required for *nix
       
     def getTextString(self, channel):
         direct = channel.getDirectValue()
@@ -154,4 +155,5 @@ class IntermediaryChannelValueRow(tk.Text):
         if stringChanges:
             self.setText(self.prevString)
             self.enforceReasons()
-
+        
+        return stringChanges

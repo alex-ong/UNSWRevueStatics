@@ -70,10 +70,11 @@ class ChannelFinalValueRow(tk.Text):
                 
         self.setText(self.prevString)
         self.config(font=NUMBER_LABEL_FONT)
-        self.config(fg='white', bg='black')
+        self.config(fg='black', bg='black')
         self.config(width=len(self.prevString))
         self.config(height=1)
-        self.config(borderwidth=0)    
+        self.config(borderwidth=0)
+        self.config(highlightthickness=0) #only required for *nix
         
         
     def setText(self, value):
@@ -140,7 +141,7 @@ class ChannelFinalValueRow(tk.Text):
         elif reasonChanges:
             self.enforceReasons()
 
-            
+        return stringChanges
     
         
         
