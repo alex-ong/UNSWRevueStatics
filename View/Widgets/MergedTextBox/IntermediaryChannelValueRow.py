@@ -1,13 +1,8 @@
 import View.ViewStyle as VS
+from View.ViewStyle import COLOR_DIRECT, COLOR_PLAYBACK, COLOR_GROUP, COLOR_RECORD, COLOR_NONE      
 
 import tkinter as tk
 
-
-COLOR_DIRECT = 'yellow'
-COLOR_PLAYBACK = 'cyan'
-COLOR_GROUP = '#00ff00'
-COLOR_RECORD = 'red'
-COLOR_NONE = 'black'
 
 GROUP = 'Group'
 CHANNEL = 'Channel'
