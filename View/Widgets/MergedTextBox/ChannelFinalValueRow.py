@@ -14,6 +14,7 @@ CHANNEL = 'Channel'
 
 from .ChannelLabelRow import NUMBER_LABEL_FONT
 
+
 def autoString(value, reason=None):        
     if value is None:
         return '00'    
@@ -23,12 +24,15 @@ def autoString(value, reason=None):
         return '00'
     else:
         return str(value).zfill(2)
+
     
 class indexStorer(object):
+
     def __init__(self, channelIndex, stringIndex, reason):
         self.channelIndex = channelIndex
         self.stringIndex = stringIndex
-        self.prevReason = reason
+        self.prevReason = None
+        self.currentReason = reason
         
     def endStringIndex(self):
         return self.stringIndex + 2
@@ -39,19 +43,29 @@ class indexStorer(object):
     def getCurrentValue(self, string):
         return string[self.stringIndex:self.endStringIndex()]
     
-    def setReason(self, reason):
-        self.prevReason = reason
+    def setReason(self, reason):    
+        self.prevReason = self.currentReason    
+        self.currentReason = reason        
+    
+    def startStrIndex(self):
+        return "1." + str(self.stringIndex)
+    
+    def endStrIndex(self):
+        return "1." + str(self.endStringIndex())
     
     def enforceReason(self, tkLabel):
-        color = VS.typeColourMapping[self.prevReason]        
-        tkLabel.tag_add(color, "1." + str(self.stringIndex), "1." + str(self.endStringIndex()))
-    
+        color = VS.typeColourMapping[self.currentReason]
+        oldcolor = VS.typeColourMapping[self.prevReason]    
+        tkLabel.tag_remove(oldcolor, self.startStrIndex(), self.endStrIndex())
+        tkLabel.tag_add(color, self.startStrIndex(), self.endStrIndex())
+        
     def valueChanged(self, newValue, fullString):
         oldValue = self.getCurrentValue(fullString)
         return oldValue != newValue
     
     def reasonChanged(self, newReason):
-        return self.prevReason != newReason  
+        return self.currentReason != newReason  
+
         
 class ChannelFinalValueRow(tk.Text):
 
@@ -74,8 +88,7 @@ class ChannelFinalValueRow(tk.Text):
         self.config(width=len(self.prevString))
         self.config(height=1)
         self.config(borderwidth=0)
-        self.config(highlightthickness=0) #only required for *nix
-        
+        self.config(highlightthickness=0)  # only required for *nix
         
     def setText(self, value):
         self.configure(state='normal')
@@ -83,11 +96,11 @@ class ChannelFinalValueRow(tk.Text):
         self.insert('end', value)
         self.configure(state='disabled')
     
-    #override in FaderFinalValueRow
+    # override in FaderFinalValueRow
     def layoutSpacing(self):
-        return {' ': ' ', # space
-                '|': ' '*4, # group gap
-                'm': ' '} # margin
+        return {' ': ' ',  # space
+                '|': ' ' * 4,  # group gap
+                'm': ' '}  # margin
         
     def initialize(self, layout):
         totalString = ''    
@@ -111,17 +124,17 @@ class ChannelFinalValueRow(tk.Text):
     '''
     Sets the colours. Necessary everytime we reset our string as well
     '''
+
     def enforceReasons(self):
         for index in self.indices:
             index.enforceReason(self)
     
     # override me for faders
     def getValueAndReason(self, item):
-        if item is None: #empty item
+        if item is None:  # empty item
             return (0, ValueType.NONE)
         else: 
             return item.getDisplayValueAndReason()
-        
            
     def refreshDisplay(self):
         stringChanges = False
@@ -145,6 +158,4 @@ class ChannelFinalValueRow(tk.Text):
             self.enforceReasons()
 
         return stringChanges
-    
-        
         

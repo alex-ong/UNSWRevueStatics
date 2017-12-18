@@ -21,7 +21,7 @@ typeColourMapping = { Channel.ValueType.DIRECT : COLOR_DIRECT,
 # needs to be 16:9. Features are disabled as you reduce resolutions below 1366x768
 # SCREEN_RESOLUTION = '3840x2160' # 4k
 # SCREEN_RESOLUTION = '2560x1440' # "2k"
-SCREEN_RESOLUTION = '1920x1080' # base resolution
+SCREEN_RESOLUTION = '1920x1080'  # base resolution
 # SCREEN_RESOLUTION = '1366x768' # minimum res with full features
 # SCREEN_RESOLUTION = '1280x720' # Disables sub-channel value display
 # SCREEN_RESOLUTION = '1024x576' # minimum resolution
@@ -33,14 +33,18 @@ BASE_RESOLUTION = 1920  # don't change this.
 # If your font doesn't scale linearly with screen resolution, you might have to 
 # modify font_size to deal with it
 
+
 def screen_x():
     return int(SCREEN_RESOLUTION.split('x')[0])
+
 
 def font_size(defaultSize):
     return round(screen_x() / BASE_RESOLUTION * defaultSize)
 
+
 def pixel_size(defaultSize):
     return round(screen_x() / BASE_RESOLUTION * defaultSize)
 
-FONT = 'Consolas' 
+
+FONT = 'Consolas'  # make sure you install this font! 
 

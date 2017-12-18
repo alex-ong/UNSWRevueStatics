@@ -14,7 +14,8 @@ class FaderIntermediaryValueRow(IntermediaryChannelValueRow):
         else: #isinstance(underlyingItem, Channel):
             return (underlyingItem.getDirectValue(),
                     underlyingItem.getGroupValue(),
-                    underlyingItem.playbackValue)
+                    underlyingItem.playbackValue,
+                    underlyingItem.recordValue)
     
     def rebuild(self, faders):
         self.channels = faders

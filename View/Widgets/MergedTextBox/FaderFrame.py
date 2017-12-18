@@ -33,8 +33,6 @@ class FaderFrameMTB(tk.Frame):
         
         self.layout = getLayout(faderLayout)
                                     
-        
-        
         # title bar
         title = tk.Label(self, text='Faders', bg='grey', font=HEADING_FONT)        
         title.grid(sticky=tk.NSEW)        
@@ -46,7 +44,6 @@ class FaderFrameMTB(tk.Frame):
             rowSize = rowLayout.count('x')
             rowFaderValues = faderValues[faderIndex:faderIndex + rowSize]
             
-
             faderTitle = FaderTitleRow(rowFaderValues, rowLayout, self)
             faderTitle.grid(sticky=tk.W)
             self.widgets[str(rowNumber) + '_faderTitleRow'] = faderTitle

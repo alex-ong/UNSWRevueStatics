@@ -4,18 +4,16 @@
 '''
 import tkinter as tk
 
-from View.Widgets.FaderFrame import FaderFrame
 from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
 from View.Widgets.ConsoleWidget import ConsoleWidget
 from View.Widgets.CueListWidget import CueListWidget
 from View.Modal.ModalManager import ModalManager
 
-from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
 from View.Widgets.FunctionButtonWidget import FunctionButtonFrame
 from View.Widgets.TopBar import TopBar
 
-#optimized channelFrame
+#optimized channelFrames
 from View.Widgets.MergedTextBox.ChannelFrame import ChannelFrameMTB
 from View.Widgets.MergedTextBox.FaderFrame import FaderFrameMTB
 
@@ -51,7 +49,7 @@ class DeskView(tk.Frame):
         self.config(bg='red')
         NUM_ROWS = 3
         #NUM_COLS = 4
-        for i in range(NUM_ROWS):
+        for i in range(1, NUM_ROWS):
             self.rowconfigure(i, weight=1)
         
         self.columnconfigure(0,weight=0)
@@ -82,7 +80,6 @@ class DeskView(tk.Frame):
         
     # called by model during setup
     def setupChannels(self, channels):
-        #cf = ChannelGroupFrame(channels, CHANNEL, self)
         cf = ChannelFrameMTB(channels,CHANNEL, self)
         cf.grid(row=1, column=1, sticky=tk.NSEW, columnspan=3)
         self.channelFrame = cf    
@@ -121,7 +118,7 @@ class DeskView(tk.Frame):
     
     def setupTopBar(self, gmPerc):        
         tb = TopBar(gmPerc, self)
-        tb.grid(row=0, column=0, columnspan=4, sticky=tk.NSEW)
+        tb.grid(row=0, column=0, columnspan=4, sticky=tk.EW)
         self.topBar = tb
                 
     def handleInput(self, dictInput):
