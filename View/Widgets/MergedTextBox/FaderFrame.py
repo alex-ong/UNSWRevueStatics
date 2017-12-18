@@ -47,33 +47,17 @@ class FaderFrameMTB(tk.Frame):
             
             faderDesc = FaderDescriptionRow(rowFaderValues, rowLayout, self)
             faderDesc.grid(sticky=tk.W)
+            self.widgets[str(rowNumber) + '_faderDescRow'] = faderDesc
+            
             faderNumbers = FaderNumberRow(rowFaderValues, rowLayout, self)            
             faderNumbers.grid(sticky=tk.W)
             
             faderFinalValueRow = FaderFinalValueRow(rowFaderValues, rowLayout, self)
-            faderFinalValueRow.grid(sticky=tk.W)            
+            faderFinalValueRow.grid(sticky=tk.EW)            
             self.widgets[str(rowNumber) + '_faderFinalValueRow'] = faderFinalValueRow
             
             faderIndex += rowSize
-            
-        '''
-        while faderIndex < self.numFaders:        
-            if col >= len(layout[row]):
-                col = 0
-                row += 1
-                        
-            layoutItem = layout[row][col]
-            
-            if layoutItem == 'x':
-                channel = None
-                if faderIndex < len(faderValues):
-                    channel = faderValues[faderIndex] 
-                faderIndex += 1
-                cw = FaderWidget.FaderWidget(channel, faderIndex, self)
-                cw.grid(row=row + 1, column=col)
-                self.widgets[faderIndex] = cw
-            col += 1
-        '''
+
         self.lastFaderValues = self.getFaderFunc()
     
     # done everytime use presses next/prev fader
@@ -81,8 +65,11 @@ class FaderFrameMTB(tk.Frame):
         faderIndex = 0
         for (rowNumber, rowLayout) in enumerate(self.layout):   
             rowSize = rowLayout.count('x')            
+            faderRowValues = faderValues[faderIndex:faderIndex+rowSize]
+            faderDesc = self.widgets[str(rowNumber) + '_faderDescRow']
+            faderDesc.rebuild(faderRowValues)
             faderFinalValueRow = self.widgets[str(rowNumber) + '_faderFinalValueRow']
-            faderFinalValueRow.rebuild(faderValues[faderIndex:faderIndex + rowSize])            
+            faderFinalValueRow.rebuild(faderRowValues)            
             faderIndex += rowSize
     
     def refreshDisplay(self):    

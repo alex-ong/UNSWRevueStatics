@@ -1,7 +1,7 @@
 import View.ViewStyle as VS
 
 import tkinter as tk
-
+from Model.Channel import ValueType
 
 COLOR_DIRECT = 'yellow'
 COLOR_PLAYBACK = 'cyan'
@@ -117,7 +117,10 @@ class ChannelFinalValueRow(tk.Text):
     
     # override me for faders
     def getValueAndReason(self, item):
-        return item.getDisplayValueAndReason()
+        if item is None: #empty item
+            return (0, ValueType.NONE)
+        else: 
+            return item.getDisplayValueAndReason()
         
            
     def refreshDisplay(self):
