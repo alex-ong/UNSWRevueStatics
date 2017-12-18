@@ -6,8 +6,10 @@ import tkinter as tk
 
 from .FaderNumberRow import FaderNumberRow
 from .FaderFinalValueRow import FaderFinalValueRow
+from .FaderDescriptionRow import FaderDescriptionRow
 
 import View.ViewStyle as VS
+
 
 HEADING_FONT = (VS.FONT, VS.font_size(16), 'bold')
 
@@ -43,6 +45,8 @@ class FaderFrameMTB(tk.Frame):
             rowSize = rowLayout.count('x')
             rowFaderValues = faderValues[faderIndex:faderIndex + rowSize]
             
+            faderDesc = FaderDescriptionRow(rowFaderValues, rowLayout, self)
+            faderDesc.grid(sticky=tk.W)
             faderNumbers = FaderNumberRow(rowFaderValues, rowLayout, self)            
             faderNumbers.grid(sticky=tk.W)
             
@@ -74,8 +78,6 @@ class FaderFrameMTB(tk.Frame):
     
     # done everytime use presses next/prev fader
     def rebuild(self, faderValues):
-        print (faderValues)
-        print ("rebuilding...")
         faderIndex = 0
         for (rowNumber, rowLayout) in enumerate(self.layout):   
             rowSize = rowLayout.count('x')            
