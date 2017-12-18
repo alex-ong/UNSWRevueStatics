@@ -4,7 +4,7 @@ from View.ViewStyle import COLOR_DIRECT, COLOR_PLAYBACK, COLOR_GROUP, COLOR_RECO
 
 import tkinter as tk
 
-FADER_LABEL_FONT = (VS.FONT, VS.font_size(10))
+FADER_LABEL_FONT = (VS.FONT, VS.font_size(8))
 from Model import Group
 
 class FaderDescriptionRow(tk.Text):
@@ -45,13 +45,16 @@ class FaderDescriptionRow(tk.Text):
                     result += ' Group' + faderRef.label.zfill(2) + ' '
                 else:  # isinstance(faderRef, Channel.Channel):
                     result += 'Channel' + faderRef.label.zfill(2)
+                    #result += ' Group' + faderRef.label.zfill(2) + ' '
                 index += 1
             elif item == ' ':
-                result += ' ' * 4
+                result += ' ' * 6
             elif item == '|':  # group split
                 result += ' ' * 4
             elif item == 'm':  # margin
-                result += ' '
-                
+                result += ' ' * 3
+        
+        print(len(result))
+        
         return result
 

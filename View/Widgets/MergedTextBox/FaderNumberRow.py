@@ -24,6 +24,6 @@ class FaderNumberRow(tk.Label):
             elif item == '|':  # group split
                 result += ' ' * 4
             elif item == 'm':  # margin
-                result += ' '
+                result += ' ' * 2
                 
         return result

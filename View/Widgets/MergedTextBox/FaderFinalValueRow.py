@@ -4,7 +4,7 @@ class FaderFinalValueRow(ChannelFinalValueRow.ChannelFinalValueRow):
     def layoutSpacing(self):
         return {' ': ' '*4, # space
                 '|': ' '*4, # group gap
-                'm': ' '} # margin
+                'm': ' '*2} # margin
     def getValueAndReason(self, item):
         return item.getBinding().getDisplayValueAndReason()
     
