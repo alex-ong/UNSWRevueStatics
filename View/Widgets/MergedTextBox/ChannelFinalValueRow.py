@@ -12,7 +12,7 @@ COLOR_NONE = 'black'
 GROUP = 'Group'
 CHANNEL = 'Channel'
 
-NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(20))
+from .ChannelLabelRow import NUMBER_LABEL_FONT
 
 def autoString(value, reason=None):        
     if value is None:

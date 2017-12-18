@@ -55,6 +55,7 @@ class indexStorer(object):
         return self.prevReason != newReason  
         
 class IntermediaryChannelValueRow(tk.Text):
+
     def __init__(self, channels, layout, *args):
         super().__init__(*args)
         self.indices = []
@@ -75,12 +76,14 @@ class IntermediaryChannelValueRow(tk.Text):
         self.config(height=1)
         self.config(borderwidth=0)    
         self.config(highlightthickness=0) #required for *nix
-      
+    
+    def getValues(self, channel):
+        return (channel.getDirectValue(),
+                channel.getGroupValue(),
+                channel.playbackValue)
+        
     def getTextString(self, channel):
-        direct = channel.getDirectValue()
-        group = channel.getGroupValue()
-        playback = channel.playbackValue
-                
+        direct, group, playback = self.getValues(channel)
             
         nonZero = 0
         if direct != 0:
@@ -99,12 +102,17 @@ class IntermediaryChannelValueRow(tk.Text):
             result = " " * 6
             
         return result  
-        
+    
     def setText(self, value):
         self.configure(state='normal')
         self.delete(1.0, tk.END)
         self.insert('end', value)
         self.configure(state='disabled')
+    
+    def getLayoutSpacing(self):
+        return {' ': ' ' * 2,
+                '|' : ' ' * 9,
+                'm' : ' '}    
         
     def initialize(self, layout):
         totalString = ''    
@@ -118,15 +126,10 @@ class IntermediaryChannelValueRow(tk.Text):
                 stringIndex += len(stringValue)
                 totalString += stringValue              
                 i += 1            
-            elif item == ' ':
-                totalString += ' ' * 2
-                stringIndex += 2
-            elif item == '|':  # group split
-                totalString += ' ' * 9
-                stringIndex += 9
-            elif item == 'm':  # margin 
-                totalString += ' ' 
-                stringIndex += 1
+            elif item in self.getLayoutSpacing():
+                result = self.getLayoutSpacing()[item]
+                totalString += result
+                stringIndex += len(result)
                 
 
         self.prevString = totalString

@@ -1,29 +1,25 @@
 # Fader frame using merged text boxes. 
 import View.ViewStyle as VS
 import tkinter as tk
-
-FADER_LABEL_FONT = (VS.FONT, VS.font_size(10))
-NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(20))
-
-class FaderNumberRow(tk.Label):
-    def __init__(self, channels, layout, *args):
-        super().__init__(*args)
-        self.config(text=self.determineString(channels, layout))
-        self.config(font=NUMBER_LABEL_FONT)
-        self.config(fg='grey', bg='black')
+from .ChannelLabelRow import ChannelLabelRow
+class FaderNumberRow(ChannelLabelRow):
+    
+    def getLayoutSpacing(self):
+        return {' ' : ' ' * 4,  # space between two elements
+                '|' : ' ' * 4,  # group spacing
+                'm' : ' ' * 2}  # margin
         
+    def getLabel(self, data):
+        return str(data.number).zfill(2)          
+    
     def determineString(self, faders, layout):
         result = ''
         i = 0
         for item in layout:
             if item == 'x':
-                result += str(faders[i].number).zfill(2)
+                result += self.getLabel(faders[i]) 
                 i += 1
-            elif item == ' ':
-                result += ' ' * 4
-            elif item == '|':  # group split
-                result += ' ' * 4
-            elif item == 'm':  # margin
-                result += ' ' * 2
+            else: 
+                result += self.getLayoutSpacing()[item]
                 
         return result

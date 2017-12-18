@@ -7,8 +7,9 @@ import tkinter as tk
 from .FaderNumberRow import FaderNumberRow
 from .FaderFinalValueRow import FaderFinalValueRow
 from .FaderDescriptionRow import FaderDescriptionRow
-
+from .FaderTitleRow import FaderTitleRow
 import View.ViewStyle as VS
+from View.Widgets.MergedTextBox.FaderIntermediaryValueRow import FaderIntermediaryValueRow
 
 
 HEADING_FONT = (VS.FONT, VS.font_size(16), 'bold')
@@ -45,17 +46,25 @@ class FaderFrameMTB(tk.Frame):
             rowSize = rowLayout.count('x')
             rowFaderValues = faderValues[faderIndex:faderIndex + rowSize]
             
+
+            faderTitle = FaderTitleRow(rowFaderValues, rowLayout, self)
+            faderTitle.grid(sticky=tk.W)
+            self.widgets[str(rowNumber) + '_faderTitleRow'] = faderTitle
+            
             faderDesc = FaderDescriptionRow(rowFaderValues, rowLayout, self)
             faderDesc.grid(sticky=tk.W)
             self.widgets[str(rowNumber) + '_faderDescRow'] = faderDesc
-            
+                        
             faderNumbers = FaderNumberRow(rowFaderValues, rowLayout, self)            
             faderNumbers.grid(sticky=tk.W)
             
             faderFinalValueRow = FaderFinalValueRow(rowFaderValues, rowLayout, self)
-            faderFinalValueRow.grid(sticky=tk.EW)            
+            faderFinalValueRow.grid(sticky=tk.W)            
             self.widgets[str(rowNumber) + '_faderFinalValueRow'] = faderFinalValueRow
             
+            intermediary = FaderIntermediaryValueRow(rowFaderValues, rowLayout, self)
+            intermediary.grid(sticky=tk.W)
+            self.widgets[str(rowNumber) + '_intermediaryRow'] = intermediary
             faderIndex += rowSize
 
         self.lastFaderValues = self.getFaderFunc()
@@ -65,11 +74,15 @@ class FaderFrameMTB(tk.Frame):
         faderIndex = 0
         for (rowNumber, rowLayout) in enumerate(self.layout):   
             rowSize = rowLayout.count('x')            
-            faderRowValues = faderValues[faderIndex:faderIndex+rowSize]
+            faderRowValues = faderValues[faderIndex:faderIndex + rowSize]
             faderDesc = self.widgets[str(rowNumber) + '_faderDescRow']
             faderDesc.rebuild(faderRowValues)
+            faderTitle = self.widgets[str(rowNumber) + '_faderTitleRow']
+            faderTitle.rebuild(faderRowValues)
             faderFinalValueRow = self.widgets[str(rowNumber) + '_faderFinalValueRow']
-            faderFinalValueRow.rebuild(faderRowValues)            
+            faderFinalValueRow.rebuild(faderRowValues)
+            intermediary = self.widgets[str(rowNumber) + '_intermediaryRow']
+            intermediary.rebuild(faderRowValues)            
             faderIndex += rowSize
     
     def refreshDisplay(self):    

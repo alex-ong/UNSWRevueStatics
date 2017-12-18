@@ -4,7 +4,7 @@ from View.ViewStyle import COLOR_DIRECT, COLOR_GROUP, COLOR_NONE
 
 import tkinter as tk
 
-FADER_LABEL_FONT = (VS.FONT, VS.font_size(12))
+FADER_LABEL_FONT = (VS.FONT, VS.font_size(8))
 from Model import Group
 
 class FaderDescriptionRow(tk.Text):
@@ -20,9 +20,11 @@ class FaderDescriptionRow(tk.Text):
         self.config(fg='white', bg='black')        
         self.config(height=1)
         self.config(borderwidth=0)        
-        self.config(font=FADER_LABEL_FONT)        
+        self.config(font=self.getFont())        
         
-        
+    def getFont(self):
+        return FADER_LABEL_FONT
+    
     def addText(self, toAdd, tag=None):
         if tag is not None:
             startIndex = self.stringLength
@@ -32,8 +34,18 @@ class FaderDescriptionRow(tk.Text):
         
         if tag is not None:
             endIndex = self.stringLength
-            self.tag_add(tag, "1."+str(startIndex),"1."+str(endIndex))
+            self.tag_add(tag, "1." + str(startIndex), "1." + str(endIndex))
             
+    def getTextAndColour(self, faderBinding):
+        if isinstance(faderBinding, Group.Group):                    
+            return ('Grp' + str(faderBinding.number).zfill(2) + ' ', COLOR_GROUP)                    
+        else:  # isinstance(faderRef, Channel.Channel):                            
+            return ('Chan' + str(faderBinding.number).zfill(2), COLOR_DIRECT)
+    
+    def getLayoutSpacing(self):
+        return {' ': ' ' * 9,  # item space
+                '|': ' ' * 4,  # group space
+                'm': ' ' * 5}  # margin
         
     def rebuild(self, faders):
         self.configure(state='normal')
@@ -44,23 +56,18 @@ class FaderDescriptionRow(tk.Text):
             if item == 'x':
                 try:
                     faderRef = faders[faderIndex].getBinding()
-                    if isinstance(faderRef, Group.Group):                    
-                        self.addText('Grp' + str(faderRef.number).zfill(2), COLOR_GROUP)                    
-                    else:  # isinstance(faderRef, Channel.Channel):                    
-                        self.addText('Chn' + faderRef.label.zfill(2), COLOR_DIRECT)
-                except IndexError: #no fader in fader list
-                    self.addText(' '* 5, COLOR_NONE)
-                    
+                    text, reason = self.getTextAndColour(faderRef)                                 
+                    self.addText(text, reason)                                        
+                except IndexError:  # no fader in fader list
+                    self.addText(' ' * 5, COLOR_NONE)                    
                 faderIndex += 1
-            elif item == ' ':
-                self.addText(' ' * 5)
-            elif item == '|':  # group split
-                self.addText(' ' * 4)
-            elif item == 'm':  # margin
-                self.addText(' ' * 3)
+            else:
+                layoutSpacing = self.getLayoutSpacing()
+                if item in layoutSpacing:
+                    self.addText(layoutSpacing[item])             
         
-        #reconfigure textbox width
-        self.configure(width=len(self.get("1.0",tk.END)))        
+        # reconfigure textbox width
+        self.configure(width=len(self.get("1.0", tk.END)))        
         self.configure(state='disabled')
     
     def refreshDisplay(self):
