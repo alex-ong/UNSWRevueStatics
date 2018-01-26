@@ -72,7 +72,7 @@ class ChannelFinalValueRow(tk.Text):
         self.config(fg='black', bg='black')
         self.config(width=len(self.prevString))
         self.config(height=1)
-        self.config(borderwidth=0)    
+        self.config(borderwidth=-1)
         
         
     def setText(self, value):

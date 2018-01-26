@@ -13,6 +13,7 @@ class AbstractModal(tk.Toplevel):
         
         self.centreOnScreen()  
         self.overrideredirect(True)        
+        self.wm_attributes('-type', 'splash')
         self.hide()
         
     def subClassSetup(self):
