@@ -10,7 +10,8 @@ class FaderIntermediaryValueRow(IntermediaryChannelValueRow):
         if isinstance(underlyingItem, Group):
             return (underlyingItem.getDirectValue(),
                     0,
-                    underlyingItem.playbackValue)
+                    underlyingItem.playbackValue,
+                    underlyingItem.recordValue)
         else: #isinstance(underlyingItem, Channel):
             return (underlyingItem.getDirectValue(),
                     underlyingItem.getGroupValue(),

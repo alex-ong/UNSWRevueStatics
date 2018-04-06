@@ -33,7 +33,7 @@ class Console(object):
     # returns autocomplete, if_error, and a list of strings
     def getTokens(self):
         result = self.tokens.copy()
-        autocomplete = validOperators(result)
+        autocomplete = self.validOperators(result)
         if_error = False  # todo call parser and get command or error
         return (result, if_error, autocomplete)
     

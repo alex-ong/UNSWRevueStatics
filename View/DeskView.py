@@ -35,7 +35,8 @@ class DeskView(tk.Frame):
             root.overrideredirect(True)  # change to windowless border
         else:
             root.overrideredirect(False) # TODO: Find optimal setting
-        root.wm_attributes('-type', 'splash')
+            root.wm_attributes('-type', 'splash') #only splash if we are in *nix
+        
         root.focus_force()             
         root.wm_title("UNSW Revue Statics")
         root.columnconfigure(0, weight=1)
