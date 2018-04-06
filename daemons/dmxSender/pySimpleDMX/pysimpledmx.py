@@ -38,7 +38,7 @@ class DMXConnection( object ):
       except:
           com_name = 'COM%s' % (comport + 1) if type( comport ) == int else comport
           logging.error( "Could not open device %s. Quitting application." % com_name )
-          # sys.exit(0)
+          sys.exit(0)
 
       logging.info( "Opened %s." % (self.com.portstr) )
 

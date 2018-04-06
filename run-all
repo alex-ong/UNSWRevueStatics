@@ -1,1 +1,3 @@
-echo TODO IMPLEMENT THIS
+python3 daemons/midi-daemon.py &
+python3 daemons/dmx-daemon.py /dev/ttyUSB0 &
+python3 main.py &

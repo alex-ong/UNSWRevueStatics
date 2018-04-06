@@ -7,7 +7,10 @@ import TCPClient
 import json
 import collections
 import time
-import rtmidi
+try:
+    import rtmidi
+except:
+    print ("Please pip install python-rtmidi")
 from rtmidi.midiutil import open_midiinput
 from rtmidi.midiconstants import (CONTROLLER_CHANGE, NOTE_ON, NOTE_OFF)
 
@@ -90,9 +93,14 @@ MIDI_MAP = {
     }
 }
 
+
 class MidiInputHandler(object):
+    def printMe(self, message):
+        print(message)
+
     def __call__(self, event, data=None):
         message, deltatime = event
+        self.printMe (message)
         channel = (message[0] & 0xF) + 1
         status = message[0] & 0xF0
         if status == NOTE_OFF or status == NOTE_ON:
@@ -100,10 +108,16 @@ class MidiInputHandler(object):
         if status == CONTROLLER_CHANGE:
             currentState.update({MIDI_MAP["sliders"][channel][message[1]]: round(message[2]*100/127)})
 
+class SilentMidiInputHandler(MidiInputHandler):
+    def printMe(self, message):
+        pass
+
 if __name__ == '__main__':		
 	try:
-		midiin, port_name = open_midiinput(0)
-		midiin1, port_name1 = open_midiinput(1)
+		print("input1")
+		midiin, port_name = open_midiinput(1)
+		print("input2")
+		midiin1, port_name1 = open_midiinput(2)
 	except (EOFError, KeyboardInterrupt):
 		print("Failed to connect to midi inputs! Press enter to exit...")
 		_ = input()
@@ -115,8 +129,8 @@ if __name__ == '__main__':
 		sys.exit()
 
 	print("Attaching MIDI input callback handler.")
-	midiin.set_callback(MidiInputHandler())
-	midiin1.set_callback(MidiInputHandler())
+	midiin.set_callback(SilentMidiInputHandler())
+	midiin1.set_callback(SilentMidiInputHandler())
 
 	print("Entering main loop. Press Control-C to exit.")
 	try:

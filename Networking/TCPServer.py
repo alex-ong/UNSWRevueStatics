@@ -43,6 +43,9 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         # turn off nagles
         self.request.setsockopt(socket.IPPROTO_TCP,
                                 socket.TCP_NODELAY, True)
+        # reuse
+        self.request.setsockopt(socket.SOL_SOCKET,
+                                socket.SO_REUSEADDR, 1)
     def handle(self):            
         # potential improvement - dont use python strings as buffer                    
         dataBuffer = ''
