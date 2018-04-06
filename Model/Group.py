@@ -87,7 +87,7 @@ class Group(object):
             if maxValue == 0:
                 return 0, ValueType.NONE            
             elif maxValue == self.getDirectValue():
-                return self.directValue, ValueType.DIRECT
+                return self.getDirectValue(), ValueType.DIRECT
             elif maxValue == self.playbackValue:
                 return self.playbackValue, ValueType.PLAYBACK 
     

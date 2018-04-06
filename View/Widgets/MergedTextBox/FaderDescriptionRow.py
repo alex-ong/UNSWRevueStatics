@@ -5,22 +5,26 @@ from View.ViewStyle import COLOR_DIRECT, COLOR_GROUP, COLOR_NONE
 import tkinter as tk
 
 FADER_LABEL_FONT = (VS.FONT, VS.font_size(8))
+from sys import platform
 from Model import Group
 
 class FaderDescriptionRow(tk.Text):
     def __init__(self, faders, layout, *args):
-        super().__init__(*args)                   
+        super().__init__(*args)
         self.tag_configure(COLOR_DIRECT, foreground=COLOR_DIRECT)
-        self.tag_configure(COLOR_GROUP, foreground=COLOR_GROUP)        
+        self.tag_configure(COLOR_GROUP, foreground=COLOR_GROUP)
         self.tag_configure(COLOR_NONE, foreground=COLOR_NONE)
         self.layout = layout
         
         self.stringLength = 0
-        self.rebuild(faders)        
-        self.config(fg='white', bg='black')        
+        self.rebuild(faders)
+        self.config(fg='white', bg='black')
         self.config(height=1)
-        self.config(borderwidth=0)        
-        self.config(font=self.getFont())        
+        if platform == 'win32':
+            self.config(borderwidth=0)
+        else:
+            self.config(borderwidth=-1)
+        self.config(font=self.getFont())
         
     def getFont(self):
         return FADER_LABEL_FONT

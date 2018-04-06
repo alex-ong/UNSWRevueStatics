@@ -2,13 +2,17 @@ import View.ViewStyle as VS
 import tkinter as tk
 
 NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(20))
+from sys import platform
 
 class ChannelLabelRow(tk.Label):
     def __init__(self, channels, layout, *args):
         super().__init__(*args)        
         self.config(text=self.determineString(channels, layout))
         self.config(font=NUMBER_LABEL_FONT)
-        self.config(borderwidth=0)       
+        if platform == 'win32':
+            self.config(borderwidth=0)       
+        else:
+            self.config(borderwidth=-1)
         self.config(highlightthickness=0) #required for *nix 
         self.config(fg='grey', bg='black')
         
