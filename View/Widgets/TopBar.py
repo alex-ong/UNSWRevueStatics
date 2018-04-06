@@ -5,7 +5,7 @@ from . import DBOWidget
 
 import View.ViewStyle as VS
 BG = '#000000'
-FONT = (VS.FONT, VS.font_size(20))
+FONT = (VS.FONT, VS.font_size(24))
 FG = VS.COLOR_DIRECT
 
 class TopBar(tk.Frame):

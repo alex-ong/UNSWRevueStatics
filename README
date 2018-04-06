@@ -11,7 +11,7 @@ Installation and running
 ============================
 * Install and use Python 3.5.2 (32bit). Other versions should work.
 * Install Consola font family. It is included in libs/fonts folder.
-* Requires 1920x1080 resolution, but work is being done to make it resolution agnostic.
+* Requires 16:9 resolution, supporting 1280x720 to 3840x2160.
 * Requires pip-install python-rtmidi (Tested with version 1.1.0)
 * Requires pip-install pyserial (Tested with version 3.4)
 

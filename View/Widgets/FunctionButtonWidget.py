@@ -13,7 +13,7 @@ import View.ViewStyle as VS
 LABEL_FONT = (VS.FONT, VS.font_size(10))
 
 NUM_BUTTONS = 4 
-BG = 'grey'
+BG = '#202020'
 border = 'red'
 
 class FunctionButtonFrame(tk.Frame):

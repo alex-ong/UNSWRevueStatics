@@ -3,21 +3,19 @@
 @date 2017-05-07
 '''
 import tkinter as tk
-import os
 
-from View.Widgets.FaderFrame import FaderFrame
 from View.Widgets.ChannelGroupFrame import ChannelGroupFrame
 from View.Widgets.ConsoleWidget import ConsoleWidget
 from View.Widgets.CueListWidget import CueListWidget
 from View.Modal.ModalManager import ModalManager
 
-from View.Widgets.ChannelGroupWidget import ChannelGroupWidget
 from View.ViewStyle import CHANNEL, GROUP, SCREEN_RESOLUTION
 from View.Widgets.FunctionButtonWidget import FunctionButtonFrame
 from View.Widgets.TopBar import TopBar
 
-#optimized channelFrame
+#optimized channelFrames
 from View.Widgets.MergedTextBox.ChannelFrame import ChannelFrameMTB
+from View.Widgets.MergedTextBox.FaderFrame import FaderFrameMTB
 
 from sys import platform
 
@@ -37,7 +35,8 @@ class DeskView(tk.Frame):
             root.overrideredirect(True)  # change to windowless border
         else:
             root.overrideredirect(False) # TODO: Find optimal setting
-        root.wm_attributes('-type', 'splash')
+            root.wm_attributes('-type', 'splash') #only splash if we are in *nix
+        
         root.focus_force()             
         root.wm_title("UNSW Revue Statics")
         root.columnconfigure(0, weight=1)
@@ -51,8 +50,8 @@ class DeskView(tk.Frame):
         self.grid(sticky=tk.NSEW)
         self.config(bg='red')
         NUM_ROWS = 3
-        NUM_COLS = 4
-        for i in range(NUM_ROWS):
+        #NUM_COLS = 4
+        for i in range(1, NUM_ROWS):
             self.rowconfigure(i, weight=1)
         
         self.columnconfigure(0,weight=0)
@@ -83,7 +82,6 @@ class DeskView(tk.Frame):
         
     # called by model during setup
     def setupChannels(self, channels):
-        #cf = ChannelGroupFrame(channels, CHANNEL, self)
         cf = ChannelFrameMTB(channels,CHANNEL, self)
         cf.grid(row=1, column=1, sticky=tk.NSEW, columnspan=3)
         self.channelFrame = cf    
@@ -95,8 +93,9 @@ class DeskView(tk.Frame):
         self.groupFrame = gf
         
     # todo: change faderLayout to "x x x  x" layout 
-    def setupFaders(self, getFaderFunc, numFaders, faderLayout=[9, 18]):        
-        ff = FaderFrame(getFaderFunc, numFaders, faderLayout, self)
+    def setupFaders(self, getFaderFunc, numFaders, faderLayout=[14, 13]):
+        #ff = FaderFrame(getFaderFunc, numFaders, faderLayout, self)        
+        ff = FaderFrameMTB(getFaderFunc, numFaders, faderLayout, self)
         ff.grid(row=2, column=1, sticky=tk.NSEW, columnspan=3)        
         self.faderFrame = ff
     
@@ -121,7 +120,7 @@ class DeskView(tk.Frame):
     
     def setupTopBar(self, gmPerc):        
         tb = TopBar(gmPerc, self)
-        tb.grid(row=0, column=0, columnspan=4, sticky=tk.NSEW)
+        tb.grid(row=0, column=0, columnspan=4, sticky=tk.EW)
         self.topBar = tb
                 
     def handleInput(self, dictInput):

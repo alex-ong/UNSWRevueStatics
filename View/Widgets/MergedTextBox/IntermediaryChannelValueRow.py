@@ -1,39 +1,36 @@
 import View.ViewStyle as VS
+from View.ViewStyle import COLOR_DIRECT, COLOR_PLAYBACK, COLOR_GROUP, COLOR_RECORD, COLOR_NONE      
 
 import tkinter as tk
-
-
-COLOR_DIRECT = 'yellow'
-COLOR_PLAYBACK = 'cyan'
-COLOR_GROUP = '#00ff00'
-COLOR_RECORD = 'red'
-COLOR_NONE = 'black'
 
 GROUP = 'Group'
 CHANNEL = 'Channel'
 
 NUMBER_LABEL_FONT = (VS.FONT, VS.font_size(8))
 
+
 def autoString(value, reason=None):        
     if value is None:
-        return '00'    
+        return '  '    
     elif value == 100:
-        return ('FL')
+        return 'FL'
     elif value == 0:
-        return '00'
+        return '  '
     else:
         return str(value).zfill(2)
 
+
 # play, direct, group, record
 class indexStorer(object):
+    SEG_LEN = 2
+
     # string comes in format [direct group play]
     def __init__(self, channelIndex, stringIndex):
         self.channelIndex = channelIndex
-        self.stringIndex = stringIndex
-        
+        self.stringIndex = stringIndex        
         
     def endStringIndex(self):
-        return self.stringIndex + 6
+        return self.stringIndex + 6  # 6, because 3 * SEG_LEN
     
     def modifyString(self, string, newValue):
         return string[:self.stringIndex] + newValue + string[self.endStringIndex():]
@@ -44,14 +41,21 @@ class indexStorer(object):
     def setReason(self, reason):
         self.prevReason = reason
     
-    def enforceReason(self, tkLabel):
-        segmentLength = 2
+    def indexString(self, index):
+        return "1." + str(index)
+    
+    def addTag(self, tkLabel, color, start, end):
+        tkLabel.tag_add(color, self.indexString(start), self.indexString(end))
+        
+    def enforceReason(self, tkLabel):        
         directIndices = self.stringIndex
-        groupIndices = self.stringIndex + 2
-        playbackIndices = self.stringIndex + 4
-        tkLabel.tag_add(COLOR_DIRECT, "1." + str(directIndices), "1." + str(directIndices + segmentLength))
-        tkLabel.tag_add(COLOR_GROUP, "1." + str(groupIndices), "1." + str(groupIndices + segmentLength))
-        tkLabel.tag_add(COLOR_PLAYBACK, "1." + str(playbackIndices), "1." + str(playbackIndices + segmentLength))
+        groupIndices = directIndices + indexStorer.SEG_LEN 
+        playbackIndices = groupIndices + indexStorer.SEG_LEN
+        endIndex = playbackIndices + indexStorer.SEG_LEN
+        
+        self.addTag(tkLabel, COLOR_DIRECT, directIndices, groupIndices)
+        self.addTag(tkLabel, COLOR_GROUP, groupIndices, playbackIndices)
+        self.addTag(tkLabel, COLOR_PLAYBACK, playbackIndices, endIndex)
     
     def valueChanged(self, newValue, fullString):
         oldValue = self.getCurrentValue(fullString)
@@ -59,8 +63,10 @@ class indexStorer(object):
     
     def reasonChanged(self, newReason):
         return self.prevReason != newReason  
+
         
 class IntermediaryChannelValueRow(tk.Text):
+
     def __init__(self, channels, layout, *args):
         super().__init__(*args)
         self.indices = []
@@ -80,18 +86,25 @@ class IntermediaryChannelValueRow(tk.Text):
         self.config(width=len(self.prevString))
         self.config(height=1)
         self.config(borderwidth=-1)
-      
-    def getTextString(self, channel):
-        direct = channel.getDirectValue()
-        group = channel.getGroupValue()
-        playback = channel.playbackValue
+        self.config(highlightthickness=0)  # required for *nix
+    
+    def getValues(self, channel):
+        return (channel.getDirectValue(),
+                channel.getGroupValue(),
+                channel.playbackValue,
+                channel.recordValue)
         
+    def getTextString(self, channel):
+        direct, group, playback, record = self.getValues(channel)
+            
         nonZero = 0
         if direct != 0:
             nonZero += 1
         if group != 0:
             nonZero += 1
         if playback != 0:
+            nonZero += 1
+        if record != None:
             nonZero += 1
         
         if nonZero > 1:
@@ -103,12 +116,17 @@ class IntermediaryChannelValueRow(tk.Text):
             result = " " * 6
             
         return result  
-        
+    
     def setText(self, value):
         self.configure(state='normal')
         self.delete(1.0, tk.END)
         self.insert('end', value)
         self.configure(state='disabled')
+    
+    def getLayoutSpacing(self):
+        return {' ': ' ' * 2,
+                '|' : ' ' * 9,
+                'm' : ' '}    
         
     def initialize(self, layout):
         totalString = ''    
@@ -122,22 +140,17 @@ class IntermediaryChannelValueRow(tk.Text):
                 stringIndex += len(stringValue)
                 totalString += stringValue              
                 i += 1            
-            elif item == ' ':
-                totalString += ' ' * 2
-                stringIndex += 2
-            elif item == '|':  # group split
-                totalString += ' ' * 9
-                stringIndex += 9
-            elif item == 'm':  # margin 
-                totalString += ' ' 
-                stringIndex += 2
-                
+            elif item in self.getLayoutSpacing():
+                result = self.getLayoutSpacing()[item]
+                totalString += result
+                stringIndex += len(result)
 
         self.prevString = totalString
     
     '''
     Sets the colours. Necessary everytime we reset our string as well
     '''
+
     def enforceReasons(self):
         for index in self.indices:
             index.enforceReason(self)
@@ -154,9 +167,5 @@ class IntermediaryChannelValueRow(tk.Text):
         if stringChanges:
             self.setText(self.prevString)
             self.enforceReasons()
-
-
-            
-    
         
-        
+        return stringChanges

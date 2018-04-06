@@ -40,7 +40,7 @@ class Programmer(object):
         elif isinstance(command, MenuCommand):
             return self._doMenu()       
         elif isinstance(command, SuckCommand): 
-            self._doSuckDick()
+            self._doSuck()
         else:
             return "Command not recognized"
         
@@ -63,7 +63,7 @@ class Programmer(object):
         else:
             return ("Error: No Cues. Can't modify time")
         
-    def _doSuckDick(self): #hehe. Should be _doSuck        
+    def _doSuck(self):        
         for group in self.groupValues.values.values():            
             value, _ = group.getCueValueAndReason()            
             if value > 0:

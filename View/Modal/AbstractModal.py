@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from sys import platform
 class AbstractModal(tk.Toplevel):
     def __init__(self, data, keyDownHandler, keyUpHandler, *args):        
         super().__init__(*args)
@@ -12,8 +13,13 @@ class AbstractModal(tk.Toplevel):
         self.subClassSetup()
         
         self.centreOnScreen()  
-        self.overrideredirect(True)        
-        self.wm_attributes('-type', 'splash')
+        #windowless border in windows
+        if platform == 'win32':
+            self.overrideredirect(True)  # change to windowless border
+        else:
+            self.overrideredirect(False) # TODO: Find optimal setting
+            self.wm_attributes('-type', 'splash') #only splash if we are in *nix
+            
         self.hide()
         
     def subClassSetup(self):
