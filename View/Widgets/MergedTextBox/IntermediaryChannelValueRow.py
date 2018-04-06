@@ -85,7 +85,7 @@ class IntermediaryChannelValueRow(tk.Text):
         self.config(fg='white', bg='black')
         self.config(width=len(self.prevString))
         self.config(height=1)
-        self.config(borderwidth=0)    
+        self.config(borderwidth=-1)
         self.config(highlightthickness=0)  # required for *nix
     
     def getValues(self, channel):

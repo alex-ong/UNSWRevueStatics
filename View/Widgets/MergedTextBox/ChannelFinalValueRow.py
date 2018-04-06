@@ -87,7 +87,7 @@ class ChannelFinalValueRow(tk.Text):
         self.config(fg='black', bg='black')
         self.config(width=len(self.prevString))
         self.config(height=1)
-        self.config(borderwidth=0)
+        self.config(borderwidth=-1)
         self.config(highlightthickness=0)  # only required for *nix
         
     def setText(self, value):
