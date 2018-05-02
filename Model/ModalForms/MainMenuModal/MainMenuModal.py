@@ -1,6 +1,8 @@
 from Model.ModalForms.AbstractModal import AbstractModal
 from Model.Console import MENU, BACKSPACE, CLEAR, ENTER
-from Model.ModalForms.ModalFormConsts import *
+from Model.ModalForms.ModalFormConsts import \
+                PATCH_MODAL, DELETE_CUES_MODAL,TIME_MODAL, \
+                CONFIRM_DESK_RESET, CONFIRM_BACKUP_MODAL, CONFIRM_RESTORE_MODAL 
 from Model.ModalForms import SubMenuHandlers
                              
 #menu options. Option Description, Modal to open, modal's fixed arguments.
@@ -9,8 +11,8 @@ mainMenuOptions = [
                    ("Clear all Cues", DELETE_CUES_MODAL),
                    ("Default Fade times", TIME_MODAL),
                    ("Reset Desk", CONFIRM_DESK_RESET),
-                   ("Backup show", CONFIRM_BACKUP_MODAL),
-                   ("Restore backup", CONFIRM_RESTORE_MODAL)
+                   ("Backup show locally", CONFIRM_BACKUP_MODAL),
+                   ("Restore local backup", CONFIRM_RESTORE_MODAL)
                    ]
                    
 # only works up to 9 though.                   
