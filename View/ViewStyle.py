@@ -1,5 +1,6 @@
 from Model import Channel
 import math
+import sys
 COLOR_DIRECT = 'yellow'
 COLOR_PLAYBACK = 'cyan'
 COLOR_GROUP = '#00ff00'
@@ -25,6 +26,20 @@ SCREEN_RESOLUTION = '1920x1080'  # base resolution
 # SCREEN_RESOLUTION = '1366x768' # minimum res with full features
 # SCREEN_RESOLUTION = '1280x720' # Disables sub-channel value display
 # SCREEN_RESOLUTION = '1024x576' # minimum resolution
+
+# note if this is set to true, it will overwrite screen resolution
+SCREEN_RESOLUTION_AUTO = True
+# auto screen resolution only supported in
+if sys.platform == 'win32':
+    if SCREEN_RESOLUTION_AUTO:
+        import ctypes
+        user32 = ctypes.windll.user32
+        user32.SetProcessDPIAware()
+        [w, h] = [user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)]
+        SCREEN_RESOLUTION = str(w) + 'x'+ str(h)
+
+
+
 BASE_RESOLUTION = 1920  # don't change this.
 
 # CHANGING THEME:
