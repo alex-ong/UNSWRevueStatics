@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+'''
+Midi-daemon converts from one midi input to TCP.
+Note that since there are two midi inputs, we need to run this script twice.
+'''
+
 import sys
 sys.path.append('./Networking')  # hack to run from main folder
 sys.path.append('../Networking')  # hack to run from this folder
@@ -178,14 +183,18 @@ def dict_diff(dictA, dictB):
     return result
 
 
-if __name__ == '__main__':      
-    try:
-        firstPort = 0
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print ("You need to specifiy which midi input you are running!")
+        print ("InputNumber is 0 indexed. Use 0 and 1")
+        print ("python midi-daemon.py INPUTNUMBER")        
+        sys.exit()
+
+    portNumber = int(sys.argv[1])
+    try:       
         if sys.platform != 'win32': #nix starts from port 1
-            firstPort = 1
-            
-        midiIn1, _ = open_midiinput(firstPort)
-        midiIn2, _ = open_midiinput(firstPort + 1)
+            portNumber += 1        
+        midiIn1, _ = open_midiinput(portNumber)        
     except (EOFError, KeyboardInterrupt):
         print("Failed to connect to midi inputs! Press enter to exit...")
         _ = input()
@@ -197,8 +206,7 @@ if __name__ == '__main__':
         sys.exit()
 
     print("Attaching MIDI input callback handler.")
-    midiIn1.set_callback(SilentMidiInputHandler())
-    midiIn2.set_callback(SilentMidiInputHandler())
+    midiIn1.set_callback(SilentMidiInputHandler())    
 
     print("Entering main loop. Press Control-C to exit.")
     try:
@@ -217,7 +225,5 @@ if __name__ == '__main__':
         print('Received KeyboardInterrupt')
     finally:
         print("Exiting.")
-        midiIn1.close_port()
-        midiIn2.close_port()
-        del midiIn1
-        del midiIn2
+        midiIn1.close_port()        
+        del midiIn1        
